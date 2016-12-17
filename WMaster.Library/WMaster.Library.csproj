@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{263640E0-ABB6-480F-8D4D-E81B922A6942}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WMaster</RootNamespace>
+    <AssemblyName>WMaster.Library</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\WMaster.Library.XML</DocumentationFile>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClassOrStructurToImplement\cActionTemplate.cs" />
+    <Compile Include="ClassOrStructurToImplement\cGoldBase.cs" />
+    <Compile Include="ClassOrStructurToImplement\cAbstractGirls.cs" />
+    <Compile Include="DAL\Gold.cs" />
+    <Compile Include="DAL\Resource.cs" />
+    <Compile Include="DAL\ResourcesCollection.cs" />
+    <Compile Include="DAL\SaveGame.cs" />
+    <Compile Include="GameConcept\AbstractConcept\EntityAttribute.cs" />
+    <Compile Include="GameConcept\AbstractConcept\ICaracteristicOwnEntity.cs" />
+    <Compile Include="GameConcept\AbstractConcept\ITurnable.cs" />
+    <Compile Include="GameConcept\AbstractConcept\IValuableAttribut.cs" />
+    <Compile Include="GameConcept\EntitySkill.cs" />
+    <Compile Include="GameConcept\EntityStat.cs" />
+    <Compile Include="GameConcept\SkillsCollection.cs" />
+    <Compile Include="GameConcept\StatsCollection.cs" />
+    <Compile Include="GameManager\cArenaManager.cs" />
+    <Compile Include="GameManager\cCentreManager.cs" />
+    <Compile Include="ClassOrStructurToImplement\cChildList.cs" />
+    <Compile Include="GameManager\cClinicManager.cs" />
+    <Compile Include="GameManager\cCustomers.cs" />
+    <Compile Include="GameManager\cFarmManager.cs" />
+    <Compile Include="GameManager\cGangManager.cs" />
+    <Compile Include="GameManager\cGirls.cs" />
+    <Compile Include="GameManager\cHouseManager.cs" />
+    <Compile Include="GameManager\cMovieStudioManager.cs" />
+    <Compile Include="ClassOrStructurToImplement\cScript.cs" />
+    <Compile Include="ClassOrStructurToImplement\cTraits.cs" />
+    <Compile Include="ClassOrStructurToImplement\cTrigger.cs" />
+    <Compile Include="GameManager\cTriggerList.cs" />
+    <Compile Include="ClassOrStructurToImplement\cTriggerQue.cs" />
+    <Compile Include="ClassOrStructurToImplement\GirlPredicate.cs" />
+    <Compile Include="ClassOrStructurToImplement\cConfig.cs" />
+    <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cGameScript.cs" />
+    <Compile Include="ClassOrStructurToImplement\cGirlGangFight.cs" />
+    <Compile Include="ClassOrStructurToImplement\cGirlTorture.cs" />
+    <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cLuaMenu.cs" />
+    <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cLuaMenuInner.cs" />
+    <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cLuaScript.cs" />
+    <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cLuaState.cs" />
+    <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cLuaStateInner.cs" />
+    <Compile Include="ClassOrStructurToImplement\CResource.cs" />
+    <Compile Include="GameManager\CResourceManager.cs" />
+    <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cScriptManager.cs" />
+    <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cScriptManagerInner.cs" />
+    <Compile Include="ClassOrStructurToImplement\cTrainable.cs" />
+    <Compile Include="ClassOrStructurToImplement\IdealAttr.cs" />
+    <Compile Include="ClassOrStructurToImplement\IdealGirl.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\MasterFile.cs" />
+    <Compile Include="ClassOrStructurToImplement\sFacilityList.cs" />
+    <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\sScript.cs" />
+    <Compile Include="ClassOrStructurToImplement\static_brothel_data.cs" />
+    <Compile Include="ClassOrStructurToImplement\TrainableGirl.cs" />
+    <Compile Include="ClassOrStructurToImplement\TrainableSkill.cs" />
+    <Compile Include="ClassOrStructurToImplement\TrainableStat.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cEditBox.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cFarmScreen.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cFont.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cGetStringScreenManager.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cGetStringScreenManager_Inner.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cGetStringTransport.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cGetStringTransport_Base.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cGetStringTransport_Func.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\CGraphics.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cHouseScreen.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cImage.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cImageItem.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cInterfaceEvent.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cInterfaceEventManager.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cInterfaceObject.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cInterfaceWindow.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cInterfaceWindowXML.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cListBox.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cListItem.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\CLog.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\CLogInner.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cMessageBox.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cMovieScreen.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenArenaManagement.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenBank.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenBrothelManagement.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenBuildingSetup.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenCentreManagement.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenClinicManagement.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenDungeon.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenFarmManagement.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenGallery.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenGangs.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenGetInput.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenGirlDetails.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenGirlManagement.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenHouse.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenHouseManagement.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenItemManagement.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenMainMenu.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenMayor.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenMovieMaker.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenNewGame.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenPrison.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenPropertyManagement.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenSettings.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenSlaveMarket.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenStudioManagement.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenTown.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScreenTurnSummary.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cScrollBar.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cSelector.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cSlider.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\CSurface.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cTextItem.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cWindowManager.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\Globals.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\SDL_Color.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\sInterfaceIDs.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\sMessage.cs" />
+    <Compile Include="ClassOrStructurToImplement\sConfigData.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\CAnimatedSprite.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cAnimatedSurface.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cArenaScreen.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cArenaTry.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cAuctionScreen.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cBuildingManagement.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cButton.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cCastingTry.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cCentreScreen.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cCheckBox.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cChoice.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cChoiceManager.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cClinicScreen.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cClinicTry.cs" />
+    <None Include="ClassOrStructurToImplement\IHMFileExclude\cColor.cs" />
+    <Compile Include="ClassOrStructurToImplement\sAction.cs" />
+    <Compile Include="ClassOrStructurToImplement\ScriptType.cs" />
+    <Compile Include="ClassOrStructurToImplement\sEntry.cs" />
+    <Compile Include="ClassOrStructurToImplement\sScriptEntry.cs" />
+    <Compile Include="ClassOrStructurToImplement\sScript.cs" />
+    <Compile Include="ClassOrStructurToImplement\sMovieScene.cs" />
+    <Compile Include="ClassOrStructurToImplement\sMovieStudio.cs" />
+    <Compile Include="ClassOrStructurToImplement\sFarm.cs" />
+    <Compile Include="ClassOrStructurToImplement\sCentre.cs" />
+    <Compile Include="ClassOrStructurToImplement\sArena.cs" />
+    <Compile Include="ClassOrStructurToImplement\sChild.cs" />
+    <Compile Include="ClassOrStructurToImplement\sRandomGirl.cs" />
+    <Compile Include="ClassOrStructurToImplement\sTrait.cs" />
+    <Compile Include="ClassOrStructurToImplement\sClinic.cs" />
+    <Compile Include="ClassOrStructurToImplement\sDungeonCust.cs" />
+    <Compile Include="ClassOrStructurToImplement\sDungeonGirl.cs" />
+    <Compile Include="ClassOrStructurToImplement\sCustomer.cs" />
+    <Compile Include="ClassOrStructurToImplement\Gang.cs" />
+    <Compile Include="GameManager\cInventory.cs" />
+    <Compile Include="ClassOrStructurToImplement\cEvents.cs" />
+    <Compile Include="ClassOrStructurToImplement\cGold.cs" />
+    <Compile Include="ClassOrStructurToImplement\cBuilding.cs" />
+    <Compile Include="ClassOrStructurToImplement\cTariff.cs" />
+    <Compile Include="ClassOrStructurToImplement\sBoundedVar.cs" />
+    <Compile Include="ClassOrStructurToImplement\sBoundedVar_Provides.cs" />
+    <Compile Include="ClassOrStructurToImplement\sEvents.cs" />
+    <Compile Include="ClassOrStructurToImplement\sFacility.cs" />
+    <Compile Include="ClassOrStructurToImplement\sEffect.cs" />
+    <Compile Include="ClassOrStructurToImplement\sFilm.cs" />
+    <Compile Include="ClassOrStructurToImplement\sHouse.cs" />
+    <Compile Include="ClassOrStructurToImplement\sMovie.cs" />
+    <Compile Include="ClassOrStructurToImplement\tEffect.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\CGameObject.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\cMessageQue.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\CRenderObject.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\CRenderQue.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\cRng.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\cScriptUtils.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\CTimer.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\cXmlWidget.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\DirPath.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\DirPathR.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\FileList.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\FileListEntry.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\GirlPredicate_GRG.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\global_State.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\ImageFileList.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\ImagePath.cs" />
+    <None Include="ClassOrStructurToImplement\UnknowUsfullClass\INPUT_MODE.cs" />
+    <Compile Include="Enum\Summary.cs" />
+    <Compile Include="GameManager\GameEngine.cs" />
+    <Compile Include="Tool\DoubleNameList.cs" />
+    <Compile Include="Tool\NameList.cs" />
+    <Compile Include="ClassOrStructurToImplement\cRivalManager.cs" />
+    <Compile Include="ClassOrStructurToImplement\cRival.cs" />
+    <Compile Include="ClassOrStructurToImplement\cJobManager.cs" />
+    <Compile Include="ClassOrStructurToImplement\cDungeon.cs" />
+    <Compile Include="ClassOrStructurToImplement\cPlayer.cs" />
+    <Compile Include="ClassOrStructurToImplement\sBrothel.cs" />
+    <Compile Include="ClassOrStructurToImplement\sGirl.cs" />
+    <Compile Include="ClassOrStructurToImplement\sInventoryItem.cs" />
+    <Compile Include="ClassOrStructurToImplement\sObjective.cs" />
+    <Compile Include="ClassOrStructurToImplement\HFileToImport\IXmlElement.cs" />
+    <Compile Include="ClassOrStructurToImplement\HFileToImport\IXmlHandle.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Diagnostics\ILog.cs" />
+    <Compile Include="Diagnostics\WMLog.cs" />
+    <Compile Include="Enum\ActionTypes.cs" />
+    <Compile Include="Enum\DayShift.cs" />
+    <Compile Include="Enum\DungeonReasons.cs" />
+    <Compile Include="Enum\Fetishs.cs" />
+    <Compile Include="Enum\FreeFireSellDump.cs" />
+    <Compile Include="Enum\GangMissions.cs" />
+    <Compile Include="Enum\Gender.cs" />
+    <Compile Include="Enum\Goals.cs" />
+    <Compile Include="Enum\ImageTypes.cs" />
+    <Compile Include="Enum\ItemRarity.cs" />
+    <Compile Include="Enum\ItemType.cs" />
+    <Compile Include="Enum\JobFilter.cs" />
+    <Compile Include="Enum\Jobs.cs" />
+    <Compile Include="Enum\Objectives.cs" />
+    <Compile Include="Enum\Rewards.cs" />
+    <Compile Include="GameConcept\EnumSkills.cs" />
+    <Compile Include="GameConcept\EnumStats.cs" />
+    <Compile Include="Enum\Status.cs" />
+    <Compile Include="Enum\TrainingTypes.cs" />
+    <Compile Include="Extension\EnumExtensions.cs" />
+    <Compile Include="GameManager\cBrothelManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tool\WMRandom.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="GameConcept\Item\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
