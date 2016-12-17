@@ -207,7 +207,18 @@ namespace WMaster.GameConcept.Item
         #endregion
 
         #region Fields
+        /// <summary>
+        /// Item name.
+        /// </summary>
         private string m_Name;
+        /// <summary>
+        /// Get or ser item name.
+        /// </summary>
+        public string Name
+        {
+            get { return m_Name; }
+            set { m_Name = value; }
+        } 
         private string m_Desc;
         /// <summary>
         /// Item type
@@ -421,7 +432,7 @@ namespace WMaster.GameConcept.Item
             }
         }
 
-        // TODO : Prévoir le retour d'une chaine localisé.
+        // TODO : TRADUCTION - Prévoir le retour d'une chaine localisé.
         /// <summary>
         /// Return string representation of sInventoryItem.Special
         /// </summary>
@@ -472,7 +483,7 @@ namespace WMaster.GameConcept.Item
                 case Rarity.ScriptOrReward:
                     return "Scripts or Reward";
                 default:
-                    WMaster.WMLog.Write(string.Format("Error: unexpected rarity value: unexpected value '{0}'", r));
+                    WMaster.WMLog.Trace(string.Format("Unexpected rarity value: unexpected value '{0}'", r), WMLog.TraceLog.ERROR);
                     return string.Format("Error({0})", r);
             }
         }
@@ -529,7 +540,7 @@ namespace WMaster.GameConcept.Item
             }
         }
 
-        // TODO : Susstitute this to ToString() instance override function.
+        // TODO : REFACTORING - Susstitute this to ToString() instance override function?
         /// <summary>
         /// Return a string representation of an <see cref="sInventoryItem"/>
         /// </summary>

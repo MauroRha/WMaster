@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 	ProjectSection(SolutionItems) = preProject
 		gpl.txt = gpl.txt
 		random ideas.txt = random ideas.txt
+		Refactoring notes.txt = Refactoring notes.txt
 		Special Thanks.txt = Special Thanks.txt
 		ToDoThings.txt = ToDoThings.txt
 		UsefullThings.txt = UsefullThings.txt

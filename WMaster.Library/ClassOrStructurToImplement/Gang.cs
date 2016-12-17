@@ -116,9 +116,29 @@
             this.NetLimit += n;
         }
 
-        public bool m_AutoRecruit; // true if auto recruiting
-        public string m_Name;
-        public bool m_Combat; // is true when gang has seen combat in the last week
+        /// <summary>
+        /// <b>True</b> if auto recruiting
+        /// </summary>
+        public bool AutoRecruit { get; set; }
+
+        /// <summary>
+        /// Name of gang.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// <b>True </b> when gang has seen combat in the last week.
+        /// </summary>
+        private bool m_Combat;
+        /// <summary>
+        /// <b>True </b> when gang has seen combat in the last week.
+        /// </summary>
+        public bool HasSeenCombat
+        {
+            get { return m_Combat; }
+            set { m_Combat = value; }
+        }
+
         public cEvents m_Events = new cEvents();
 
         public IXmlElement SaveGangXML(IXmlElement pRoot)
@@ -386,14 +406,14 @@
         /// </summary>
         public Gang()
         {
-            m_Name = "Unnamed";
+            Name = "Unnamed";
             m_Num = 0;
 
             m_MissionID = GangMissions.GUARDING;
             m_LastMissID = GangMissions.NONE;
 
-            m_Combat = false;
-            m_AutoRecruit = false;
+            HasSeenCombat = false;
+            AutoRecruit = false;
 
             foreach (EntitySkill item in this.Skills)
             { item.Value = 0; }

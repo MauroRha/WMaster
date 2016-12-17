@@ -20,7 +20,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         private static sConfigData data;
 
-        cConfig()
+        public cConfig()
         { throw new NotImplementedException(); }
         void reload(string filename)
         { throw new NotImplementedException(); }

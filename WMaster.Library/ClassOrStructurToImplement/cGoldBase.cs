@@ -217,7 +217,7 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
         bool item_cost(double cost)
         { throw new NotImplementedException(); }
-        bool consumable_cost(double cost, bool force = false)
+        public bool consumable_cost(double cost, bool force = false)
         { throw new NotImplementedException(); }
         void movie_cost(double cost)
         { throw new NotImplementedException(); }
@@ -280,7 +280,7 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
         void objective_reward(double income)
         { throw new NotImplementedException(); }
-        void plunder(double income)
+        public void plunder(double income)
         { throw new NotImplementedException(); } // from raiding rivals
         void petty_theft(double income)
         { throw new NotImplementedException(); }

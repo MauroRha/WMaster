@@ -27,7 +27,7 @@ namespace WMaster.ClassOrStructurToImplement
             Free();
         }
         //void			DisplayMessages();		// No definition
-        void AddMessage(string message, int nImgType, int nEvent)
+        public void AddMessage(string message, int nImgType, int nEvent)
         { throw new NotImplementedException(); }
         cEvent GetMessage(int id)
         { throw new NotImplementedException(); }

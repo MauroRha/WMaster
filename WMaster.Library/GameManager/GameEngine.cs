@@ -58,6 +58,7 @@ namespace WMaster.GameManager
 
         private bool quitAccepted = false;
 
+        public cConfig cfg = new cConfig();
         private int g_CurrBrothel = 0;
         private int g_Building = 0;
         private int g_CurrClinic = 0;
@@ -72,7 +73,7 @@ namespace WMaster.GameManager
         private bool newWeek = false;
 
         /// <summary>
-        /// TODO : Localiz month names
+        /// TODO : TRADUCTION - Localise month names
         /// </summary>
         string[] monthnames = { "No Month", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
@@ -121,8 +122,14 @@ namespace WMaster.GameManager
             set { GameEngine.Game.g_Day = value; }
         }
 
-        // the players gold
+        /// <summary>
+        /// Player gold
+        /// </summary>
         private cGold g_Gold = new cGold();
+        [Obsolete("Player gold must be move to player object", false)]
+        /// <summary>
+        /// Player gold
+        /// </summary>
         public cGold Gold
         { get { return this.g_Gold; } }
 
@@ -1102,7 +1109,6 @@ namespace WMaster.GameManager
         //// TEmporary testing crap
         //int IDS = 0;
         //cRng g_Dice = new cRng();
-        //cConfig cfg = new cConfig();
         #endregion
 
         #region Game manager

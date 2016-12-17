@@ -17,6 +17,15 @@ namespace WMaster.GameConcept.AbstractConcept
         where TEnumType : struct, IConvertible
     {
         /// <summary>
+        /// Maximum value attribut can take.
+        /// </summary>
+        protected abstract int UpperBoundLimit { get; }
+        /// <summary>
+        /// Minimum value attribut can take.
+        /// </summary>
+        protected abstract int LowerBoundLimit { get; }
+
+        /// <summary>
         /// Get or set the Caracteristique skill.
         /// </summary>
         [XmlAttribute("Name")]
@@ -42,18 +51,25 @@ namespace WMaster.GameConcept.AbstractConcept
             set { this.CurrentValue = value; }
         }
 
+        private int m_CurrentValue;
         /// <summary>
         /// Get or set the current value of Attribute
         /// </summary>
         [XmlAttribute("CurrentValue")]
-        public int CurrentValue { get; set; }
+        public int CurrentValue
+        {
+            get { return this.m_CurrentValue; }
+            set { this.m_CurrentValue = Math.Max(Math.Min(value, this.UpperBoundLimit), this.LowerBoundLimit); }
+        }
 
         /// <summary>
         /// Caracteristic value of last week. Need to know weekly progression value.
         /// </summary>
         private int? m_LastWeekValue = null;
         /// <summary>
-        /// Get the set the caracteristic value of last week. Need to know weekly progression value.
+        /// Get the set the caracteristic value of last week.
+        /// Needed to know weekly progression value.
+        /// <remarks><para>WARNING !!! Setting this value must only be donne by XmlSerializer!</para></remarks>
         /// </summary>
         [XmlAttribute("LastWeekValue")]
         public int? LastWeekValue
@@ -67,7 +83,9 @@ namespace WMaster.GameConcept.AbstractConcept
         /// </summary>
         private int? m_LastYearValue = -1;
         /// <summary>
-        /// Get the set the caracteristic value of last year. Need to know annual progression value.
+        /// Get or set the caracteristic value of last year.
+        /// Needed to know annual progression value.
+        /// <remarks><para>WARNING !!! Setting this value must only be donne by XmlSerializer!</para></remarks>
         /// </summary>
         [XmlAttribute("LastYearValue")]
         public int? LastYearValue
@@ -75,7 +93,6 @@ namespace WMaster.GameConcept.AbstractConcept
             get { return this.m_LastYearValue; }
             set { this.m_LastYearValue = value; }
         }
-
 
         /// <summary>
         /// Close current week and do traitement for initialise new week.

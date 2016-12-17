@@ -1,0 +1,14 @@
+Keep developpement chart:
+	- naming convention is Camel case
+	- use '_' only in private fields and constants;
+	- private fields startwuth m_[UpperCase];
+	- local variable starts with [LowerCase];
+	- properties and functions starts with [UpperCase]
+
+	Suppressing all public field and replace it by pair private field/public property.
+
+1)	Skills and Stats attributs was convert to object who store weekly and annual progression, automaticly keep value between bound limits (-100/100)
+	Creation Collection to manage the attribut set.
+2)	Gold is agregate to player class who herite from IWMaster. Rival herite from IWMaster to extend to Whore Master NPC.
+	WMaster V2 : add IA to rivals to challenge playing.
+3)	Correcting somewrong access to attribut array (enemy_gang->m_Skills[STAT_CONSTITUTION])

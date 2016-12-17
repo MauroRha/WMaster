@@ -46,7 +46,7 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
 
         public int GetNumInPrison()
-        { return m_NumPrison; }
+        { return m_PrisonGirlList.Count; }
 
         public void AddGirlToRunaways(sGirl girl)
         { throw new NotImplementedException(); }
@@ -54,7 +54,7 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
 
         public int GetNumRunaways()
-        { return m_NumRunaways; }
+        { return m_RunawaysGirlList.Count; }
 
 
         public void NewBrothel(int NumRooms, int MaxNumRooms = 200)
@@ -88,7 +88,7 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
 
         public sGirl GetPrison()
-        { return m_Prison; }
+        { return m_PrisonGirlList.FirstOrDefault(); }
         public int stat_lookup(string stat_name, int brothel_id = -1)
         { throw new NotImplementedException(); }
 
@@ -354,14 +354,35 @@ namespace WMaster.ClassOrStructurToImplement
         private int m_DrinksReserves;
         private int m_AlchemyReserves;
 
+        /// <summary>
+        /// A list of girls kept in prision.
+        /// </summary>
+        private List<sGirl> m_PrisonGirlList = new List<sGirl>();
+        /// <summary>
+        /// Get the list of girls kept in prision.
+        /// </summary>
+        public List<sGirl> PrisonGirlList
+        {
+            get { return this.m_PrisonGirlList; }
+        }
+        //private int m_NumPrison;
+        //private sGirl m_Prison;				// a list of girls kept in prision
+        //private sGirl m_LastPrison;
 
-        private int m_NumPrison;
-        private sGirl m_Prison;				// a list of girls kept in prision
-        private sGirl m_LastPrison;
-
-        private int m_NumRunaways;          // a list of runaways
-        private sGirl m_Runaways;
-        private sGirl m_LastRunaway;
+        /// <summary>
+        /// A list of runaways girls.
+        /// </summary>
+        private List<sGirl> m_RunawaysGirlList = new List<sGirl>();
+        /// <summary>
+        /// Get the list of runaways girls.
+        /// </summary>
+        public List<sGirl> RunawaysGirlList
+        {
+            get { return this.m_PrisonGirlList; }
+        }
+        //private int m_NumRunaways;          // a list of runaways
+        //private sGirl m_Runaways;
+        //private sGirl m_LastRunaway;
 
         private long m_BribeRate;				// the amount of money spent bribing officials per week
         private int m_Influence;				// based on the bribe rate this is the percentage of influence you have
@@ -370,7 +391,7 @@ namespace WMaster.ClassOrStructurToImplement
 
         private sObjective m_Objective;
 
-        private cRivalManager m_Rivals;			// all of the players compedators
+        public cRivalManager m_Rivals;			// all of the players compedators
 
         private bool m_TortureDoneFlag;			// WD:	Have we got a torturer working today
         // TODO : REFACTORING - Convert to DayShift enum?

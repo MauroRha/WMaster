@@ -9,7 +9,7 @@ namespace WMaster.ClassOrStructurToImplement
     /// <summary>
     /// holds an objective and its data
     /// </summary>
-    public struct sObjective
+    public class sObjective
     {
         public int m_Objective; // the objective type
         public int m_Reward; // the reward type

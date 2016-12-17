@@ -12,7 +12,7 @@ namespace WMaster.ClassOrStructurToImplement
         private sAction m_ActionParent; // list of template actions
 
         // Functions for reading text (mainly used in actions)
-        // TODO : File access functions must be translate to specific os application
+        // TODO : REFACTORING - File access functions must be translate to specific os application
         bool GetNextQuotedLine(ref string Data, System.IO.FileInfo fp, int MaxSize)
         { throw new NotImplementedException(); }
         bool GetNextWord(ref string Data, System.IO.FileInfo fp, int MaxSize)

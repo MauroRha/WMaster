@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WMaster.Enum;
 using WMaster.GameConcept;
+using WMaster.GameConcept.AbstractConcept;
+using WMaster.GameConcept.Item;
 using WMaster.GameManager;
 using WMaster.Tool;
 
@@ -53,11 +55,29 @@ namespace WMaster.ClassOrStructurToImplement
         private int m_NumHealingPotions;
         private int m_SwordLevel;
         private int m_KeepNetsStocked;
-        private int m_NumNets;
 
+        /// <summary>
+        /// Number of Nets the gang have.
+        /// </summary>
+        private int m_NumNets;
+        /// <summary>
+        /// Get number of Nets the gang have.
+        /// </summary>
+        /// <returns>Number of Nets the gang have.</returns>
+        public int GetNets()
+        {
+            return m_NumNets;
+        }
+
+        /// <summary>
+        /// Initialise a new instance of <see cref="cGangManager"/>
+        /// TODO : REFACTORING - Make singleton or static class?
+        /// </summary>
         public cGangManager()
         {
             m_NumGangNames = 0;
+
+            // TODO : Get number of gang name
             //ifstream in = new ifstream();
             //// WD: Typecast to resolve ambiguous call in VS 2010
             //DirPath dp = DirPath() << "Resources" << "Data" << "HiredGangNames.txt";
@@ -71,7 +91,6 @@ namespace WMaster.ClassOrStructurToImplement
             m_Control_Gangs = false;
             m_Gang_Gets_Girls = m_Gang_Gets_Items = m_Gang_Gets_Beast = 0;
         }
-
 
         public void Dispose()
         {
@@ -152,7 +171,7 @@ namespace WMaster.ClassOrStructurToImplement
             //while (!done)
             //{
             //    in.seekg(0);
-            //    int name = g_Dice % m_NumGangNames;
+            //    int name = WMRandom % m_NumGangNames;
             //    in >> m_NumGangNames; // ignore the first line
             //    for (int i = 0; i <= name; i++)
             //    {
@@ -198,7 +217,7 @@ namespace WMaster.ClassOrStructurToImplement
         /// <param name="newGang"><see cref="Gang"/> to add.</param>
         public void AddGang(Gang newGang)
         {
-            // TODO : Control newGang dosen't hire by player / rivals
+            // TODO : GAME - Control newGang dosen't hire by player / rivals
             if ((newGang != null) && !this.m_PlayerGangList.Contains(newGang))
             { this.m_PlayerGangList.Add(newGang); }
         }
@@ -254,7 +273,7 @@ namespace WMaster.ClassOrStructurToImplement
         {
             if (gang != null && this.m_HireableGangList.Contains(gang) && !this.m_PlayerGangList.Contains(gang))
             {
-                gang.m_Combat = gang.m_AutoRecruit = false;
+                gang.HasSeenCombat = gang.AutoRecruit = false;
                 gang.m_LastMissID = GangMissions.NONE;
                 if (gang.MemberNum <= 5)
                 {
@@ -278,7 +297,7 @@ namespace WMaster.ClassOrStructurToImplement
         /// <param name="newGang"><see cref="Gang"/> to add.</param>
         public void AddHireableGang(Gang newGang)
         {
-            // TODO : Control newGang dosen't hire by player / rivals
+            // TODO : GAME - Control newGang dosen't hire by player / rivals
             if ((newGang != null) && !this.m_HireableGangList.Contains(newGang))
             { this.m_HireableGangList.Add(newGang); }
         }
@@ -337,7 +356,7 @@ namespace WMaster.ClassOrStructurToImplement
             {
                 if (this.m_HireableGangList.Count < cConfig.Instance.Gangs.MaxRecruitList)
                 {
-                    gang.m_Combat = gang.m_AutoRecruit = false;
+                    gang.HasSeenCombat = gang.AutoRecruit = false;
                     gang.m_LastMissID = GangMissions.NONE;
                     this.AddHireableGang(gang);
                 }
@@ -353,6 +372,10 @@ namespace WMaster.ClassOrStructurToImplement
         {
             return m_PlayerGangList.Count;
         }
+        /// <summary>
+        /// Get the maximum number of gang player can have.
+        /// </summary>
+        /// <returns>Maximum number of gang player can have.</returns>
         public int GetMaxNumGangs()
         {
             m_MaxNumGangs = 7 + GameEngine.Game.g_Brothels.GetNumBrothels();
@@ -366,6 +389,11 @@ namespace WMaster.ClassOrStructurToImplement
         {
             return m_HireableGangList.Count;
         }
+
+        /// <summary>
+        /// Creates a new gang for single use
+        /// </summary>
+        /// <returns>Temporary new <see cref="Gang"/>.</returns>
         public Gang GetTempGang()
         {
             Gang newGang = new Gang();
@@ -381,7 +409,29 @@ namespace WMaster.ClassOrStructurToImplement
             newGang.Stats[EnumStats.HEALTH].Value = 100;
             newGang.Stats[EnumStats.HAPPINESS].Value = 100;
             return newGang;
-        } // creates a new gang
+        }
+
+        /// <summary>
+        /// Creates a new weak gang for single use.
+        /// <remarks><para>Used by the new brothel security code.</para></remarks>
+        /// </summary>
+        /// <returns>Temporary new weak <see cref="Gang"/>.</returns>
+        public Gang GetTempWeakGang()
+        {
+            // MYR: Weak gangs attack girls when they work
+            Gang newGang = new Gang();
+            newGang.MemberNum = 15;
+            foreach (EntitySkill item in newGang.Skills)
+            {
+                item.Value = WMRandom.Next() % 30 + 51;
+            }
+            foreach (EntityStat item in newGang.Stats)
+            {
+                item.Value = WMRandom.Next() % 30 + 51;
+            }
+            newGang.Stats[EnumStats.HEALTH].Value = 100;
+            return newGang;
+        }
 
         /// <summary>
         /// Creates a new gang with stat/skill mod
@@ -407,24 +457,6 @@ namespace WMaster.ClassOrStructurToImplement
 
             return newGang;
         }
-
-        //Used by the new brothel security code
-        public Gang GetTempWeakGang()
-        {
-            // MYR: Weak gangs attack girls when they work
-            Gang newGang = new Gang();
-            newGang.MemberNum = 15;
-            foreach (EntitySkill item in newGang.Skills)
-            {
-                item.Value = WMRandom.Next() % 30 + 51;
-            }
-            foreach (EntityStat item in newGang.Stats)
-            {
-                item.Value = WMRandom.Next() % 30 + 51;
-            }
-            newGang.Stats[EnumStats.HEALTH].Value = 100;
-            return newGang;
-        }
         /// <summary>
         /// Get randomly a gang from a gang list.
         /// </summary>
@@ -438,7 +470,6 @@ namespace WMaster.ClassOrStructurToImplement
             return gangList[WMRandom.Next(gangList.Count)];
         }
 
-        #region TODO : code to convert
         /// <summary>
         /// Simple function to increase a gang's combat skills a bit.
         /// </summary>
@@ -446,115 +477,116 @@ namespace WMaster.ClassOrStructurToImplement
         /// <param name="count">Number of skill to boost.</param>
         public void BoostGangCombatSkills(Gang gang, int count)
         {
-            //List<WMaster.GameConcept.AbstractConcept.IValuableAttribut> possibleSkills = new List<WMaster.GameConcept.AbstractConcept.IValuableAttribut>;
+            List<IValuableAttribut> possibleSkills = new List<IValuableAttribut>();
 
-            //possibleSkills.Add(gang.Skills[EnumSkills.COMBAT]);
-            //possibleSkills.Add(gang.Skills[EnumSkills.MAGIC]);
-            //possibleSkills.Add(gang.Stats[EnumStats.AGILITY]);
-            //possibleSkills.Add(gang.Stats[EnumStats.CONSTITUTION]);
+            possibleSkills.Add(gang.Skills[EnumSkills.COMBAT]);
+            possibleSkills.Add(gang.Skills[EnumSkills.MAGIC]);
+            possibleSkills.Add(gang.Stats[EnumStats.AGILITY]);
+            possibleSkills.Add(gang.Stats[EnumStats.CONSTITUTION]);
 
-            //BoostGangRandomSkill(possibleSkills, count, 1);
-            //possibleSkills.Clear();
+            BoostGangRandomSkill(possibleSkills, count, 1);
         }
+
         /// <summary>
         /// Chooses from the passed skills/stats and raises one or more of them
         /// </summary>
         /// <param name="possibleSkills"></param>
         /// <param name="count"></param>
-        /// <param name="boost_count"></param>
-        public void BoostGangRandomSkill(List<WMaster.GameConcept.AbstractConcept.IValuableAttribut> possibleSkills, int count, int boost_count)
+        /// <param name="boostCount"></param>
+        private void BoostGangRandomSkill(List<IValuableAttribut> possibleSkills, int count, int boostCount)
         {
-            ///*
-            //*	Which of the passed skills/stats will be raised this time?
-            //*	Hopefully they'll tend to focus a bit more on what they're already good at...
-            //*	that way, they will have strengths instead of becoming entirely homogenized
-            //*
-            //*	ex. 60 combat, 50 magic, and 40 intelligence: squared, that comes to 3600, 2500 and 1600...
-            //*		so: ~46.75% chance combat, ~32.46% chance magic, ~20.78% chance intelligence
-            //*/
-            //for (int j = 0; j < count; j++) // we'll pick and boost a skill/stat "count" number of times
-            //{
-            //    //C++ TO C# CONVERTER TODO TASK: C# does not have an equivalent to pointers to value types:
-            //    //ORIGINAL LINE: int *affect_skill = 0;
-            //    int affect_skill = 0;
-            //    int total_chance = 0;
-            //    List<WMaster.GameConcept.AbstractConcept.IValuableAttribut> chance = new List<WMaster.GameConcept.AbstractConcept.IValuableAttribut>();
+            /*
+            *	Which of the passed skills/stats will be raised this time?
+            *	Hopefully they'll tend to focus a bit more on what they're already good at...
+            *	that way, they will have strengths instead of becoming entirely homogenized
+            *
+            *	ex. 60 combat, 50 magic, and 40 intelligence: squared, that comes to 3600, 2500 and 1600...
+            *		so: ~46.75% chance combat, ~32.46% chance magic, ~20.78% chance intelligence
+            */
+            if (possibleSkills == null || possibleSkills.Count.Equals(0))
+            { return; }
 
-            //    foreach (WMaster.GameConcept.AbstractConcept.IValuableAttribut item in possibleSkills)
-            //    { // figure chances for each skill/stat; more likely to choose those they're better at
-            //        chance.Add((int)Math.Pow((float)possibleSkills[i].Value, 2));
-            //        total_chance += chance[i];
-            //    }
-            //    int choice = WMRandom.Next(total_chance);
+            Dictionary<IValuableAttribut, int> chance = new Dictionary<IValuableAttribut, int>();
+            for (int j = 0; j < count; j++) // we'll pick and boost a skill/stat "count" number of times
+            {
+                IValuableAttribut affectSkill = null;
+                chance.Clear();
+                int totalChance = 0;
 
-            //    total_chance = 0;
-            //    for (int i = 0; i < (int)chance.Count; i++)
-            //    {
-            //        if (choice < (chance[i] + total_chance))
-            //        {
-            //            affect_skill = possible_skills[i];
-            //            break;
-            //        }
-            //        total_chance += chance[i];
-            //    }
-            //    /*
-            //    *	OK, we've picked a skill/stat. Now to boost it however many times were specified
-            //    */
-            //    BoostGangSkill(affect_skill, boost_count);
-            //}
+                foreach (IValuableAttribut item in possibleSkills)
+                { // figure chances for each skill/stat; more likely to choose those they're better at
+                    int calcChance = (int)Math.Pow((float)item.Value, 2);
+                    chance.Add(item, calcChance);
+                    totalChance += calcChance;
+                }
+                int choice = WMRandom.Next(totalChance);
+
+                totalChance = 0;
+                foreach (IValuableAttribut item in possibleSkills)
+                {
+                    if (choice < (chance[item] + totalChance))
+                    {
+                        affectSkill = item;
+                        break;
+                    }
+                    totalChance += chance[item];
+                }
+                /*
+                *	OK, we've picked a skill/stat. Now to boost it however many times were specified
+                */
+                BoostGangSkill(affectSkill, boostCount);
+            }
         }
+
         /// <summary>
-        /// Increases a specific skill/stat the specified number of times
+        /// Increases a specific skill/stat the specified number of times.
         /// </summary>
-        /// <param name="affect_skill"></param>
-        /// <param name="count"></param>
-        public void BoostGangSkill(int affect_skill, int count)
+        /// <param name="affectSkill">Skill to increase.</param>
+        /// <param name="count">Number of time to increase.</param>
+        private void BoostGangSkill(IValuableAttribut affectSkill, int count)
         {
-            ///*
-            //*	OK, we've been passed a skill/stat. Now to raise it an amount depending on how high the
-            //*	skill/stat already is. The formula is fairly simple.
-            //*	Where x = current skill level, and y = median boost amount:
-            //*	y = (70/x)^2
-            //*	If y > 5, y = 5.
-            //*	Then, we get a random number ranging from (y/2) to (y*1.5) for the actual boost
-            //*	amount.
-            //*	Of course, we can't stick a floating point number into a char/int, so instead we
-            //*	use the remaining decimal value as a percentage chance for 1 more point. For
-            //*	example, 3.57 would be 3 points guaranteed, with 57% chance to instead get 4 points.
-            //*
-            //*	ex. 1: 50 points in skill. (70/50)^2 = 1.96. Possible point range: 0.98 to 2.94
-            //*	ex. 2: 30 points in skill. (70/30)^2 = 5.44. Possible point range: 2.72 to 8.16
-            //*	ex. 3: 75 points in skill. (70/75)^2 = 0.87. Possible point range: 0.44 to 1.31
-            //*/
-            //for (int j = 0; j < count; j++) // we'll boost the skill/stat "count" number of times
-            //{
-            //    if (affect_skill < 1)
-            //    {
-            //        affect_skill = 1;
-            //    }
+            /*
+            *	OK, we've been passed a skill/stat. Now to raise it an amount depending on how high the
+            *	skill/stat already is. The formula is fairly simple.
+            *	Where x = current skill level, and y = median boost amount:
+            *	y = (70/x)^2
+            *	If y > 5, y = 5.
+            *	Then, we get a random number ranging from (y/2) to (y*1.5) for the actual boost
+            *	amount.
+            *	Of course, we can't stick a floating point number into a char/int, so instead we
+            *	use the remaining decimal value as a percentage chance for 1 more point. For
+            *	example, 3.57 would be 3 points guaranteed, with 57% chance to instead get 4 points.
+            *
+            *	ex. 1: 50 points in skill. (70/50)^2 = 1.96. Possible point range: 0.98 to 2.94
+            *	ex. 2: 30 points in skill. (70/30)^2 = 5.44. Possible point range: 2.72 to 8.16
+            *	ex. 3: 75 points in skill. (70/75)^2 = 0.87. Possible point range: 0.44 to 1.31
+            */
+            if (affectSkill == null)
+            { return; }
 
-            //    double boost_amount = Math.Pow(70 / (double)affect_skill, 2);
-            //    if (boost_amount > 5)
-            //    {
-            //        boost_amount = 5;
-            //    }
+            for (int j = 0; j < count; j++) // we'll boost the skill/stat "count" number of times
+            {
+                if (affectSkill.Value < 1)
+                {
+                    affectSkill.Value = 1;
+                }
 
-            //    boost_amount = (double)WMRandom.InRange((int)((boost_amount / 2) * 100), (int)((boost_amount * 1.5) * 100)) / 100;
-            //    int one_more = WMRandom.Percent((int)((boost_amount - (int)boost_amount) * 100)) ? 1 : 0;
-            //    int final_boost = (int)(boost_amount + one_more);
+                double boostAmount = Math.Pow(70 / (double)affectSkill.Value, 2);
+                if (boostAmount > 5)
+                {
+                    boostAmount = 5;
+                }
 
-            //    affect_skill += final_boost;
+                boostAmount = (double)WMRandom.InRange((int)((boostAmount / 2) * 100), (int)((boostAmount * 1.5) * 100)) / 100;
+                int oneMore = WMRandom.Percent((int)((boostAmount - (int)boostAmount) * 100)) ? 1 : 0;
+                int finalBoost = (int)(boostAmount + oneMore);
 
-            //    if (affect_skill > 100)
-            //    {
-            //        affect_skill = 100;
-            //    }
-            //}
+                affectSkill.Value += finalBoost;
+            }
         }
-        #endregion
 
         /// <summary>
-        /// angBrawl - returns true if gang1 wins and false if gang2 wins
+        /// GangBrawl - returns true if gang1 wins and false if gang2 wins
         /// If the Player's gang is in the fight, make sure it is the first gang
         /// If two Rivals are fighting set rivalVrival to true
         /// </summary>
@@ -575,7 +607,7 @@ namespace WMaster.ClassOrStructurToImplement
 
             cTariff tariff = new cTariff();
             // Player's gang or first gang if rivalVrival = true
-            gang1.m_Combat = true;
+            gang1.HasSeenCombat = true;
             EnumSkills g1attack = EnumSkills.COMBAT;
             int initalNumber1 = gang1.MemberNum;
             int g1dodge = gang1.Stats[EnumStats.AGILITY].Value;
@@ -585,7 +617,7 @@ namespace WMaster.ClassOrStructurToImplement
             }
             int g1SwordLevel = (rivalVrival ? Math.Min(5, (WMRandom.Next() % (gang1.Skills[EnumSkills.COMBAT].Value / 20) + 1)) : m_SwordLevel);
 
-            gang2.m_Combat = true;
+            gang2.HasSeenCombat = true;
             EnumSkills g2attack = EnumSkills.COMBAT;
             int initalNumber2 = gang2.MemberNum;
             int g2dodge = gang2.Stats[EnumStats.AGILITY].Value;
@@ -616,7 +648,7 @@ namespace WMaster.ClassOrStructurToImplement
                     }
                     if (WMRandom.Percent(gang1.Skills[g1attack].Value))
                     {
-                        int damage = (g1SwordLevel + 1) * Math.Max(1, gang1.strength() / 10);
+                        int damage = (g1SwordLevel + 1) * Math.Max(1, gang1.Strength / 10);
                         if (g1attack == EnumSkills.MAGIC)
                         {
                             damage += gang1.Skills[EnumSkills.MAGIC].Value / 10 + 3;
@@ -714,17 +746,6 @@ namespace WMaster.ClassOrStructurToImplement
             return false;
         }
 
-        void SendGang(int gangID, int missID)
-        { throw new NotImplementedException(); } // sends a gang on a mission
-         Gang GetGangOnMission(int missID)
-        { throw new NotImplementedException(); } // gets a gang on the current mission
-        Gang GetGangNotFull(int roomfor = 0, bool recruiting = true)
-        { throw new NotImplementedException(); } // gets a gang with room to spare
-        Gang GetGangRecruitingNotFull(int roomfor = 0)
-        { throw new NotImplementedException(); } // gets a gang recruiting with room to spare
-        void UpdateGangs()
-        { throw new NotImplementedException(); }
-
         // returns true if the girl wins
         public bool GangCombat(sGirl girl, Gang gang)
         {
@@ -766,13 +787,13 @@ namespace WMaster.ClassOrStructurToImplement
 
                 int initalNumber = gang.MemberNum;
 
-                attack = (girl.combat() >= girl.magic()) ? SKILL_COMBAT : SKILL_MAGIC; // first determine what she will fight with
-                gattack = (gang.Combat >= gang.Magic) ? EnumSkills.COMBAT : EnumSkills.AGIC; // determine how gang will fight
+                attack = (girl.combat() >= girl.magic()) ? EnumSkills.COMBAT : EnumSkills.MAGIC; // first determine what she will fight with
+                gattack = (gang.Combat >= gang.Magic) ? EnumSkills.COMBAT : EnumSkills.MAGIC; // determine how gang will fight
 
                 dodge = Math.Max(0, (girl.agility()) - girl.tiredness());
 
                 int numGoons = gang.MemberNum;
-                gang.m_Combat = true;
+                gang.HasSeenCombat = true;
 
                 /*
                 *	don't let a gang use up more than their
@@ -837,7 +858,7 @@ namespace WMaster.ClassOrStructurToImplement
                             *				she may improve a little
                             *				(checked every round of combat? seems excessive)
                             */
-                            int gain = WMRandom.Next % 2;
+                            int gain = WMRandom.Next() % 2;
                             if (gain != 0)
                             {
                                 WMLog.Trace(string.Format("    {0} gains {1} to attack skill.", girl.m_Realname, gain), WMLog.TraceLog.INFORMATION);
@@ -961,6 +982,1059 @@ namespace WMaster.ClassOrStructurToImplement
             }
         }
 
+        // MYR: This is similar to GangCombat, but instead of one of the players gangs
+        //      fighting the girl, some random gang attacks her.  This random gang
+        //      doesn't have healing potions and the weapon levels of a player gang.
+        //      ATM only the new security code uses it.
+        //      This will also be needed to be updated to the new way of doing combat.
+        // true means the girl won
+
+        public bool GirlVsEnemyGang(sGirl girl, Gang enemyGang)
+        {
+            // MYR: Sanity check: Incorporeal is an auto-win.
+            if (girl.has_trait("Incorporeal"))
+            {
+                girl.m_Stats[(int)EnumStats.HEALTH] = 100;
+
+                WMLog.Trace(string.Format("Girl vs. Goons: {0} is incorporeal, so she wins.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+
+                enemyGang.MemberNum = (int)enemyGang.MemberNum / 2;
+                while (enemyGang.MemberNum > 0) // Do the casualty calculation
+                {
+                    if (WMRandom.Percent(40))
+                    {
+                        enemyGang.MemberNum--;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                WMLog.Trace(string.Format("  {0} goons escaped with their lives.", enemyGang.MemberNum), WMLog.TraceLog.INFORMATION);
+                return true;
+            }
+
+            int dodge = GameEngine.Game.g_Girls.GetStat(girl, (int)EnumStats.AGILITY); // MYR: Was 0
+            int mana = GameEngine.Game.g_Girls.GetStat(girl, (int)EnumStats.MANA); // MYR: Like agility, mana is now per battle
+
+            EnumSkills attack = EnumSkills.COMBAT; // determined later, defaults to combat
+            EnumSkills goonAttack = EnumSkills.COMBAT;
+
+            if (enemyGang == null || enemyGang.MemberNum == 0)
+            {
+                return true;
+            }
+
+            // first determine what she will fight with
+            if (GameEngine.Game.g_Girls.GetSkill(girl, (int)EnumSkills.COMBAT) > GameEngine.Game.g_Girls.GetSkill(girl, (int)EnumSkills.MAGIC))
+            {
+                attack = EnumSkills.COMBAT;
+            }
+            else
+            {
+                attack = EnumSkills.MAGIC;
+            }
+
+            // determine how gang will fight
+            if (enemyGang.Skills[EnumSkills.COMBAT].Value > enemyGang.Skills[EnumSkills.MAGIC].Value)
+            {
+                goonAttack = EnumSkills.COMBAT;
+            }
+            else
+            {
+                goonAttack = EnumSkills.MAGIC;
+            }
+
+            int initialNum = enemyGang.MemberNum;
+
+            enemyGang.HasSeenCombat = true;
+
+
+            WMLog.Trace(string.Format("Girl vs. Goons: {0} fights {1} opponents!", girl.m_Realname, initialNum), WMLog.TraceLog.INFORMATION);
+            WMLog.Trace(string.Format("{0}: Health {1}, Dodge {2}, Mana {3}",
+                girl.m_Realname,
+                girl.health(),
+                GameEngine.Game.g_Girls.GetStat(girl, (int)EnumStats.AGILITY),
+                girl.mana()), WMLog.TraceLog.INFORMATION);
+
+            for (int i = 0; i < initialNum; i++)
+            {
+                WMLog.Trace(string.Format("Goon #{0}: Health: {1}, Mana: {2}, Dodge: {3}, Attack:{4}, Constitution:{5}",
+                    i,
+                    enemyGang.Stats[EnumStats.HEALTH].Value,
+                    enemyGang.Stats[EnumStats.MANA].Value,
+                    enemyGang.Stats[EnumStats.AGILITY].Value,
+                    enemyGang.Skills[goonAttack].Value,
+                    enemyGang.Stats[EnumStats.CONSTITUTION].Value), WMLog.TraceLog.INFORMATION);
+
+                int gHealth = enemyGang.Stats[EnumStats.HEALTH].Value;
+                int gDodge = enemyGang.Stats[EnumStats.AGILITY].Value;
+                int gMana = enemyGang.Stats[EnumStats.MANA].Value;
+
+                while (GameEngine.Game.g_Girls.GetStat(girl, (int)EnumStats.HEALTH) >= 20 && gHealth > 0)
+                {
+                    // Girl attacks
+                    WMLog.Trace(string.Format("  {0} attacks the goon.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+
+                    if (attack == EnumSkills.MAGIC)
+                    {
+
+                        if (mana < 5)
+                        {
+                            attack = EnumSkills.COMBAT;
+                            WMLog.Trace(string.Format("    {0} insufficient mana: using combat.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                        }
+                        else
+                        {
+
+                            mana = mana - 5;
+                            WMLog.Trace(string.Format("    {0} casts a spell; mana now {0}.", girl.m_Realname, mana), WMLog.TraceLog.INFORMATION);
+                        }
+                    }
+                    else
+                    {
+                        WMLog.Trace(string.Format("    {0} using physical attack.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                    }
+
+                    int girlAttackChance = GameEngine.Game.g_Girls.GetSkill(girl, (int)attack);
+
+                    int dieRoll = WMRandom.Next();
+
+                    WMLog.Trace(string.Format("    attack chance {0} die roll:{1}.", girlAttackChance, dieRoll), WMLog.TraceLog.INFORMATION);
+
+                    if (dieRoll > girlAttackChance)
+                    {
+                        WMLog.Trace("      attack misses.", WMLog.TraceLog.INFORMATION);
+                    }
+                    else
+                    {
+                        int damage = GameEngine.Game.g_Girls.GetCombatDamage(girl, (int)attack);
+
+                        dieRoll = WMRandom.Next();
+
+                        // Goon attempts Dodge
+                        WMLog.Trace(string.Format("    Goon tries to dodge: needs {0}, gets {1}.", gDodge, dieRoll), WMLog.TraceLog.INFORMATION);
+
+                        // Dodge maxes out at 95%
+                        if ((dieRoll <= gDodge) && (dieRoll <= 95))
+                        {
+                            WMLog.Trace("    success!", WMLog.TraceLog.INFORMATION);
+                        }
+                        else
+                        {
+                            int conMod = enemyGang.Stats[EnumStats.CONSTITUTION].Value / 20;
+                            damage -= conMod;
+                            if (damage <= 0) // MYR: Minimum 1 damage on hit
+                            {
+                                damage = 1;
+                            }
+                            gHealth -= damage;
+                            WMLog.Trace(string.Format("    Goon takes {0}. New health value: {1}.", damage, gHealth), WMLog.TraceLog.INFORMATION);
+                        }
+                    }
+
+                    if (gHealth <= 0) // Goon may have been killed by damage above
+                    {
+                        continue;
+                    }
+
+                    // Goon Attacks
+
+                    dieRoll = WMRandom.Next();
+                    WMLog.Trace("  Goon Attack:", WMLog.TraceLog.INFORMATION);
+                    WMLog.Trace(string.Format("    chance:{0}, die roll:{1}.", (int)enemyGang.Skills[goonAttack].Value, dieRoll), WMLog.TraceLog.INFORMATION);
+
+                    if (dieRoll > enemyGang.Skills[goonAttack].Value)
+                    {
+                        WMLog.Trace("    attack fails!", WMLog.TraceLog.INFORMATION);
+                    }
+                    else
+                    {
+                        WMLog.Trace("    attack succeeds!", WMLog.TraceLog.INFORMATION);
+
+                        // MYR: Goon damage calculation is different from girl's.  Do we care?
+                        int damage = 5 + enemyGang.Skills[goonAttack].Value / 10;
+
+                        if (goonAttack == EnumSkills.MAGIC)
+                        {
+                            if (gMana < 10)
+                            {
+                                goonAttack = EnumSkills.COMBAT;
+                            }
+                            else
+                            {
+                                damage += 8;
+                                gMana -= 10;
+                            }
+                        }
+
+                        // girl attempts Dodge
+                        dieRoll = WMRandom.Next();
+
+                        WMLog.Trace(string.Format("    {0} tries to dodge: needs {1}, gets {2}.", girl.m_Realname, dodge, dieRoll), WMLog.TraceLog.INFORMATION);
+
+                        // MYR: Girl dodge maxes out at 90 (Gang dodge at 95).  It's a bit of a hack
+                        if (dieRoll <= dodge && dieRoll <= 90)
+                        {
+                            WMLog.Trace("    succeeds!", WMLog.TraceLog.INFORMATION);
+                        }
+                        else
+                        {
+                            GameEngine.Game.g_Girls.TakeCombatDamage(girl, -damage); // MYR: Note change
+
+                            WMLog.Trace(string.Format("  {0} takes {1}. New health value: {2}.", girl.m_Realname, damage, dieRoll, girl.health()), WMLog.TraceLog.INFORMATION);
+                            if (girl.has_trait("Incorporeal"))
+                            {
+                                WMLog.Trace("    (Girl is Incorporeal)", WMLog.TraceLog.INFORMATION);
+                            }
+                        }
+                    }
+
+                    // update girls dodge ability
+                    if ((dodge - 1) < 0)
+                    {
+                        dodge = 0;
+                    }
+                    else
+                    {
+                        dodge--;
+                    }
+
+                    // update goons dodge ability
+                    if ((gDodge - 1) < 0)
+                    {
+                        gDodge = 0;
+                    }
+                    else
+                    {
+                        gDodge--;
+                    }
+                } // While loop
+
+                if (GameEngine.Game.g_Girls.GetStat(girl, (int)EnumStats.HEALTH) <= 20)
+                {
+                    WMLog.Trace(string.Format("The gang overwhelmed and defeated {0}. She lost the battle.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                    GameEngine.Game.g_Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, -5);
+                    return false;
+                }
+                else
+                {
+                    enemyGang.MemberNum--; // Gang casualty
+                }
+
+                // if the gang has lost half its number there is a chance they will run away
+                // This is checked for every member killed over 50%
+                if ((initialNum / 2) > enemyGang.MemberNum)
+                {
+                    if (WMRandom.Percent(50)) // MYR: Adjusting this has a big effect
+                    {
+                        WMLog.Trace(string.Format("The gang ran away after losing too many members. {0} WINS!", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                        GameEngine.Game.g_Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, +5);
+                        return true; // the men run away
+                    }
+                }
+                // Gang fought to the death
+                if (enemyGang.MemberNum == 0)
+                {
+                    WMLog.Trace(string.Format("The gang fought to bitter end. They are all dead. {0} WINS!", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                    GameEngine.Game.g_Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, +5);
+                    return true;
+                }
+            }
+
+            WMLog.Trace(string.Format("No more opponents: {0} WINS!", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+
+            GameEngine.Game.g_Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, +5);
+
+            return true;
+        }
+        /// <summary>
+        /// Get the number of business extorted.
+        /// </summary>
+        /// <returns>Number of business extorted.</returns>
+        public int GetNumBusinessExtorted()
+        {
+            return m_BusinessesExtort;
+        }
+        /// <summary>
+        /// Adjuste number of business extorted.
+        /// </summary>
+        /// <param name="n">Adjustement value of number of business extorted.</param>
+        /// <returns>Number of business extorted.</returns>
+        public int NumBusinessExtorted(int n)
+        {
+            // TODO : GAME - Check m_BusinessesExtort < Max value
+            m_BusinessesExtort += n;
+            return m_BusinessesExtort;
+        }
+
+        public int GetWeaponLevel()
+        {
+            return m_SwordLevel;
+        }
+        public int GetNetRestock()
+        {
+            return m_KeepNetsStocked;
+        }
+        public void KeepNetStocked(int stocked)
+        {
+            m_KeepNetsStocked = stocked;
+        }
+
+        public int GetHealingPotions()
+        {
+            return m_NumHealingPotions;
+        }
+        public void KeepHealStocked(int stocked)
+        {
+            m_KeepHealStocked = stocked;
+        }
+        public int GetHealingRestock()
+        {
+            return m_KeepHealStocked;
+        }
+
+        /// <summary>
+        /// Get the max number of healpotion a gang can use. (?)
+        /// </summary>
+        /// <remarks><para>`J` replaced with passing out of pots/nets in GangStartOfShift() for .06.01.09</para></remarks>
+        /// <returns>Max number of healpotion a gang can use.</returns>
+        public int HealingLimit()
+        {
+            if (m_PlayerGangList.Count.Equals(0) || m_NumHealingPotions  < 1)
+            {
+                return 0;
+            }
+            int limit;
+            // take the number of potions and divide by the the number of gangs
+            limit = m_NumHealingPotions / m_PlayerGangList.Count;
+            /*
+            *	if that rounds to less than zero, and there are still
+            *	potions available, make sure they get at least one to use
+            */
+            if ((limit < 1) && (m_NumHealingPotions > 0))
+            {
+                limit = 1;
+            }
+            return limit;
+        }
+
+        public bool Control_Gangs()
+        {
+            return m_Control_Gangs;
+        }
+        public int Gang_Gets_Girls()
+        {
+            return m_Gang_Gets_Girls;
+        }
+        public int Gang_Gets_Items()
+        {
+            return m_Gang_Gets_Items;
+        }
+        public int Gang_Gets_Beast()
+        {
+            return m_Gang_Gets_Beast;
+        }
+        public bool Control_Gangs(bool cg)
+        {
+            return m_Control_Gangs = cg;
+        }
+        public int Gang_Gets_Girls(int g)
+        {
+            return m_Gang_Gets_Girls = g;
+        }
+        public int Gang_Gets_Items(int g)
+        {
+            return m_Gang_Gets_Items = g;
+        }
+        public int Gang_Gets_Beast(int g)
+        {
+            return m_Gang_Gets_Beast = g;
+        }
+
+        /// <summary>
+        /// Get the number of net a gang can use (?)
+        /// <remarks><para>`J` - Added for .06.01.09</para></remarks>
+        /// </summary>
+        /// <returns>Number of net a gang can use</returns>
+        public int NetLimit()
+        {
+            if (m_PlayerGangList.Count < 1 || m_NumNets < 1)
+            {
+                return 0;
+            }
+            int limit;
+            // take the number of nets and divide by the the number of gangs
+            limit = m_NumNets / m_PlayerGangList.Count;
+            /*
+            *	if that rounds to less than zero, and there are still
+            *	nets available, make sure they get at least one to use
+            */
+            if ((limit < 1) && (m_NumNets > 0))
+            {
+                limit = 1;
+            }
+            return limit;
+        }
+
+        // ----- Mission related
+        /// <summary>
+        /// Update hureable ganglist and launch mission for player gang.
+        /// <remarks><para>Missions done here - Updated for .06.01.09</para></remarks>
+        /// </summary>
+        public void UpdateGangs()
+        {
+            cTariff tariff = new cTariff();
+
+            // maintain recruitable gangs list, potentially pruning some old ones
+            int removeChance = GameEngine.Game.cfg.Gangs.ChanceRemoveUnwanted;
+            foreach(Gang item in m_HireableGangList)
+            {
+                if (WMRandom.Percent(removeChance))
+                {
+                    WMLog.Trace(string.Format("Culling recruitable gang: {0}", item.Name), WMLog.TraceLog.INFORMATION);
+                    RemoveHireableGang(item);
+                }
+            }
+
+            // maybe add some new gangs to the recruitable list
+            int addMin = GameEngine.Game.cfg.Gangs.AddNewWeeklyMin;
+            int addMax = GameEngine.Game.cfg.Gangs.AddNewWeeklyMax;
+            int addRecruits = WMRandom.Bell(addMin, addMax);
+            for (int i = 0; i < addRecruits; i++)
+            {
+                if (m_HireableGangList.Count >= GameEngine.Game.cfg.Gangs.MaxRecruitList)
+                {
+                    break;
+                }
+                WMLog.Trace("Adding new recruitable gang.", WMLog.TraceLog.INFORMATION);
+                AddNewGang(false);
+            }
+
+            // now, deal with player controlled gangs on missions
+            foreach (Gang item in m_PlayerGangList)
+            {
+                switch (item.m_MissionID)
+                {
+                    case GangMissions.GUARDING: // these are handled in GangStartOfShift()
+                    case GangMissions.SPYGIRLS:
+                        break;
+                    case GangMissions.CAPTUREGIRL:
+                        if (!GameEngine.Game.g_Brothels.RunawaysGirlList.Count.Equals(0))
+                        {
+                            recapture_mission(item);
+                            break;
+                        }
+                        else
+                        {
+                            // TODO : TRADUCTION - Localisation of message
+                            item.m_Events.AddMessage("This gang was sent to look for runaways but there are none so they went looking for any girl to kidnap instead.", (int)ImageTypes.PROFILE, Constants.EVENT_GANG);
+                            kidnapp_mission(item);
+                            break;
+                        }
+                    case GangMissions.KIDNAPP:
+                        kidnapp_mission(item);
+                        break;
+                    case GangMissions.SABOTAGE:
+                        sabotage_mission(item);
+                        break;
+                    case GangMissions.EXTORTION:
+                        extortion_mission(item);
+                        break;
+                    case GangMissions.PETYTHEFT:
+                        petytheft_mission(item);
+                        break;
+                    case GangMissions.GRANDTHEFT:
+                        grandtheft_mission(item);
+                        break;
+                    case GangMissions.CATACOMBS:
+                        catacombs_mission(item);
+                        break;
+                    case GangMissions.TRAINING:
+                        gangtraining(item);
+                        break;
+                    case GangMissions.RECRUIT:
+                        gangrecruiting(item);
+                        break;
+                    case GangMissions.SERVICE:
+                        service_mission(item);
+                        break;
+                    default:
+                        // TODO : TRADUCTION - Localisation of message
+                        item.m_Events.AddMessage(string.Format("Error: no mission set or mission not found : {0}", item.m_MissionID),
+                            (int)ImageTypes.PROFILE, Constants.EVENT_GANG);
+                        continue;
+                }
+
+                if (losegang(item))
+                {
+                    continue; // if they all died, move on.
+                }
+                if (item.HasSeenCombat == false && item.MemberNum < 15)
+                {
+                    item.MemberNum++;
+                }
+                check_gang_recruit(item);
+            }
+
+            GameEngine.Game.g_Brothels.m_Rivals.Update(m_BusinessesExtort); // Update the rivals
+
+            RestockNetsAndPots();
+        }
+
+        /// <summary>
+        /// Restock gang's net and healing.
+        /// <remarks><para>`J` restock at the start and end of the gang shift - Added for .06.01.09.</para></remarks>
+        /// </summary>
+        public void RestockNetsAndPots()
+        {
+            cTariff tariff = new cTariff();
+
+            WMLog.Trace(string.Format("Time to restock heal potions and nets{0}Heal Flag    = {1}{0}Heal Target  = {2}{0}Heal Current = {3}{0}Nets Flag    = {4}{0}Nets Target  = {5}{0}Nets Current = {6}"
+                , Environment.NewLine, (bool)(m_KeepHealStocked > 0), m_KeepHealStocked, m_KeepHealStocked, (bool)(m_KeepNetsStocked > 0), m_KeepNetsStocked, m_KeepNetsStocked),
+                WMLog.TraceLog.INFORMATION);
+
+            if (m_KeepHealStocked > 0 && m_KeepHealStocked > m_NumHealingPotions)
+            {
+                int diff = m_KeepHealStocked - m_NumHealingPotions;
+                m_NumHealingPotions = m_KeepHealStocked;
+                GameEngine.Game.Gold.consumable_cost(tariff.healing_price(diff));
+            }
+            if (m_KeepNetsStocked > 0 && m_KeepNetsStocked > m_NumNets)
+            {
+                int diff = m_KeepNetsStocked - m_NumNets;
+                m_NumNets = m_KeepNetsStocked;
+                GameEngine.Game.Gold.consumable_cost(tariff.nets_price(diff));
+            }
+        }
+
+        /// <summary>
+        /// Sends a gang on a mission.
+        /// </summary>
+        /// <param name="gangID"></param>
+        /// <param name="missID"></param>
+        [Obsolete("Use void SendGang(Gang gang, int missID)", false)]
+        public void SendGang(int gangID, GangMissions mission)
+        {
+            SendGang(m_PlayerGangList[gangID], mission);
+        }
+
+        /// <summary>
+        /// Sends a gang on a mission.
+        /// </summary>
+        /// <param name="gangID">Gang to send on mission.</param>
+        /// <param name="missID">Mission to affect to gang.</param>
+        public void SendGang(Gang gang, GangMissions mission)
+        {
+            if (gang == null)
+            { return; }
+
+            gang.m_MissionID = mission;
+        }
+
+        /// <summary>
+        /// Get the first gang on mission.
+        /// </summary>
+        /// <param name="missID">Mission of gang to find.</param>
+        /// <returns>First <see cref="Gang"/> assigned to <paramref name="mission"/></returns>
+        public Gang GetGangOnMission(GangMissions mission)
+        {
+            return m_PlayerGangList
+                .Where(g => g.CurrentMission.Equals(mission))
+                .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets a gang with room to spare.
+        /// <remarks><para>`J` - Added for .06.02.18</para></remarks>
+        /// </summary>
+        /// <param name="roomFor">Number of place formember to recruit.</param>
+        /// <param name="recruiting"><b>True</b> to take care of <paramref name="roomFor"/></param>
+        /// <returns></returns>
+        public Gang GetGangNotFull(int roomFor, bool recruiting)
+        {
+            List<GangMissions> mission = new List<GangMissions>() { GangMissions.RECRUIT, GangMissions.TRAINING, GangMissions.SPYGIRLS, GangMissions.GUARDING, GangMissions.SERVICE };
+            foreach (Gang item in m_PlayerGangList)
+            {
+                if (mission.Contains(item.m_MissionID))
+                {
+                    // TODO : Replace literal to Max gang member value
+                    if (
+                        (recruiting && item.MemberNum + roomFor <= 15)
+                        ||
+                        (!recruiting && item.MemberNum < 15)
+                        )
+                    {
+                        return item;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets a gang recruiting with room to spare.
+        /// </summary>
+        /// <param name="roomFor">Number of free room in gang to find.</param>
+        /// <returns><see cref="Gang"/> with room to spare</returns>
+        public Gang GetGangRecruitingNotFull(int roomFor)
+        {
+            List<GangMissions> mission = new List<GangMissions>() { GangMissions.RECRUIT, GangMissions.TRAINING, GangMissions.SPYGIRLS, GangMissions.GUARDING, GangMissions.SERVICE };
+            foreach (Gang item in m_PlayerGangList)
+            {
+                if (item.MemberNum + roomFor <= 15)
+                {
+                    if (mission.Contains(item.m_MissionID))
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            // if none are found then get a gang that has room for at least 1
+            foreach (Gang item in m_PlayerGangList)
+            {
+                if (item.MemberNum < 15)
+                {
+                    if (mission.Contains(item.m_MissionID))
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get a list of all the gangs doing MISS_FOO.
+        /// </summary>
+        /// <param name="mission">The mission gang must be affected to.</param>
+        /// <returns>List of all gang affected to <paramref name="mission"/>.</returns>
+        public List<Gang> GangsOnMission(GangMissions mission)
+        {
+            List<Gang> list = new List<Gang>(); // loop through the gangs
+            foreach (Gang item in m_PlayerGangList)
+            {
+                // if they're doing the job we are looking for, take them
+                if (item.m_MissionID.Equals(mission))
+                {
+                    list.Add(item);
+                }
+            }
+            return list;
+        }
+
+        // 
+        /// <summary>
+        /// Get a list of all the gangs doing watching girls missions.
+        /// <remarks><para>`J` - Added for .06.01.09</para></remarks>
+        /// </summary>
+        /// <returns>List of all gang affected watch girls.</returns>
+        public List<Gang> GangsWatchingGirls()
+        {
+            List<Gang> list = new List<Gang>(); // loop through the gangs
+            foreach (Gang item in m_PlayerGangList)
+            {
+                // if they're doing the job we are looking for, take them
+                if (item.m_MissionID.Equals(GangMissions.GUARDING) || item.m_MissionID.Equals(GangMissions.SPYGIRLS))
+                {
+                    list.Add(item);
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// two objectives here:
+        /// A: multiple squads spying on the girls improves the chance of catching thieves
+        /// B: The intelligence of the girl and the goons affects the result
+        /// </summary>
+        /// <param name="girl"><see cref="sGirl"/> to catch.</param>
+        /// <returns>Chance (0 to 100) to catch em.</returns>
+        public int ChanceToCatch(sGirl girl)
+        {
+            int pc = 0;
+            List<Gang> gvec = GangsOnMission(GangMissions.SPYGIRLS); // get a vector containing all the spying gangs
+
+            WMLog.Trace(string.Format("GangManager.ChanceToCatch: {0} gangs spying.",gvec.Count), WMLog.TraceLog.INFORMATION);
+
+            foreach (Gang item in gvec)
+            {
+                /*
+                *		now then: the basic chance is 5 * number of goons
+                *		but I want to modify that for the intelligence
+                *		of the girl, and that of the squad
+                */
+                float mod = 100.0f + item.Intelligence;
+                mod -= girl.intelligence();
+                mod /= 100.0f;
+                /*
+                *		that should give us a multiplier that can
+                *		at one extreme, double the chances of the sqaud
+                *		catching her, and at the other, reduce it to zero
+                */
+                pc += (int)(5 * item.MemberNum * mod);
+
+                // GBN : Moving upgrading inteligence stat inside loop to affect all gangs instead of only last of them.
+                BoostGangSkill(item.Stats[EnumStats.INTELLIGENCE], 1);
+            }
+            if (pc > 100)
+            {
+                pc = 100;
+            }
+            return pc;
+        }
+
+        /// <summary>
+        /// Performe a gang sabotage mission against player's rival.
+        /// <remarks><para>`J` returns true if they succeded, false if they failed - updated for .06.01.09</para></remarks>
+        /// </summary>
+        /// <param name="gang"><see cref="Gang"/> performing mission.</param>
+        /// <returns></returns>
+        public bool sabotage_mission(Gang gang)
+        {
+            // TODO : TRADUCTION - Try to localize event text of mission.
+            StringBuilder sabotageEvent = new StringBuilder();
+            sabotageEvent.AppendLine(string.Format("Gang   {0}   is attacking rivals.", gang.Name));
+            /*
+            *	See if they can find any enemy assets to attack
+            *
+            *	I'd like to add a little more intelligence to this.
+            *	Modifiers based on gang intelligence, for instance
+            *	Allow a "scout" activity for gangs that improves the
+            *	chances of a raid. That sort of thing.
+            */
+            if (!WMRandom.Percent(Math.Min(90, gang.Intelligence)))
+            {
+                gang.m_Events.AddMessage("They failed to find any enemy assets to hit.", (int)ImageTypes.PROFILE, Constants.EVENT_GANG);
+                return false;
+            }
+            /*
+            *	if yes then do damage to a random rival
+            *
+            *	Something else to consider: rival choice should be
+            *	weighted by number of territories controlled
+            *	(or - if we go with the ward idea - by territories
+            *	controlled in the ward in question
+            *
+            *	of course, if there is no rival, it's academic
+            */
+            cRival rival = GameEngine.Game.g_Brothels.GetRivalManager().GetRandomRivalToSabotage();
+            Gang rivalGang;
+            if (rival == null)
+            {
+                gang.m_Events.AddMessage("Scouted the city in vain, seeking would-be challengers to your dominance.", (int)ImageTypes.PROFILE, Constants.EVENT_GANG);
+                return false;
+            }
+
+            if (rival.m_NumGangs > 0)
+            {
+                rivalGang = GetTempGang(rival.m_Power);
+                sabotageEvent.AppendLine(string.Format("Your men run into a gang from {0} and a brawl breaks out.", rival.m_Name));
+                if (GangBrawl(gang, rivalGang, false) == false)
+                {
+                    rivalGang = null;
+                    if (gang.MemberNum > 0)
+                    {
+                        sabotageEvent.Append("Your men lost. The ");
+                        if (gang.MemberNum == 1)
+                        {
+                            sabotageEvent.Append("lone survivor fights his");
+                        }
+                        else
+                        {
+                            sabotageEvent.Append(string.Format("{0} survivors fight their", gang.MemberNum));
+                        }
+                        sabotageEvent.Append(" way back to friendly territory.");
+                        gang.m_Events.AddMessage(sabotageEvent.ToString(), (int)ImageTypes.PROFILE, Constants.EVENT_DANGER);
+                    }
+                    else
+                    {
+                        sabotageEvent.Append(string.Format("Your gang {0} fails to report back from their sabotage mission." + Environment.NewLine + "Later you learn that they were wiped out to the last man.", gang.MemberNum));
+                        // TODO : Interface Windows
+                        //g_MessageQue.AddToQue(sabotageEvent.ToString(), Constants.COLOR_RED);
+                    }
+                    return false;
+                }
+                else
+                {
+                    sabotageEvent.AppendLine("Your men win.");
+                }
+                if (rivalGang.MemberNum <= 0) // clean up the rival gang
+                {
+                    rival.m_NumGangs--;
+                    sabotageEvent.AppendFormat("The enemy gang is destroyed. {0} has ", rival.m_Name);
+                    if (rival.m_NumGangs == 0)
+                    {
+                        sabotageEvent.AppendLine("no more gangs left!");
+                    }
+                    else if (rival.m_NumGangs <= 3)
+                    {
+                        sabotageEvent.AppendLine("a few gangs left.");
+                    }
+                    else
+                    {
+                        sabotageEvent.AppendLine("a lot of gangs left.");
+                    }
+                }
+                rivalGang = null;
+            }
+            else
+            {
+                sabotageEvent.AppendFormat("Your men encounter no resistance when you go after {0}.", rival.m_Name);
+            }
+
+
+            // if we had an objective to attack a rival we just achieved it
+            if (GameEngine.Game.g_Brothels.GetObjective() != null && GameEngine.Game.g_Brothels.GetObjective().m_Objective == (int)Objectives.LAUNCHSUCCESSFULATTACK)
+            {
+                GameEngine.Game.g_Brothels.PassObjective();
+            }
+
+            // If the rival has some businesses under his control he's going to lose some of them
+            if (rival.m_BusinessesExtort > 0)
+            {
+                // mod: brighter goons do better damage they need 100% to be better than before however
+                int spread = gang.Intelligence / 4;
+                int num = 1 + WMRandom.Next(spread); // get the number of businesses lost
+                if (rival.m_BusinessesExtort < num) // Can't destroy more businesses than they have
+                {
+                    num = rival.m_BusinessesExtort;
+                }
+                rival.m_BusinessesExtort -= num;
+
+                sabotageEvent.AppendFormat("Your men destroy {0} of their businesses. {1} have ", num, rival.m_Name);
+                if (rival.m_BusinessesExtort == 0)
+                {
+                    sabotageEvent.AppendLine("no more businesses left!");
+                }
+                else if (rival.m_BusinessesExtort <= 10)
+                {
+                    sabotageEvent.AppendLine("a few businesses left.");
+                }
+                else
+                {
+                    sabotageEvent.AppendLine("a lot of businesses left.");
+                }
+            }
+            else
+            {
+                sabotageEvent.AppendLine(string.Format("{0} have no businesses to attack.", rival.m_Name));
+            }
+
+            if (rival.m_Gold > 0)
+            {
+                // mod: brighter goons are better thieves
+                // `J` changed it // they need 100% to be better than before however	
+                // `J` now based on rival's gold
+                // `J` bookmark - your gang sabotage mission gold taken
+                int gold = WMRandom.Next((int)(((double)gang.Intelligence / 2000.0) * (double)rival.m_Gold)) + WMRandom.Next((gang.Intelligence / 5) * gang.MemberNum); // plus (int/5)*num -  0-5% of rival's gold
+                if (gold > rival.m_Gold)
+                {
+                    gold = (int)rival.m_Gold;
+                }
+                rival.m_Gold -= gold;
+
+                // some of the money taken 'dissappears' before the gang reports it.
+                if (WMRandom.Percent(20) && gold > 1000)
+                {
+                    gold -= WMRandom.Next() % 1000;
+                }
+
+                sabotageEvent.AppendFormat("\nYour men steal {0} gold from them. ", gold);
+                if (rival.m_Gold == 0)
+                {
+                    sabotageEvent.AppendLine("Mu-hahahaha!  They're penniless now!");
+                }
+                else if (rival.m_Gold <= 10000)
+                {
+                    sabotageEvent.AppendLine(string.Format("{0} is looking pretty poor.", rival.m_Name));
+                }
+                else
+                {
+                    sabotageEvent.AppendLine(string.Format("It looks like {0} still has a lot of gold.", rival.m_Name));
+                }
+
+                /*
+                `J` zzzzzz - need to add more and better limiters
+                Suggestions from Whitetooth:
+                I'm guessing those factors are based on there skills which make sense. For Example:
+                Men - Overall number of people able to carry gold after sabotage.
+                Combat - total amount of gold each man can hold.
+                Magic - Amount of extra gold the gang can carry with magic not relying on combat or men. Magic could be bonus gold that can't be dropped, bribed, or stolen on the way back.
+                Intel - Could be a overall factor to check if the gang knows what is valuable and what isn't.
+                Agility - Could be a check for clumsiness of the gang; they could drop valuables on the way back.
+                Tough - Checks if there tough enough to intimidate any guards or protect the money they have.
+                Charisma - Factors how much gold they have to bribe to guards if they get caught and can't intimidate them.
+                The order of checks could be -> Intel -> Magic -> Men - > Combat -> Agility -> Tough -> Charisma
+                */
+
+                // `J` bookmark - limit gold taken by gang sabotage
+                bool limit = false;
+                if (gold > 15000)
+                {
+                    limit = true;
+                    int burnedbonds = (gold / 10000);
+                    int bbcost = burnedbonds * 10000;
+                    gold -= bbcost;
+                    sabotageEvent.Append("As your men are fleeing, one of them has to jump through a wall of fire. When he does, he drops ");
+                    if (burnedbonds == 1)
+                    {
+                        sabotageEvent.Append("a");
+                    }
+                    else if (burnedbonds > 4)
+                    {
+                        sabotageEvent.Append("a stack of ");
+                    }
+                    else
+                    {
+                        sabotageEvent.Append(burnedbonds);
+                    }
+
+                    sabotageEvent.Append(string.Format(" Gold Bearer Bond{0} worth 10k gold each. {1} gold just went up in smoke.",
+                        burnedbonds > 1 ? "s" : "", bbcost));
+                }
+                if (gold > 5000 && WMRandom.Percent(50))
+                {
+                    limit = true;
+                    int spill = (WMRandom.Next() % 4500) + 500;
+                    gold -= spill;
+                    sabotageEvent.Append(string.Format("As they are being chased through the streets by {0}'s people, one of your gang members cuts open a sack of gold spilling its contents in the street. As the throngs of civilians stream in to collect the coins, they block the pursuers and allow you men to get away safely.",
+                        rival.m_Name));
+                }
+
+                if (gold > 5000)
+                {
+                    limit = true;
+                    int bribeperc = ((WMRandom.Next() % 15) * 5) + 10;
+                    int bribe = (int)(gold * ((double)bribeperc / 100.0));
+                    gold -= bribe;
+                    sabotageEvent.AppendLine(string.Format("As your gang leave your rival's territory on the way back to your brothel, they come upon a band of local police that are hunting them. Their boss demands {0}"
+                        + "% of what your gang is carrying in order to let them go.  They pay them {1} gold and continue on home.",
+                        bribeperc, bribe));
+                }
+
+                if (limit)
+                {
+                    sabotageEvent.AppendLine(string.Format("{0} returns with {1} gold.",
+                        gang.Name, gold));
+                }
+                GameEngine.Game.Gold.plunder(gold);
+            }
+            else
+            {
+                sabotageEvent.AppendLine("The losers have no gold to take.");
+            }
+
+            if (rival.m_NumInventory > 0 && WMRandom.Percent(Math.Min(75, gang.Intelligence)))
+            {
+                cRivalManager r = new cRivalManager();
+                int num = r.GetRandomRivalItemNum(rival);
+                sInventoryItem item = r.GetRivalItem(rival, num);
+                if (item != null)
+                {
+                    sabotageEvent.AppendFormat("Your men steal an item from them, one {0}.", item.Name);
+                    r.RemoveRivalInvByNumber(rival, num);
+                    GameEngine.Game.g_Brothels.AddItemToInventory(item);
+                }
+            }
+
+            if (rival.m_NumBrothels > 0 && WMRandom.Percent(gang.Intelligence / Math.Min(3, 11 - rival.m_NumBrothels)))
+            {
+                rival.m_NumBrothels--;
+                rival.m_Power--;
+                sabotageEvent.AppendFormat("Your men burn down one of {0}'s Brothels. {1}", rival.m_Name, rival.m_Name);
+                if (rival.m_NumBrothels == 0)
+                {
+                    sabotageEvent.AppendLine(" has no Brothels left.");
+                }
+                else if (rival.m_NumBrothels <= 3)
+                {
+                    sabotageEvent.AppendLine(" is in control of very few Brothels.");
+                }
+                else
+                {
+                    sabotageEvent.AppendLine(" has many Brothels left.");
+                }
+            }
+            if (rival.m_NumGamblingHalls > 0 && WMRandom.Percent(gang.Intelligence / Math.Min(1, 9 - rival.m_NumGamblingHalls)))
+            {
+                rival.m_NumGamblingHalls--;
+                sabotageEvent.AppendFormat("Your men burn down one of {0}'s Gambling Halls. {1}", rival.m_Name, rival.m_Name);
+                if (rival.m_NumGamblingHalls == 0)
+                {
+                    sabotageEvent.AppendLine(" has no Gambling Halls left.");
+                }
+                else if (rival.m_NumGamblingHalls <= 3)
+                {
+                    sabotageEvent.AppendLine(" is in control of very few Gambling Halls .");
+                }
+                else
+                {
+                    sabotageEvent.AppendLine(" has many Gambling Halls left.");
+                }
+            }
+            if (rival.m_NumBars > 0 && WMRandom.Percent(gang.Intelligence / Math.Min(1, 7 - rival.m_NumBars)))
+            {
+                rival.m_NumBars--;
+                sabotageEvent.AppendFormat("Your men burn down one of {0}'s Bars. {1}", rival.m_Name, rival.m_Name);
+                if (rival.m_NumBars == 0)
+                {
+                    sabotageEvent.AppendLine(" has no Bars left.");
+                }
+                else if (rival.m_NumBars <= 3)
+                {
+                    sabotageEvent.AppendLine(" is in control of very few Bars.");
+                }
+                else
+                {
+                    sabotageEvent.AppendLine(" has many Bars left.");
+                }
+            }
+
+            BoostGangSkill(gang.Stats[EnumStats.INTELLIGENCE], 2);
+            gang.m_Events.AddMessage(sabotageEvent.ToString(), (int)ImageTypes.PROFILE, Constants.EVENT_GANG);
+
+            // See if the rival is eliminated:  If 4 or more are zero or less, the rival is eliminated
+            int VictoryPoints = 0;
+            if (rival.m_Gold <= 0)
+            {
+                VictoryPoints++;
+            }
+            if (rival.m_NumGangs <= 0)
+            {
+                VictoryPoints++;
+            }
+            if (rival.m_BusinessesExtort <= 0)
+            {
+                VictoryPoints++;
+            }
+            if (rival.m_NumBrothels <= 0)
+            {
+                VictoryPoints++;
+            }
+            if (rival.m_NumGamblingHalls <= 0)
+            {
+                VictoryPoints++;
+            }
+            if (rival.m_NumBars <= 0)
+            {
+                VictoryPoints++;
+            }
+
+            if (VictoryPoints >= 4)
+            {
+                StringBuilder ssVic = new StringBuilder();
+                ssVic.AppendFormat("You have dealt {0} a fatal blow.  Their criminal organization crumbles to nothing before you.", rival.m_Name);
+                GameEngine.Game.g_Brothels.m_Rivals.RemoveRival(rival);
+                gang.m_Events.AddMessage(ssVic.ToString(), (int)ImageTypes.PROFILE, Constants.EVENT_GOODNEWS);
+            }
+            return true;
+        }
+    
+
+        #region XML Save/Load gang
         public IXmlElement SaveGangsXML(IXmlElement pRoot)
         {
             throw new NotImplementedException();
@@ -1082,61 +2156,8 @@ namespace WMaster.ClassOrStructurToImplement
 
             //return true;
         }
+        #endregion
 
-
-        public int GetNumBusinessExtorted()
-        {
-            return m_BusinessesExtort;
-        }
-        public int NumBusinessExtorted(int n)
-        {
-            m_BusinessesExtort += n;
-            return m_BusinessesExtort;
-        }
-
-        //C++ TO C# CONVERTER WARNING: C# has no equivalent to methods returning pointers to value types:
-        //ORIGINAL LINE: int* GetWeaponLevel()
-        public int GetWeaponLevel()
-        {
-            return m_SwordLevel;
-        }
-
-        //C++ TO C# CONVERTER WARNING: C# has no equivalent to methods returning pointers to value types:
-        //ORIGINAL LINE: int* GetNets()
-        public int GetNets()
-        {
-            return m_NumNets;
-        }
-        public int GetNetRestock()
-        {
-            return m_KeepNetsStocked;
-        }
-        public void KeepNetStocked(int stocked)
-        {
-            m_KeepNetsStocked = stocked;
-        }
-        int net_limit()
-        { throw new NotImplementedException(); }
-
-        //C++ TO C# CONVERTER WARNING: C# has no equivalent to methods returning pointers to value types:
-        //ORIGINAL LINE: int* GetHealingPotions()
-        public int GetHealingPotions()
-        {
-            return m_NumHealingPotions;
-        }
-        public void KeepHealStocked(int stocked)
-        {
-            m_KeepHealStocked = stocked;
-        }
-        public int GetHealingRestock()
-        {
-            return m_KeepHealStocked;
-        }
-        int healing_limit()
-        { throw new NotImplementedException(); }
-
-        bool sabotage_mission(Gang gang)
-        { throw new NotImplementedException(); }
         bool recapture_mission(Gang gang)
         { throw new NotImplementedException(); }
         bool extortion_mission(Gang gang)
@@ -1161,52 +2182,6 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
         void GangStartOfShift()
         { throw new NotImplementedException(); }
-        void RestockNetsAndPots()
-        { throw new NotImplementedException(); }
-
-        int chance_to_catch(sGirl girl)
-        { throw new NotImplementedException(); }
-
-        bool GirlVsEnemyGang(sGirl girl, Gang enemy_gang)
-        { throw new NotImplementedException(); }
-
-        List<Gang> gangs_on_mission(int mission_id)
-        { throw new NotImplementedException(); }
-        List<Gang> gangs_watching_girls()
-        { throw new NotImplementedException(); }
-
-        public bool Control_Gangs()
-        {
-            return m_Control_Gangs;
-        }
-        public int Gang_Gets_Girls()
-        {
-            return m_Gang_Gets_Girls;
-        }
-        public int Gang_Gets_Items()
-        {
-            return m_Gang_Gets_Items;
-        }
-        public int Gang_Gets_Beast()
-        {
-            return m_Gang_Gets_Beast;
-        }
-        public bool Control_Gangs(bool cg)
-        {
-            return m_Control_Gangs = cg;
-        }
-        public int Gang_Gets_Girls(int g)
-        {
-            return m_Gang_Gets_Girls = g;
-        }
-        public int Gang_Gets_Items(int g)
-        {
-            return m_Gang_Gets_Items = g;
-        }
-        public int Gang_Gets_Beast(int g)
-        {
-            return m_Gang_Gets_Beast = g;
-        }
 
     }
 }

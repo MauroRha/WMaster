@@ -69,9 +69,9 @@ namespace WMaster.ClassOrStructurToImplement
         // MYR: More functions for attack/defense/agility-style combat.
         bool GirlInjured(sGirl girl, uint modifier)
         { throw new NotImplementedException(); }
-        int GetCombatDamage(sGirl girl, int CombatType)
+        public int GetCombatDamage(sGirl girl, int CombatType)
         { throw new NotImplementedException(); }
-        int TakeCombatDamage(sGirl girl, int amt)
+        public int TakeCombatDamage(sGirl girl, int amt)
         { throw new NotImplementedException(); }
 
         void LevelUp(sGirl girl)
