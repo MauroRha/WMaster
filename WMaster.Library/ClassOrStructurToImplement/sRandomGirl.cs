@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WMaster.Enum;
-using WMaster.GameConcept;
-using WMaster.GameConcept.Item;
+using WMaster.Game.Concept;
+using WMaster.Game.Entity.Item;
 
 namespace WMaster.ClassOrStructurToImplement
 {

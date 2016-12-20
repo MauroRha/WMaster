@@ -1,1 +1,3 @@
 Import/Translate lapi.c lobject.h/cpp
+
+void AddNewGang(bool boosted) -> Resource get gang name

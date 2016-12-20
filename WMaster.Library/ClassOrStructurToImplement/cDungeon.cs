@@ -35,7 +35,7 @@ namespace WMaster.ClassOrStructurToImplement
         bool LoadDungeonDataXML(IXmlHandle hDungeon)
         { throw new NotImplementedException(); }
 
-        void AddGirl(sGirl girl, int reason)
+        public void AddGirl(sGirl girl, int reason)
         { throw new NotImplementedException(); }
         void AddCust(int reason, int numDaughters, bool hasWife)
         { throw new NotImplementedException(); }

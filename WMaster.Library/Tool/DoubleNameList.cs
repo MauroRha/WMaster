@@ -37,29 +37,55 @@ namespace WMaster.Tool
 {
     using System;
 
+    /// <summary>
+    /// Provide facilitie to load and create name from two sources, first and last name.
+    /// </summary>
     public class DoubleNameList
     {
+        /// <summary>
+        /// List of firstname.
+        /// </summary>
         private NameList _firstName = new NameList();
+        /// <summary>
+        /// List of lastname.
+        /// </summary>
         private NameList _lastName = new NameList();
 
+        /// <summary>
+        /// Initialise an instance of <see cref="DoubleNameList"/> with empty name list
+        /// </summary>
         public DoubleNameList()
         {
             this._firstName = new NameList();
             this._lastName = new NameList();
         }
 
+        /// <summary>
+        /// Initialise an instance of <see cref="DoubleNameList"/>. Fill first name list with <paramref name="firstNameFile"/> resources content and last name list with <paramref name="lastNameFile"/> resources content.
+        /// </summary>
+        /// <param name="firstNameFile">Resource containing first name list.</param>
+        /// <param name="lastNameFile">Resource containing last name list.</param>
         public DoubleNameList(string firstNameFile, string lastNameFile)
         {
             this._firstName = new NameList(firstNameFile);
             this._lastName = new NameList(lastNameFile);
         }
 
+        /// <summary>
+        /// Fill first name mist with <paramref name="firstNameFile"/> resources content and last name list with <paramref name="lastNameFile"/> resources content.
+        /// </summary>
+        /// <param name="firstNameFile">Resource containing the list of first name.</param>
+        /// <param name="lastNameFile">Resource containing the list of last name.</param>
         public void Load(string firstNameFile, string lastNameFile)
         {
             this._lastName.Load(firstNameFile);
             this._firstName.Load(lastNameFile);
         }
 
+        /// <summary>
+        /// Generate a random couple firstname / lastname.
+        /// </summary>
+        /// <returns>Random couple firstname / lastname.</returns>
         public string Random()
         {
             return String.Format("{0} {1}", _firstName.Random(), _lastName.Random());

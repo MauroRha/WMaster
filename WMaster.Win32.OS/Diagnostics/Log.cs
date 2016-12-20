@@ -7,7 +7,7 @@
     /// <summary>
     /// Classe de gestion des logs
     /// </summary>
-    public sealed class Log : WMaster.Diagnostics.ILog
+    public sealed class Log : WMaster.Tool.Diagnostics.ILog
     {
         #region Static part
         /// <summary>
@@ -114,7 +114,7 @@
         /// <summary>
         /// Log message event handler.
         /// </summary>
-        public event WMaster.Diagnostics.LoggedDataEventHandler LoggedData;
+        public event WMaster.Tool.Diagnostics.LoggedDataEventHandler LoggedData;
 
         /// <summary>
         /// Send log event.

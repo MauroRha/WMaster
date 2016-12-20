@@ -36,7 +36,6 @@
 namespace WMaster
 {
     using System;
-    using System.Reflection;
     using WMaster.Enum;
 
     // TODO : REFACTORING - Transfert constants to specific emplacement for ex : MAXNUM_GIRL_INVENTORY to girl class

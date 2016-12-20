@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WMaster.Enum;
-using WMaster.GameConcept;
+using WMaster.Game.Concept;
 
 namespace WMaster.ClassOrStructurToImplement
 {

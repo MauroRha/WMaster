@@ -39,23 +39,59 @@ namespace WMaster.Tool
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using WMaster.Tool;
 
+    /// <summary>
+    /// Represent a list of name who can randomize a name.
+    /// </summary>
     public class NameList
     {
         /// <summary>
-        /// List of Names
+        /// List of Names.
         /// </summary>
         private List<string> _names = new List<string>();
 
+        /// <summary>
+        /// Initialise an instance of <see cref="NameList"/> with empty list of name.
+        /// </summary>
         public NameList()
         { }
 
+        /// <summary>
+        /// Initialise an instance of <see cref="DoubleNameList"/>. Fill name list with <paramref name="firstNameFile"/> resources content
+        /// </summary>
+        /// <param name="fileName">Resource containing name list.</param>
         public NameList(string fileName)
         {
             this.Load(fileName);
         }
 
+        /// <summary>
+        /// Fill name list with <paramref name="resourceCode"/> resources content.
+        /// </summary>
+        /// <param name="resourceCode">Resource containing the list of name.</param>
+        public void Load(string resourceCode)
+        {
+            this._names = GameEngine.Game.Resources.GetResourcesLines(resourceCode);
+
+            //bool removeFirstLine = true;
+            //// TODO : CROSPLATFORM - translate I/O to OS dependent project
+            //this._names.Clear();
+            //this._names.AddRange(File.ReadAllLines(fileName));
+
+            //if (removeFirstLine && !this._names.Count().Equals(0))
+            //{ this._names.RemoveAt(0); }
+
+            if (this._names.Count().Equals(0))
+            {
+                WMLog.Trace(String.Format("Error: zero names found in resource '{0}'", resourceCode), WMLog.TraceLog.ERROR);
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Generate a random name.
+        /// </summary>
+        /// <returns>Random name.</returns>
         public string Random()
         {
             int size = this._names.Count();
@@ -66,22 +102,21 @@ namespace WMaster.Tool
                 return "";
             }
 
-            return this._names[WMRandom.Next(size)];
+            return this._names[WMRand.Random(size)];
         }
 
-        public void Load(string fileName, bool removeFirstLine = true)
+        /// <summary>
+        /// Exclude all name from <paramref name="excludeList"/> to list.
+        /// </summary>
+        /// <param name="excludeList">List of name to exclude.</param>
+        public void Exclude(IEnumerable<string> excludeList)
         {
-            // TODO : CROSPLATFORM - translate I/O to OS dependent project
-            this._names.Clear();
-            this._names.AddRange(File.ReadAllLines(fileName));
+            if (excludeList == null)
+            { return; }
 
-            if (removeFirstLine && !this._names.Count().Equals(0))
-            { this._names.RemoveAt(0); }
-
-            if (this._names.Count().Equals(0))
+            foreach (string item in excludeList)
             {
-                WMaster.WMLog.Write(String.Format("Error: zero names found in file '{0}'", fileName));
-                return;
+                this._names.Remove(item);
             }
         }
     }

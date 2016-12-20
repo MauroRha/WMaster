@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using WMaster.Tool;
 
 namespace WMaster.Library.Tests
 {
@@ -15,7 +16,7 @@ namespace WMaster.Library.Tests
             // Try to execut multiple time to check randomise bounds
             for (int i = 0; i < nbRepeat; i++)
             {
-                int test = WMaster.Tool.WMRandom.Next(BoundValue);
+                int test = WMRand.Random(BoundValue);
 
                 Assert.IsTrue(test >= 0, "WMRandom.Next(int upperLimit) return a negative value!");
                 Assert.IsTrue(test < BoundValue, "WMRandom.Next(int upperLimit) return a value greater or equal to upperLimit!");

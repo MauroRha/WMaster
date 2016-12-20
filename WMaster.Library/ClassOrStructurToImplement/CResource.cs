@@ -6,33 +6,38 @@ using System.Threading.Tasks;
 
 namespace WMaster.ClassOrStructurToImplement
 {
-    public class CResource : System.IDisposable
+    public abstract class CResource : System.IDisposable
     {
-        public virtual void Register()
-        {
-        } // registers the resource with the resource manager
-        public virtual void Free()
-        {
-        } // Free all data
-        public virtual void FreeResources()
-        {
-        } // Frees only the loaded data, this is so the class isn't destroyed
+        /// <summary>
+        /// Stores the last time this resource was used.
+        /// </summary>
+        public long m_TimeUsed;
+
+        /// <summary>
+        /// registers the resource with the resource manager.
+        /// </summary>
+        public abstract void Register();
+
+        /// <summary>
+        /// Free all data.
+        /// </summary>
+        public abstract void Free();
+
+        /// <summary>
+        /// Frees only the loaded data, this is so the class isn't destroyed.
+        /// </summary>
+        public abstract void FreeResources();
+
         public CResource()
         {
-            m_Next = null;
-            m_Prev = null;
-            //m_TimeUsed = g_Graphics.GetTicks();
+            m_TimeUsed = DateTime.Now.Ticks;
         }
+
         public void Dispose()
         {
             Free();
-            m_Next = null;
-            m_Prev = null;
         }
 
-        public CResource m_Next; // pointer to the next resource or null if end of list
-        public CResource m_Prev; // Pointer to the previous resource or null if top of list
-        public uint m_TimeUsed; // Stores the last time this resource was used
         public bool m_Registered;
     }
 

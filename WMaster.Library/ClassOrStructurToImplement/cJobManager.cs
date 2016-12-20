@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WMaster.GameConcept;
+using WMaster.Game.Concept;
+using WMaster.Game.Entity.Living;
 
 namespace WMaster.ClassOrStructurToImplement
 {

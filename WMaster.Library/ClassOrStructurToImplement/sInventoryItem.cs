@@ -33,7 +33,7 @@
 //  </remarks>
 //</file>
 //<!-- -------------------------------------------------------------------------------------------------------------------- -->
-namespace WMaster.GameConcept.Item
+namespace WMaster.Game.Entity.Item
 {
     using System;
     using System.Collections.Generic;

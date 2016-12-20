@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WMaster.Enum;
-using WMaster.GameConcept;
-using WMaster.GameConcept.Item;
-using WMaster.GameManager;
+using WMaster.Game;
+using WMaster.Game.Concept;
+using WMaster.Game.Entity.Item;
+using WMaster.Game.Entity.Living;
+using WMaster.Game.Manager;
 
 namespace WMaster.ClassOrStructurToImplement
 {
@@ -114,7 +116,7 @@ namespace WMaster.ClassOrStructurToImplement
 
         public string m_Flags = new string(new char[Constants.NUM_GIRLFLAGS]); // flags used by scripts
 
-        public cEvents m_Events = new cEvents(); // Each girl keeps track of all her events that happened to her in the last turn
+        public Events m_Events = new Events(); // Each girl keeps track of all her events that happened to her in the last turn
 
 
         public cTriggerList m_Triggers = new cTriggerList(); // triggers for the girl

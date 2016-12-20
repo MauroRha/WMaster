@@ -1,7 +1,6 @@
 ﻿namespace WMaster.DAL
 {
     using System.Xml.Serialization;
-    using WMaster.GameManager;
 
     /// <summary>
     /// Root class for save game

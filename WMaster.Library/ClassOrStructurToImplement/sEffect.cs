@@ -50,7 +50,7 @@ namespace WMaster.ClassOrStructurToImplement
             else
             {
                 m_Affects = What.Nothing;
-                WMaster.WMLog.Write(string.Format("Error: Bad 'what' string for item effect: unexpected value '{0}'", s));
+                WMaster.WMLog.Trace(string.Format("Bad 'what' string for item effect: unexpected value '{0}'", s), WMLog.TraceLog.ERROR);
             }
         }
         /*

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WMaster.Game;
 
 namespace WMaster.ClassOrStructurToImplement
 {
@@ -118,7 +119,7 @@ namespace WMaster.ClassOrStructurToImplement
 
         public int m_Filthiness;
 
-        public cEvents m_Events = new cEvents();
+        public Events m_Events = new Events();
 
         [Obsolete("Convert int[] to List<int>")]
         public int[] m_BuildingQuality = new int[(int)Enum.JobFilter.NUMJOBTYPES];
