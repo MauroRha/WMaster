@@ -13,15 +13,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMaster.Win32.Tests", "WMas
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{B5E2EE70-110F-4FF0-867D-A0771C792647}"
 	ProjectSection(SolutionItems) = preProject
-		gpl.txt = gpl.txt
-		random ideas.txt = random ideas.txt
-		Refactoring notes.txt = Refactoring notes.txt
-		Special Thanks.txt = Special Thanks.txt
-		ToDoThings.txt = ToDoThings.txt
-		UsefullThings.txt = UsefullThings.txt
+		Documentation\GPL.txt = Documentation\GPL.txt
+		Documentation\Random Ideas.txt = Documentation\Random Ideas.txt
+		Documentation\Refactoring Notes.docx = Documentation\Refactoring Notes.docx
+		Documentation\Special Thanks.txt = Documentation\Special Thanks.txt
+		Documentation\ToDoThings.txt = Documentation\ToDoThings.txt
+		Documentation\UsefullThings.txt = Documentation\UsefullThings.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMaster.Sandbox", "WMaster.Sandbox\WMaster.Sandbox.csproj", "{DE1DDD4E-1C42-4F67-871A-15D663276F70}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{20007291-36E3-4DE4-9AE2-05536CD35839}"
+	ProjectSection(SolutionItems) = preProject
+		Tools\PrepareResourceString.exe = Tools\PrepareResourceString.exe
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

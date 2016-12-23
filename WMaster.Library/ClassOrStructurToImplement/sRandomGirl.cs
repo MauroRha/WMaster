@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WMaster.Enum;
-using WMaster.Game.Concept;
-using WMaster.Game.Entity.Item;
+using WMaster.Enums;
+using WMaster.Concept;
+using WMaster.Entity.Item;
 
 namespace WMaster.ClassOrStructurToImplement
 {

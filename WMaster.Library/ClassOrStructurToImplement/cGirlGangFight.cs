@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WMaster.Game.Entity.Living;
+using WMaster.Entity.Living;
 
 namespace WMaster.ClassOrStructurToImplement.HFileToImport
 {

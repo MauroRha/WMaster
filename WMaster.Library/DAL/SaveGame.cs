@@ -155,12 +155,12 @@
         [XmlAttribute("Year")]
         public string Year
         {
-            get { return GameEngine.Year.ToString(); }
+            get { return Game.Year.ToString(); }
             set
             {
-                int year = GameEngine.Year;
+                int year = Game.Year;
                 int.TryParse(value, out year);
-                GameEngine.Year = year;
+                Game.Year = year;
             }
         }
 
@@ -170,12 +170,12 @@
         [XmlAttribute("Month")]
         public string Month
         {
-            get { return GameEngine.Month.ToString(); }
+            get { return Game.Month.ToString(); }
             set
             {
-                int month = GameEngine.Month;
+                int month = Game.Month;
                 int.TryParse(value, out month);
-                GameEngine.Month = month;
+                Game.Month = month;
             }
         }
 
@@ -185,12 +185,12 @@
         [XmlAttribute("Day")]
         public string Day
         {
-            get { return GameEngine.Day.ToString(); }
+            get { return Game.Day.ToString(); }
             set
             {
-                int day = GameEngine.Day;
+                int day = Game.Day;
                 int.TryParse(value, out day);
-                GameEngine.Day = day;
+                Game.Day = day;
             }
         }
 

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace WMaster.Game.Manager
+namespace WMaster.Manager
 {
     using System;
     using System.Collections.Generic;
@@ -60,7 +60,7 @@ namespace WMaster.Game.Manager
         cTriggerQue GetNextQueItem()
         { throw new NotImplementedException(); }
 
-        cTrigger CheckForScript(int Type, bool trigger, int[] values)
+        public cTrigger CheckForScript(int Type, bool trigger, int[] values)
         { throw new NotImplementedException(); }
 
         void ProcessTriggers()

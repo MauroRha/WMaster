@@ -71,7 +71,7 @@ namespace WMaster.Tool
         /// <param name="resourceCode">Resource containing the list of name.</param>
         public void Load(string resourceCode)
         {
-            this._names = GameEngine.Game.Resources.GetResourcesLines(resourceCode);
+            this._names = Game.Resources.GetResourcesLines(resourceCode);
 
             //bool removeFirstLine = true;
             //// TODO : CROSPLATFORM - translate I/O to OS dependent project

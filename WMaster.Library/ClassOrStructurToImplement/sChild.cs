@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WMaster.Enum;
-using WMaster.Game.Concept;
+using WMaster.Enums;
+using WMaster.Concept;
 
 namespace WMaster.ClassOrStructurToImplement
 {

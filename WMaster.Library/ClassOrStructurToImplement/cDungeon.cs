@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WMaster.Enums;
 
 namespace WMaster.ClassOrStructurToImplement
 {
@@ -35,7 +36,7 @@ namespace WMaster.ClassOrStructurToImplement
         bool LoadDungeonDataXML(IXmlHandle hDungeon)
         { throw new NotImplementedException(); }
 
-        public void AddGirl(sGirl girl, int reason)
+        public void AddGirl(sGirl girl, DungeonReasons reason)
         { throw new NotImplementedException(); }
         void AddCust(int reason, int numDaughters, bool hasWife)
         { throw new NotImplementedException(); }

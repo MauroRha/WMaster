@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WMaster.Enum;
-using WMaster.Game;
-using WMaster.Game.Concept;
-using WMaster.Game.Entity.Item;
-using WMaster.Game.Entity.Living;
-using WMaster.Game.Manager;
+using WMaster.Enums;
+using WMaster.Concept;
+using WMaster.Entity.Item;
+using WMaster.Entity.Living;
+using WMaster.Manager;
 
 namespace WMaster.ClassOrStructurToImplement
 {
@@ -235,39 +234,39 @@ namespace WMaster.ClassOrStructurToImplement
         */
         public int get_stat(int stat_id)
         {
-            return GameEngine.Game.g_GirlsPtr.GetStat(this, stat_id);
+            return GameEngine.Instance.g_GirlsPtr.GetStat(this, stat_id);
         }
         public int upd_temp_stat(int stat_id, int amount)
         {
-            GameEngine.Game.g_GirlsPtr.UpdateStatTemp(this, stat_id, amount);
-            return GameEngine.Game.g_GirlsPtr.GetStat(this, stat_id);
+            GameEngine.Instance.g_GirlsPtr.UpdateStatTemp(this, stat_id, amount);
+            return GameEngine.Instance.g_GirlsPtr.GetStat(this, stat_id);
         }
         public int upd_stat(int stat_id, int amount, bool usetraits = true)
         {
-            GameEngine.Game.g_GirlsPtr.UpdateStat(this, stat_id, amount, usetraits);
-            return GameEngine.Game.g_GirlsPtr.GetStat(this, stat_id);
+            GameEngine.Instance.g_GirlsPtr.UpdateStat(this, stat_id, amount, usetraits);
+            return GameEngine.Instance.g_GirlsPtr.GetStat(this, stat_id);
         }
 
         public int upd_temp_Enjoyment(int stat_id, int amount)
         {
-            GameEngine.Game.g_GirlsPtr.UpdateEnjoymentTemp(this, stat_id, amount);
-            return GameEngine.Game.g_GirlsPtr.GetEnjoyment(this, stat_id);
+            GameEngine.Instance.g_GirlsPtr.UpdateEnjoymentTemp(this, stat_id, amount);
+            return GameEngine.Instance.g_GirlsPtr.GetEnjoyment(this, stat_id);
         }
         public int upd_Enjoyment(int stat_id, int amount, bool usetraits = true)
         {
-            GameEngine.Game.g_GirlsPtr.UpdateEnjoyment(this, stat_id, amount);
-            return GameEngine.Game.g_GirlsPtr.GetEnjoyment(this, stat_id);
+            GameEngine.Instance.g_GirlsPtr.UpdateEnjoyment(this, stat_id, amount);
+            return GameEngine.Instance.g_GirlsPtr.GetEnjoyment(this, stat_id);
         }
 
         public int upd_temp_Training(int stat_id, int amount)
         {
-            GameEngine.Game.g_GirlsPtr.UpdateTrainingTemp(this, stat_id, amount);
-            return GameEngine.Game.g_GirlsPtr.GetTraining(this, stat_id);
+            GameEngine.Instance.g_GirlsPtr.UpdateTrainingTemp(this, stat_id, amount);
+            return GameEngine.Instance.g_GirlsPtr.GetTraining(this, stat_id);
         }
         public int upd_Training(int stat_id, int amount, bool usetraits = true)
         {
-            GameEngine.Game.g_GirlsPtr.UpdateTraining(this, stat_id, amount);
-            return GameEngine.Game.g_GirlsPtr.GetTraining(this, stat_id);
+            GameEngine.Instance.g_GirlsPtr.UpdateTraining(this, stat_id, amount);
+            return GameEngine.Instance.g_GirlsPtr.GetTraining(this, stat_id);
         }
         /*
     *	Now then:
@@ -524,17 +523,17 @@ namespace WMaster.ClassOrStructurToImplement
         */
         public int get_skill(int skill_id)
         {
-            return GameEngine.Game.g_GirlsPtr.GetSkill(this, skill_id);
+            return GameEngine.Instance.g_GirlsPtr.GetSkill(this, skill_id);
         }
         public int upd_temp_skill(int skill_id, int amount)
         {
-            GameEngine.Game.g_GirlsPtr.UpdateSkillTemp(this, skill_id, amount);
-            return GameEngine.Game.g_GirlsPtr.GetSkill(this, skill_id);
+            GameEngine.Instance.g_GirlsPtr.UpdateSkillTemp(this, skill_id, amount);
+            return GameEngine.Instance.g_GirlsPtr.GetSkill(this, skill_id);
         }
         public int upd_skill(int skill_id, int amount)
         {
-            GameEngine.Game.g_GirlsPtr.UpdateSkill(this, skill_id, amount);
-            return GameEngine.Game.g_GirlsPtr.GetSkill(this, skill_id);
+            GameEngine.Instance.g_GirlsPtr.UpdateSkill(this, skill_id, amount);
+            return GameEngine.Instance.g_GirlsPtr.GetSkill(this, skill_id);
         }
         public int anal()
         {
@@ -715,11 +714,11 @@ namespace WMaster.ClassOrStructurToImplement
 
         public int get_enjoyment(int actiontype)
         {
-            return GameEngine.Game.g_GirlsPtr.GetEnjoyment(this, actiontype);
+            return GameEngine.Instance.g_GirlsPtr.GetEnjoyment(this, actiontype);
         }
         public int get_training(int actiontype)
         {
-            return GameEngine.Game.g_GirlsPtr.GetTraining(this, actiontype);
+            return GameEngine.Instance.g_GirlsPtr.GetTraining(this, actiontype);
         }
 
         /*
@@ -770,7 +769,7 @@ namespace WMaster.ClassOrStructurToImplement
         *	let's overload that...
         *	should be able to do the same using sCustomer as well...
         */
-        void add_trait(string trait, int temptime = 0)
+        public void add_trait(string trait, int temptime = 0)
         { throw new NotImplementedException(); }
         void remove_trait(string trait)
         { throw new NotImplementedException(); }

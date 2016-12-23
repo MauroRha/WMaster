@@ -17,12 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace WMaster.Game.Manager
+namespace WMaster.Manager
 {
     using System;
     using System.Collections.Generic;
     using WMaster.ClassOrStructurToImplement;
-    using WMaster.Game.Entity.Item;
+    using WMaster.Entity.Item;
+    using WMaster.Enums;
 
     // Keeps track of all the available (not used by player) girls in the game.
     public class cGirls : cAbstractGirls, System.IDisposable
@@ -176,7 +177,7 @@ namespace WMaster.Game.Manager
         void MutuallyExclusiveTraits(sGirl girl, bool apply, sTrait trait = null, bool rememberflag = false)
         { throw new NotImplementedException(); }
 
-        bool PossiblyGainNewTrait(sGirl girl, string Trait, int Threshold, int ActionType, string Message, bool Day0Night1, int eventtype = Constants.EVENT_GOODNEWS)
+        bool PossiblyGainNewTrait(sGirl girl, string Trait, int Threshold, int ActionType, string Message, bool Day0Night1, EventType eventtype = EventType.GOODNEWS)
         { throw new NotImplementedException(); }
         bool PossiblyLoseExistingTrait(sGirl girl, string Trait, int Threshold, int ActionType, string Message, bool Day0Night1)
         { throw new NotImplementedException(); }
@@ -245,10 +246,10 @@ namespace WMaster.Game.Manager
         { throw new NotImplementedException(); }
         // end mod
 
-        sGirl CreateRandomGirl(int age, bool addToGGirls, bool slave = false, bool undead = false, bool Human0Monster1 = false, bool childnaped = false, bool arena = false, bool daughter = false, bool isdaughter = false, string findbyname = "")
+        public sGirl CreateRandomGirl(int age, bool addToGGirls, bool slave = false, bool undead = false, bool Human0Monster1 = false, bool childnaped = false, bool arena = false, bool daughter = false, bool isdaughter = false, string findbyname = "")
         { throw new NotImplementedException(); }
 
-        sGirl GetRandomGirl(bool slave = false, bool catacomb = false, bool arena = false, bool daughter = false, bool isdaughter = false)
+        public sGirl GetRandomGirl(bool slave = false, bool catacomb = false, bool arena = false, bool daughter = false, bool isdaughter = false)
         { throw new NotImplementedException(); }
         sGirl GetUniqueYourDaughterGirl(int Human0Monster1 = -1)
         { throw new NotImplementedException(); } // -1 either, 0 human, 1 monster
@@ -429,7 +430,7 @@ namespace WMaster.Game.Manager
         { throw new NotImplementedException(); }
         int PreferredAccom(sGirl girl)
         { throw new NotImplementedException(); }
-        string catacombs_look_for(int girls, int items, int beast)
+        public string catacombs_look_for(int girls, int items, int beast)
         { throw new NotImplementedException(); }
 
         sCustomer GetBeast()

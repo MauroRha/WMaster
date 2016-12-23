@@ -17,13 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace WMaster.Game.Manager
+namespace WMaster.Manager
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using WMaster.ClassOrStructurToImplement;
-    using WMaster.Game.Entity.Item;
+    using WMaster.Entity.Item;
 
     /// <summary>
     /// Manages all brothels
@@ -206,21 +206,25 @@ namespace WMaster.Game.Manager
         public bool PlayerCombat(sGirl girl)
         { throw new NotImplementedException(); }
 
+        [Obsolete("Player instance must be move to be member of game instance", false)]
         public cPlayer GetPlayer()
         { return m_Player; }
+        [Obsolete("Dungeon instance must be move to be member of game instance or in Dungeon manager to provide multiple dungeon ingame.", false)]
         public cDungeon GetDungeon()
         { return m_Dungeon; }
 
+        [Obsolete("Inventory move to player so HasItem move to player too!", false)]
         public int HasItem(string name, int countFrom = -1)
         { throw new NotImplementedException(); }
 
         // Some public members for ease of use
+        [Obsolete("Inventory move to player so m_NumInventory move to player too! m_NumInventory field public !!", false)]
         public int m_NumInventory;								// current amount of inventory the brothel has
-        [Obsolete("Convert sInventoryItem[] to List<sInventoryItem>", false)]
+        [Obsolete("Convert sInventoryItem[] to List<sInventoryItem>, Inventory move to player", false)]
         public sInventoryItem[] m_Inventory = new sInventoryItem[Constants.MAXNUM_INVENTORY];	// List of inventory items they have (3000 max)
-        [Obsolete("Convert short[] to List<short>", false)]
+        [Obsolete("Convert short[] to List<short>, integrate to inventory item", false)]
         public short[] m_EquipedItems = new short[Constants.MAXNUM_INVENTORY];	// value of > 0 means equipped (wearing) the item
-        [Obsolete("Convert int[] to List<int>", false)]
+        [Obsolete("Convert int[] to List<int>, integrate to inventory item", false)]
         public int[] m_NumItem = new int[Constants.MAXNUM_INVENTORY];		// the number of items there are stacked
         public cJobManager m_JobManager;						// manages all the jobs
 
@@ -240,6 +244,7 @@ namespace WMaster.Game.Manager
 
         public cRival GetRivals()
         { return m_Rivals.GetRivals(); }
+        [Obsolete("RivalManager may move to GameEngine", false)]
         public cRivalManager GetRivalManager()
         { return m_Rivals; }
 
@@ -253,6 +258,7 @@ namespace WMaster.Game.Manager
         { return m_Food; }
         public int GetNumDrinks()
         { return m_Drinks; }
+        [Obsolete("Think about moving Beast information out of Brothel Manager", false)]
         public int GetNumBeasts()
         { return m_Beasts; }
         public int GetNumGoods()
@@ -263,6 +269,7 @@ namespace WMaster.Game.Manager
         { m_Food += i; if (m_Food < 0) m_Food = 0; }
         public void add_to_drinks(int i)
         { m_Drinks += i; if (m_Drinks < 0) m_Drinks = 0; }
+        [Obsolete("Think about moving Beast information out of Brothel Manager", false)]
         public void add_to_beasts(int i)
         { m_Beasts += i; if (m_Beasts < 0) m_Beasts = 0; }
         public void add_to_goods(int i)
@@ -275,6 +282,7 @@ namespace WMaster.Game.Manager
 
         public void UpdateObjective()
         { throw new NotImplementedException(); } 				// updates an objective and checks for compleation
+        [Obsolete("Game objectives must be move to Game instance or as default to player instance", false)]
         public sObjective GetObjective()
         { throw new NotImplementedException(); } 			// returns the objective
         public void CreateNewObjective()
@@ -332,9 +340,9 @@ namespace WMaster.Game.Manager
 
         // WD: test to check if doing turn processing.  Used to ingnore HOUSE_STAT value in GetRebelValue() if girl gets to keep all her income.
         public bool is_Dayshift_Processing()
-        { return m_Processing_Shift == (short)WMaster.Enum.DayShift.Day; }
+        { return m_Processing_Shift == (short)WMaster.Enums.DayShift.Day; }
         public bool is_Nightshift_Processing()
-        { return m_Processing_Shift == (short)WMaster.Enum.DayShift.Night; }
+        { return m_Processing_Shift == (short)WMaster.Enums.DayShift.Night; }
 
         // WD:	Update code of girls stats
         public void updateGirlTurnBrothelStats(sGirl girl)
@@ -360,6 +368,7 @@ namespace WMaster.Game.Manager
 
         // brothel resources
         private int m_HandmadeGoods;			// used with the community centre
+        [Obsolete("Think about moving Beast information out of Brothel Manager", false)]
         private int m_Beasts;					// used for beastiality scenes
         private int m_Food;						// food produced at the farm
         private int m_Drinks;					// drinks produced at the farm
@@ -409,6 +418,7 @@ namespace WMaster.Game.Manager
 
         private sObjective m_Objective;
 
+        [Obsolete("RivalManager may move to GameEngine", false)]
         public cRivalManager m_Rivals;			// all of the players compedators
 
         private bool m_TortureDoneFlag;			// WD:	Have we got a torturer working today

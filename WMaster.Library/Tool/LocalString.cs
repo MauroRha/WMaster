@@ -293,6 +293,30 @@ namespace WMaster
         }
 
         /// <summary>
+        /// Append new line.
+        /// </summary>
+        public void NewLine()
+        {
+            this.m_String.Append(Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Append a comma (',').
+        /// </summary>
+        public void Comma()
+        {
+            this.m_String.Append(',');
+        }
+
+        /// <summary>
+        /// Append a dot ('.').
+        /// </summary>
+        public void Dot()
+        {
+            this.m_String.Append(',');
+        }
+
+        /// <summary>
         /// Get string composition.
         /// </summary>
         /// <returns>Result of string composition.</returns>

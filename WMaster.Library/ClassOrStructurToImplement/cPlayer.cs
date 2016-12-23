@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WMaster.Enum;
-using WMaster.Game.Concept;
+using WMaster.Enums;
+using WMaster.Concept;
 
 namespace WMaster.ClassOrStructurToImplement
 {
@@ -112,7 +112,7 @@ namespace WMaster.ClassOrStructurToImplement
         {
             return m_Disposition;
         }
-        int disposition(int n)
+        public int disposition(int n)
         { throw new NotImplementedException(); }
         int evil(int n)
         { throw new NotImplementedException(); }
@@ -120,13 +120,13 @@ namespace WMaster.ClassOrStructurToImplement
         {
             return m_Suspicion;
         }
-        int suspicion(int n)
+        public int suspicion(int n)
         { throw new NotImplementedException(); }
         public int customerfear()
         {
             return m_CustomerFear;
         }
-        int customerfear(int n)
+        public int customerfear(int n)
         { throw new NotImplementedException(); }
 
         public int BirthYear()

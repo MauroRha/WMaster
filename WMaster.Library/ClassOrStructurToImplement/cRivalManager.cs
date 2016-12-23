@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WMaster.Game.Entity.Item;
+using WMaster.Entity.Item;
 using WMaster.Tool;
 
 namespace WMaster.ClassOrStructurToImplement

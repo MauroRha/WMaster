@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WMaster.Game;
-
-namespace WMaster.ClassOrStructurToImplement
+﻿namespace WMaster.ClassOrStructurToImplement
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using WMaster.Manager;
+    using WMaster.Enums;
+
     // defines a single brothel
     public class sBrothel : System.IDisposable
     {
@@ -122,7 +123,7 @@ namespace WMaster.ClassOrStructurToImplement
         public Events m_Events = new Events();
 
         [Obsolete("Convert int[] to List<int>")]
-        public int[] m_BuildingQuality = new int[(int)Enum.JobFilter.NUMJOBTYPES];
+        public int[] m_BuildingQuality = new int[(int)Enums.JobFilter.NUMJOBTYPES];
 
         public sGirl m_Girls; // A list of all the girls this place has
         public sGirl m_LastGirl;

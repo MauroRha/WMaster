@@ -36,7 +36,7 @@
 namespace WMaster
 {
     using System;
-    using WMaster.Enum;
+    using WMaster.Enums;
 
     // TODO : REFACTORING - Transfert constants to specific emplacement for ex : MAXNUM_GIRL_INVENTORY to girl class
 
@@ -145,32 +145,16 @@ namespace WMaster
         public const uint LISTBOX_COLUMNS = 25;
 
         // Listbox Constants moved from cListBox.h
-        [Obsolete("IHM value must move to IHM project", true)]
-        public const uint COLOR_BLUE = 0;
-        [Obsolete("IHM value must move to IHM project", true)]
-        public const uint COLOR_RED = 1;
-        [Obsolete("IHM value must move to IHM project", true)]
-        public const uint COLOR_DARKBLUE = 2;
-        [Obsolete("IHM value must move to IHM project", true)]
-        public const uint COLOR_GREEN = 3;
-        [Obsolete("IHM value must move to IHM project", true)]
-        public const uint COLOR_YELLOW = 4; // `J` added
-
-        // Event constants oved from cEvents.h
-        public const int EVENT_DAYSHIFT = 0;
-        public const int EVENT_NIGHTSHIFT = 1;
-        public const int EVENT_WARNING = 2;
-        public const int EVENT_DANGER = 3;
-        public const int EVENT_GOODNEWS = 4;
-        public const int EVENT_SUMMARY = 5;
-        public const int EVENT_DUNGEON = 6; // For torturer reports
-        public const int EVENT_MATRON = 7; // For Matron reports
-        public const int EVENT_GANG = 8;
-        public const int EVENT_BROTHEL = 9;
-        public const int EVENT_NOWORK = 10;
-        public const int EVENT_BACKTOWORK = 11;
-        public const int EVENT_LEVELUP = 12; // `J` added
-        public const int EVENT_DEBUG = 99;
+        [Obsolete("IHM value must move to IHM project", false)]
+        public const int COLOR_BLUE = 0;
+        [Obsolete("IHM value must move to IHM project", false)]
+        public const int COLOR_RED = 1;
+        [Obsolete("IHM value must move to IHM project", false)]
+        public const int COLOR_DARKBLUE = 2;
+        [Obsolete("IHM value must move to IHM project", false)]
+        public const int COLOR_GREEN = 3;
+        [Obsolete("IHM value must move to IHM project", false)]
+        public const int COLOR_YELLOW = 4; // `J` added
 
         // Constants determining which screen is currently showing. This will help with hotkeys and help menu. --PP
         // The variable that uses this constant is int g_CurrentScreen;
@@ -232,5 +216,21 @@ namespace WMaster
         public const int CHILD08_MISCARRIAGES = 8;
         public const int CHILD09_ABORTIONS = 9;
         public const int CHILD_COUNT_TYPES = 10; // last type+1
+
+        // girl specific triggers
+        public const int TRIGGER_RANDOM = 0;	// May trigger each week
+        public const int TRIGGER_SHOPPING = 1;	// May trigger when shopping
+        public const int TRIGGER_SKILL = 2;	// May trigger when a skill is greater or equal to a value
+        public const int TRIGGER_STAT = 3;		// same as skill
+        public const int TRIGGER_STATUS = 4;	// has a particular status, ie slave, pregnant etc
+        public const int TRIGGER_MONEY = 5;	// same as skill or stat levels
+        public const int TRIGGER_MEET = 6;		// Triggers when meeting girl
+        public const int TRIGGER_TALK = 7;		// triggered when talking to girl in dungeon on details screen
+        public const int TRIGGER_WEEKSPAST = 8;	// certain number of weeks pass while girl is in employment
+        public const int TRIGGER_GLOBALFLAG = 9;	// triggered when a global flag is set
+        public const int TRIGGER_SCRIPTRUN = 10;	// triggered when a specifed script has been run
+        public const int TRIGGER_KIDNAPPED = 11;	// triggers when a girl is kidnaped
+        public const int TRIGGER_PLAYERMONEY = 12;	// triggers when players money hits a value
+
     }
 }

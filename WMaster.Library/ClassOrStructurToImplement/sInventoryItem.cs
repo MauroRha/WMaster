@@ -33,7 +33,7 @@
 //  </remarks>
 //</file>
 //<!-- -------------------------------------------------------------------------------------------------------------------- -->
-namespace WMaster.Game.Entity.Item
+namespace WMaster.Entity.Item
 {
     using System;
     using System.Collections.Generic;
@@ -168,41 +168,41 @@ namespace WMaster.Game.Entity.Item
             /// <summary>
             /// Common item.
             /// </summary>
-            Common = WMaster.Enum.ItemRarity.COMMON,
+            Common = WMaster.Enums.ItemRarity.COMMON,
             /// <summary>
             /// 50% chance of appearing in shops.
             /// </summary>
-            Shop50 = WMaster.Enum.ItemRarity.SHOP50,
+            Shop50 = WMaster.Enums.ItemRarity.SHOP50,
             /// <summary>
             /// 25% chance of appearing in shops.
             /// </summary>
-            Shop25 = WMaster.Enum.ItemRarity.SHOP25,
+            Shop25 = WMaster.Enums.ItemRarity.SHOP25,
             /// <summary>
             /// 5% chance of appearing in shops.
             /// </summary>
-            Shop05 = WMaster.Enum.ItemRarity.SHOP05,
+            Shop05 = WMaster.Enums.ItemRarity.SHOP05,
             /// <summary>
             /// 15% chance of being found in catacombs.
             /// </summary>
-            Catacomb15 = WMaster.Enum.ItemRarity.CATACOMB15,
+            Catacomb15 = WMaster.Enums.ItemRarity.CATACOMB15,
             /// <summary>
             /// 5% chance of being found in catacombs.
             /// <remarks><para>MYR: Added 05 and 01 for the really, really valuable things like invulnerability</para></remarks>
             /// </summary>
-            Catacomb05 = WMaster.Enum.ItemRarity.CATACOMB05,
+            Catacomb05 = WMaster.Enums.ItemRarity.CATACOMB05,
             /// <summary>
             /// 1% chance of being found in catacombs.
             /// <remarks><para>MYR: Added 05 and 01 for the really, really valuable things like invulnerability</para></remarks>
             /// </summary>
-            Catacomb01 = WMaster.Enum.ItemRarity.CATACOMB01,
+            Catacomb01 = WMaster.Enums.ItemRarity.CATACOMB01,
             /// <summary>
             /// ONLY given in scripts.
             /// </summary>
-            ScriptOnly = WMaster.Enum.ItemRarity.SCRIPTONLY,
+            ScriptOnly = WMaster.Enums.ItemRarity.SCRIPTONLY,
             /// <summary>
             /// ONLY given in scripts or reward for objective.
             /// </summary>
-            ScriptOrReward = WMaster.Enum.ItemRarity.SCRIPTORREWARD
+            ScriptOrReward = WMaster.Enums.ItemRarity.SCRIPTORREWARD
         };
         #endregion
 

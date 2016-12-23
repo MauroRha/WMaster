@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WMaster.Game.Concept;
-using WMaster.Game.Entity.Living;
+using WMaster.Concept;
+using WMaster.Entity.Living;
 
 namespace WMaster.ClassOrStructurToImplement
 {
@@ -18,18 +18,18 @@ namespace WMaster.ClassOrStructurToImplement
         // using an array of function pointers
         //	WorkJobF JobFunc[NUM_JOBS];
         public delegate bool JobFuncDelegate(sGirl NamelessParameter1, sBrothel NamelessParameter2, bool NamelessParameter3, string NamelessParameter4);
-        public JobFuncDelegate[] JobFunc = new JobFuncDelegate[(int)WMaster.Enum.Jobs.NUM_JOBS];
+        public JobFuncDelegate[] JobFunc = new JobFuncDelegate[(int)WMaster.Enums.Jobs.NUM_JOBS];
         public delegate double JobPerfDelegate(sGirl NamelessParameter1, bool estimate); // `J` a replacement for job performance - work in progress
-        public JobPerfDelegate[] JobPerf = new JobPerfDelegate[(int)WMaster.Enum.Jobs.NUM_JOBS];
+        public JobPerfDelegate[] JobPerf = new JobPerfDelegate[(int)WMaster.Enums.Jobs.NUM_JOBS];
 
-        public string[] JobName = new string[(int)WMaster.Enum.Jobs.NUM_JOBS]; // short descriptive name of job
-        public string[] JobQkNm = new string[(int)WMaster.Enum.Jobs.NUM_JOBS]; // a shorter name of job
-        public string[] JobDesc = new string[(int)WMaster.Enum.Jobs.NUM_JOBS]; // longer description of job
-        public string[] JobFilterName = new string[(int)WMaster.Enum.JobFilter.NUMJOBTYPES]; // short descriptive name of job filter
-        public string[] JobFilterDesc = new string[(int)WMaster.Enum.JobFilter.NUMJOBTYPES]; // longer description of job filter
-        public int[] JobFilterIndex = new int[(int)WMaster.Enum.JobFilter.NUMJOBTYPES + 1]; // starting job index # for job filter
+        public string[] JobName = new string[(int)WMaster.Enums.Jobs.NUM_JOBS]; // short descriptive name of job
+        public string[] JobQkNm = new string[(int)WMaster.Enums.Jobs.NUM_JOBS]; // a shorter name of job
+        public string[] JobDesc = new string[(int)WMaster.Enums.Jobs.NUM_JOBS]; // longer description of job
+        public string[] JobFilterName = new string[(int)WMaster.Enums.JobFilter.NUMJOBTYPES]; // short descriptive name of job filter
+        public string[] JobFilterDesc = new string[(int)WMaster.Enums.JobFilter.NUMJOBTYPES]; // longer description of job filter
+        public int[] JobFilterIndex = new int[(int)WMaster.Enums.JobFilter.NUMJOBTYPES + 1]; // starting job index # for job filter
 
-        string JobDescriptionCount(int job_id, int brothel_id, int day = (int)WMaster.Enum.DayShift.Day, bool isClinic = false, bool isStudio = false, bool isArena = false, bool isCentre = false, bool isHouse = false, bool isFarm = false)
+        string JobDescriptionCount(int job_id, int brothel_id, int day = (int)WMaster.Enums.DayShift.Day, bool isClinic = false, bool isStudio = false, bool isArena = false, bool isCentre = false, bool isHouse = false, bool isFarm = false)
         { throw new NotImplementedException(); } // return a job description along with a count of how many girls are on it
 
         bool HandleSpecialJobs(int TargetBrothel, sGirl Girl, int JobID, int OldJobID, bool Day0Night1, bool fulltime = false)

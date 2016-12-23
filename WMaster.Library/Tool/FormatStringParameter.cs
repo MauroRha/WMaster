@@ -56,6 +56,11 @@ namespace WMaster
             get { return _value; }
         }
 
+        /// <summary>
+        /// Initialise a new <see cref="FormatStringParameter"/>.
+        /// </summary>
+        /// <param name="name">ame of parameter.</param>
+        /// <param name="value">Value of parameter.</param>
         public FormatStringParameter(string name, string value)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -66,6 +71,16 @@ namespace WMaster
 
             this._name = name;
             this._value = value ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Initialise a new <see cref="FormatStringParameter"/>.
+        /// </summary>
+        /// <param name="name">ame of parameter.</param>
+        /// <param name="value">Value of parameter.</param>
+        public FormatStringParameter(string name, int value)
+            : this(name, value.ToString())
+        {
         }
     }
 }

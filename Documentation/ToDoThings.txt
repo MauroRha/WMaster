@@ -1,0 +1,4 @@
+Import/Translate lapi.c lobject.h/cpp
+
+void AddNewGang(bool boosted) -> Resource get gang name
+Set GangMission to structure like strategy for all gang mission and Factory in abstract base mission class (Strategy) to set gang mission instance.
