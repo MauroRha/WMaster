@@ -33,7 +33,7 @@
 //  </remarks>
 //</file>
 //<!-- -------------------------------------------------------------------------------------------------------------------- -->
-namespace WMaster.Enums
+namespace WMaster.Concept.GangMission
 {
     using System;
     using System.Xml.Serialization;
@@ -44,64 +44,64 @@ namespace WMaster.Enums
     /// Goon missions.
     /// </summary>
     [Flags] // Need Flags attribut for XmlSerialisation of Enum
-    public enum GangMissions
+    public enum EnuGangMissions
     {
         /// <summary>
         /// Guarding player businesses.
         /// </summary>
         [XmlEnum("MISS_GUARDING")]
-        GUARDING = 0,
+        Guarding = 0,
         /// <summary>
         /// Sabotaging rival business.
         /// </summary>
-        SABOTAGE,
+        Sabotage,
         /// <summary>
         /// Checking up on the girls while they work.
         /// </summary>
-        SPYGIRLS,
+        SpyGirls,
         /// <summary>
         /// Looking for runaway girls.
         /// </summary>
-        CAPTUREGIRL,
+        RecaptureGirls,
         /// <summary>
         /// Exthortion of local business for money in return for protection.
         /// </summary>
-        EXTORTION,
+        Extortion,
         /// <summary>
         /// Go out on the streets and steal from people.
         /// </summary>
-        PETYTHEFT,
+        PettyTheft,
         /// <summary>
         /// Go and rob local business while noone is there.
         /// </summary>
-        GRANDTHEFT,
+        GrandTheft,
         /// <summary>
         /// Go out and kidnap homeless or lost girls.
         /// </summary>
-        KIDNAPP,
+        KidnappGirls,
         /// <summary>
         /// Men go down into the catacombs to find treasures.
         /// </summary>
-        CATACOMBS,
+        Catacombs,
         /// <summary>
         /// Men improve their skills.
         /// </summary>
-        TRAINING,
+        Training,
         /// <summary>
         /// Men recuit new members.
         /// </summary>
-        RECRUIT,
+        Recruit,
         /// <summary>
         /// men will do community service - `J` added for .06.02.41.
         /// </summary>
-        SERVICE,
+        Service,
         /// <summary>
         /// Men will help break girls in the dungeon
         /// </summary>
-        DUNGEON,
+        Dungeon,
         /// <summary>
         /// No mission defined, need for last mission whene not storing somthing.
         /// </summary>
-        NONE
+        None
     };
 }

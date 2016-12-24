@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{20007291
 		Tools\PrepareResourceString.exe = Tools\PrepareResourceString.exe
 	EndProjectSection
 EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "WMaster.Models", "WMaster.Models\WMaster.Models.modelproj", "{E6794DD1-DD1F-4731-A702-FB59CD8ADBF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,8 @@ Global
 		{DE1DDD4E-1C42-4F67-871A-15D663276F70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE1DDD4E-1C42-4F67-871A-15D663276F70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE1DDD4E-1C42-4F67-871A-15D663276F70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6794DD1-DD1F-4731-A702-FB59CD8ADBF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6794DD1-DD1F-4731-A702-FB59CD8ADBF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

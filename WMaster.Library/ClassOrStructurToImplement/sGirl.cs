@@ -8,6 +8,7 @@ using WMaster.Concept;
 using WMaster.Entity.Item;
 using WMaster.Entity.Living;
 using WMaster.Manager;
+using WMaster.Concept.Attributs;
 
 namespace WMaster.ClassOrStructurToImplement
 {

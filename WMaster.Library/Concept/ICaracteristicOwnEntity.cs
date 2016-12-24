@@ -19,6 +19,7 @@
  */
 namespace WMaster.Concept
 {
+    using WMaster.Concept.Attributs;
 
     /// <summary>
     /// Represent an entity who have set of evolutive caracteristics.

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WMaster.Enums;
 using WMaster.Concept;
+using WMaster.Concept.Attributs;
 
 namespace WMaster.ClassOrStructurToImplement
 {

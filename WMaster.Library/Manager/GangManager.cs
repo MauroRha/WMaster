@@ -29,24 +29,113 @@ namespace WMaster.Manager
     using WMaster.Entity.Item;
     using WMaster.Entity.Living;
     using WMaster.Tool;
+    using WMaster.Concept.Attributs;
+    using WMaster.Concept.GangMission;
 
     /// <summary>
     /// Manages all the player gangs
     /// </summary>
     public class GangManager
     {
+        #region Static members
+        /// <summary>
+        /// Singleton of <see cref="GangManager"/>.
+        /// </summary>
+        private static GangManager m_Instance;
+        /// <summary>
+        /// Get unique instance of <see cref="GangManager"/>.
+        /// </summary>
+        public static GangManager Instance
+        {
+            get
+            {
+                if (GangManager.m_Instance == null)
+                { GangManager.m_Instance = new GangManager(); }
+                return GangManager.m_Instance;
+            }
+        }
+        #endregion
+
         /// <summary>
         /// Number of businesses under player control.
         /// <remarks><para>TODO : May translate to player class</para></remarks>
         /// </summary>
         private int m_BusinessesExtort;
-
-        private bool m_Control_Gangs; // Use to switch between old/new code in catacombs mission
-        private int m_Gang_Gets_Girls;
-        private int m_Gang_Gets_Items;
-        private int m_Gang_Gets_Beast;
-
+        /// <summary>
+        /// Get or set the number of business extorted.
+        /// </summary>
+        public static int NumBusinessExtort
+        {
+            get { return GangManager.Instance.m_BusinessesExtort; }
+            // TODO : GAME - Check m_BusinessesExtort < Max value?
+            set { GangManager.Instance.m_BusinessesExtort = value; }
+        }
+        /// <summary>
+        /// Adjuste number of business extorted.
+        /// </summary>
+        /// <param name="n">Adjustement value of number of business extorted.</param>
+        /// <returns>Number of business extorted.</returns>
+        public static int AdjustBusinessExtorted(int n)
+        {
+            // TODO : GAME - Check m_BusinessesExtort < Max value?
+            NumBusinessExtort += n;
+            return NumBusinessExtort;
+        }
+        /// <summary>
+        /// Maximum number of gang player can hire
+        /// </summary>
         private int m_MaxNumGangs;
+
+        /// <summary>
+        /// Use to switch between old/new code in catacombs mission.
+        /// </summary>
+        [Obsolete("Do choice between new or old cade. Use compilation pragma ?")]
+        private bool m_ControlGangs;
+        public static bool ControlGangs
+        {
+            get { return GangManager.Instance.m_ControlGangs; }
+            set { GangManager.Instance.m_ControlGangs = value; }
+        }
+
+        #region Catacombs relativs settings
+        /// <summary>
+        /// Percentage of looking for girls in catacombs.
+        /// </summary>
+        private int m_GangGetsGirls;
+        /// <summary>
+        /// Get or set the percentage of looking for girls in catacombs.
+        /// </summary>
+        public static int GangGetsGirls
+        {
+            get { return GangManager.Instance.m_GangGetsGirls; }
+            set { GangManager.Instance.m_GangGetsGirls = Math.Max(Math.Min(value, 0), 100); }
+        }
+        /// <summary>
+        /// Percentage of looking for items in catacombs.
+        /// </summary>
+        private int m_GangGetsItems;
+        /// <summary>
+        /// Get or set the percentage of looking for items in catacombs.
+        /// </summary>
+        public static int GangGetsItems
+        {
+            get { return GangManager.Instance.m_GangGetsItems; }
+            set { GangManager.Instance.m_GangGetsItems = Math.Max(Math.Min(value, 0), 100); }
+        }
+        /// <summary>
+        /// Percentage of looking for beasts in catacombs.
+        /// </summary>
+        private int m_GangGetsBeast;
+        /// <summary>
+        /// Get or set the percentage of looking for beasts in catacombs.
+        /// </summary>
+        public static int GangGetsBeast
+        {
+            get { return GangManager.Instance.m_GangGetsBeast; }
+            set { GangManager.Instance.m_GangGetsBeast = Math.Max(Math.Min(value, 0), 100); }
+        }
+        #endregion
+
         //private int m_NumGangNames;
         //private int m_NumGangs;
         //private Gang m_GangStart; // the start and end of the list of gangs under the players employment
@@ -66,6 +155,67 @@ namespace WMaster.Manager
         /// </summary>
         private List<Gang> m_HireableGangList = new List<Gang>();
 
+
+        // TODO : Bound SwordLevet to upper limite (4?)
+        /// <summary>
+        /// Weapond level the gangs has been upgraded.
+        /// </summary>
+        private int m_SwordLevel;
+        /// <summary>
+        /// Get or set the weapond level the gangs has been upgraded.
+        /// </summary>
+        public static int SwordLevel
+        {
+            get { return GangManager.Instance.m_SwordLevel; }
+            set { GangManager.Instance.m_SwordLevel = Math.Min(value, 0); }
+        }
+        /// <summary>
+        /// Return the weapon level of gang.
+        /// </summary>
+        /// <returns>The weapon level the gang.</returns>
+        [Obsolete("Use SwordLevel property", false)]
+        public int GetWeaponLevel()
+        {
+            return m_SwordLevel;
+        }
+
+        #region Nets
+        // gang armory
+        // mod - changing the keep stocked flag to an int
+        // so we can record the level at which to maintain
+        // the stock - then we can restock at turn end
+        // to prevent squads becoming immortal by
+        // burning money
+        private int m_KeepNetsStocked;
+        /// <summary>
+        /// Number of Nets player have.
+        /// </summary>
+        [Obsolete("Use property instead of private fields", false)]
+        private int m_NumNets;
+        /// <summary>
+        /// Get or set the number of nets player have.
+        /// </summary>
+        public static int NumNets
+        {
+            get { return GangManager.Instance.m_NumNets; }
+            set { GangManager.Instance.m_NumNets = Math.Min(value, 0); }
+        }
+        /// <summary>
+        /// Get number of Nets the gang have.
+        /// </summary>
+        /// <returns>Number of Nets the gang have.</returns>
+        [Obsolete("Use NumNets property", false)]
+        public static int GetNets()
+        {
+            return NumNets;
+        }
+        public static void UseANet()
+        {
+            NumNets--;
+        }
+        #endregion
+
+        #region Healing Pot
         // gang armory
         // mod - changing the keep stocked flag to an int
         // so we can record the level at which to maintain
@@ -73,24 +223,44 @@ namespace WMaster.Manager
         // to prevent squads becoming immortal by
         // burning money
         private int m_KeepHealStocked;
+        /// <summary>
+        /// Number of healing pot the player have.
+        /// </summary>
         [Obsolete("Use property instead of private fields", false)]
         private int m_NumHealingPotions;
-        private int m_SwordLevel;
-        private int m_KeepNetsStocked;
-
         /// <summary>
-        /// Number of Nets the gang have.
+        /// Get or set the number of healing pot player have
         /// </summary>
-        [Obsolete("Use property instead of private fields", false)]
-        private int m_NumNets;
-        /// <summary>
-        /// Get number of Nets the gang have.
-        /// </summary>
-        /// <returns>Number of Nets the gang have.</returns>
-        public int GetNets()
+        public static int NumHealingPotions
         {
-            return m_NumNets;
+            get { return GangManager.Instance.m_NumHealingPotions; }
+            set { GangManager.Instance.m_NumHealingPotions = Math.Min(value, 0); }
         }
+        /// <summary>
+        /// Get the max number of healpotion a gang can use. (?)
+        /// </summary>
+        /// <remarks><para>`J` replaced with passing out of pots/nets in GangStartOfShift() for .06.01.09</para></remarks>
+        /// <returns>Max number of healpotion a gang can use.</returns>
+        public int HealingLimit()
+        {
+            if (m_PlayerGangList.Count.Equals(0) || m_NumHealingPotions < 1)
+            {
+                return 0;
+            }
+            int limit;
+            // take the number of potions and divide by the the number of gangs
+            limit = m_NumHealingPotions / m_PlayerGangList.Count;
+            /*
+            *	if that rounds to less than zero, and there are still
+            *	potions available, make sure they get at least one to use
+            */
+            if ((limit < 1) && (m_NumHealingPotions > 0))
+            {
+                limit = 1;
+            }
+            return limit;
+        }
+        #endregion
 
         /// <summary>
         /// Initialise a new instance of <see cref="GangManager"/>
@@ -101,12 +271,12 @@ namespace WMaster.Manager
             m_BusinessesExtort = 0;
             m_NumHealingPotions = m_NumNets = m_SwordLevel = 0;
             m_KeepHealStocked = m_KeepNetsStocked = 0;
-            m_Control_Gangs = false;
-            m_Gang_Gets_Girls = m_Gang_Gets_Items = m_Gang_Gets_Beast = 0;
+            m_ControlGangs = false;
+            m_GangGetsGirls = m_GangGetsItems = m_GangGetsBeast = 0;
         }
 
         /// <summary>
-        /// Free GangManager datas
+        /// Free/(re)initialize GangManager datas
         /// </summary>
         public void Free()
         {
@@ -115,8 +285,8 @@ namespace WMaster.Manager
             m_BusinessesExtort = 0;
             m_NumHealingPotions = m_SwordLevel = m_NumNets = 0;
             m_KeepHealStocked = m_KeepNetsStocked = 0;
-            m_Control_Gangs = false;
-            m_Gang_Gets_Girls = m_Gang_Gets_Items = m_Gang_Gets_Beast = 0;
+            m_ControlGangs = false;
+            m_GangGetsGirls = m_GangGetsItems = m_GangGetsBeast = 0;
         }
 
         /// <summary>
@@ -127,8 +297,8 @@ namespace WMaster.Manager
         {
             Gang newGang = new Gang();
 
-            int maxMembers = cConfig.Instance.Gangs.InitMemberMax;
-            int minMembers = cConfig.Instance.Gangs.InitMemberMin;
+            int maxMembers = Config.Instance.Gangs.InitMemberMax;
+            int minMembers = Config.Instance.Gangs.InitMemberMin;
             newGang.MemberNum = minMembers + WMRand.Random() % (maxMembers + 1 - minMembers);
             if (boosted)
             {
@@ -249,14 +419,14 @@ namespace WMaster.Manager
             if (gang != null && this.m_HireableGangList.Contains(gang) && !this.m_PlayerGangList.Contains(gang))
             {
                 gang.HasSeenCombat = gang.AutoRecruit = false;
-                gang.m_LastMissID = GangMissions.NONE;
+                gang.LastMission = GangMissionBase.None;
                 if (gang.MemberNum <= 5)
                 {
-                    gang.m_MissionID = GangMissions.RECRUIT;
+                    GangMissionBase.SetGangMission(EnuGangMissions.Recruit, gang);
                 }
                 else
                 {
-                    gang.m_MissionID = GangMissions.GUARDING;
+                    GangMissionBase.SetGangMission(EnuGangMissions.Guarding, gang);
                 }
                 this.AddGang(gang);
                 this.RemoveHireableGang(gang);
@@ -327,10 +497,10 @@ namespace WMaster.Manager
         {
             if (gang != null)
             {
-                if (this.m_HireableGangList.Count < cConfig.Instance.Gangs.MaxRecruitList)
+                if (this.m_HireableGangList.Count < Config.Instance.Gangs.MaxRecruitList)
                 {
                     gang.HasSeenCombat = gang.AutoRecruit = false;
-                    gang.m_LastMissID = GangMissions.NONE;
+                    gang.LastMission = GangMissionBase.None;
                     this.AddHireableGang(gang);
                 }
                 this.RemoveGang(gang);
@@ -368,7 +538,7 @@ namespace WMaster.Manager
         /// Creates a new nonamed gang for single use
         /// </summary>
         /// <returns>Temporary new <see cref="Gang"/>.</returns>
-        public Gang GetTempGang()
+        public static Gang GetTempGang()
         {
             Gang newGang = new Gang();
             newGang.MemberNum = WMRand.Random() % 6 + 10;
@@ -382,6 +552,30 @@ namespace WMaster.Manager
             }
             newGang.Stats[EnumStats.HEALTH].Value = 100;
             newGang.Stats[EnumStats.HAPPINESS].Value = 100;
+            return newGang;
+        }
+        /// <summary>
+        /// Creates a new nonamed gang with stat/skill mod
+        /// </summary>
+        /// <param name="mod"></param>
+        /// <returns></returns>
+        public static Gang GetTempGang(int mod)
+        {
+            Gang newGang = new Gang();
+            newGang.MemberNum = Math.Min(15, WMRand.Bell(6, 18));
+            foreach (Skill item in newGang.Skills)
+            {
+                item.Value = (WMRand.Random() % 40) + 21 + (WMRand.Random() % mod);
+                item.Value = Math.Max(Math.Min(item.Value, 100), 1);
+            }
+            foreach (Stat item in newGang.Stats)
+            {
+                item.Value = (WMRand.Random() % 40) + 21 + (WMRand.Random() % mod);
+                item.Value = Math.Max(Math.Min(item.Value, 100), 1);
+            }
+            newGang.Stats[EnumStats.HEALTH].Value = 100;
+            newGang.Stats[EnumStats.HAPPINESS].Value = 100;
+
             return newGang;
         }
 
@@ -408,30 +602,6 @@ namespace WMaster.Manager
         }
 
         /// <summary>
-        /// Creates a new nonamed gang with stat/skill mod
-        /// </summary>
-        /// <param name="mod"></param>
-        /// <returns></returns>
-        public Gang GetTempGang(int mod)
-        {
-            Gang newGang = new Gang();
-            newGang.MemberNum = Math.Min(15, WMRand.Bell(6, 18));
-            foreach (Skill item in newGang.Skills)
-            {
-                item.Value = (WMRand.Random() % 40) + 21 + (WMRand.Random() % mod);
-                item.Value = Math.Max(Math.Min(item.Value, 100), 1);
-            }
-            foreach (Stat item in newGang.Stats)
-            {
-                item.Value = (WMRand.Random() % 40) + 21 + (WMRand.Random() % mod);
-                item.Value = Math.Max(Math.Min(item.Value, 100), 1);
-            }
-            newGang.Stats[EnumStats.HEALTH].Value = 100;
-            newGang.Stats[EnumStats.HAPPINESS].Value = 100;
-
-            return newGang;
-        }
-        /// <summary>
         /// Get randomly a gang from a gang list.
         /// </summary>
         /// <param name="gangList">List of gang.</param>
@@ -449,7 +619,7 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="gang"><see cref="Gang"/> to boost skill.</param>
         /// <param name="count">Number of skill to boost.</param>
-        public void BoostGangCombatSkills(Gang gang, int count)
+        public static void BoostGangCombatSkills(Gang gang, int count)
         {
             List<IValuableAttribut> possibleSkills = new List<IValuableAttribut>();
 
@@ -467,7 +637,7 @@ namespace WMaster.Manager
         /// <param name="possibleSkills"></param>
         /// <param name="count"></param>
         /// <param name="boostCount"></param>
-        private void BoostGangRandomSkill(List<IValuableAttribut> possibleSkills, int count, int boostCount)
+        public static void BoostGangRandomSkill(List<IValuableAttribut> possibleSkills, int count, int boostCount)
         {
             /*
             *	Which of the passed skills/stats will be raised this time?
@@ -517,7 +687,7 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="affectSkill">Skill to increase.</param>
         /// <param name="count">Number of time to increase.</param>
-        private void BoostGangSkill(IValuableAttribut affectSkill, int count)
+        public static void BoostGangSkill(IValuableAttribut affectSkill, int count)
         {
             /*
             *	OK, we've been passed a skill/stat. Now to raise it an amount depending on how high the
@@ -568,7 +738,7 @@ namespace WMaster.Manager
         /// <param name="gang2">Second gang to fight.</param>
         /// <param name="rivalVrival"><b>True</b> if <paramref name="gang1"/> and <paramref name="gang2"/> are rivals gangs.</param>
         /// <returns></returns>
-        public bool GangBrawl(Gang gang1, Gang gang2, bool rivalVrival)
+        public static bool GangBrawl(Gang gang1, Gang gang2, bool rivalVrival)
         {
             if (gang1 == null || gang1.MemberNum < 1)
             {
@@ -589,7 +759,7 @@ namespace WMaster.Manager
             {
                 gang1.HealLimit = 10;
             }
-            int g1SwordLevel = (rivalVrival ? Math.Min(5, (WMRand.Random() % (gang1.Skills[EnumSkills.COMBAT].Value / 20) + 1)) : m_SwordLevel);
+            int g1SwordLevel = (rivalVrival ? Math.Min(5, (WMRand.Random() % (gang1.Skills[EnumSkills.COMBAT].Value / 20) + 1)) : SwordLevel);
 
             gang2.HasSeenCombat = true;
             EnumSkills g2attack = EnumSkills.COMBAT;
@@ -669,7 +839,7 @@ namespace WMaster.Manager
                         gang1.AdjustHealLimit(-1);
                         if (!rivalVrival)
                         {
-                            m_NumHealingPotions--;
+                            NumHealingPotions--;
                         }
                         g1Health += 30;
                     }
@@ -727,7 +897,7 @@ namespace WMaster.Manager
         /// <param name="girl">A girl who ficht.</param>
         /// <param name="gang">A gang who fight.</param>
         /// <returns><b>True</b> if the girl wins</returns>
-        public bool GangCombat(sGirl girl, Gang gang)
+        public static bool GangCombat(sGirl girl, Gang gang)
         {
             WMLog.Trace("GangManager.GangCombat started!", WMLog.TraceLog.INFORMATION);
 
@@ -867,7 +1037,7 @@ namespace WMaster.Manager
                         if (gang.HealLimit > 0 && gHealth <= 40)
                         {
                             gang.AdjustHealLimit(-1);
-                            m_NumHealingPotions--;
+                            NumHealingPotions--;
                             gHealth += 30;
                             WMLog.Trace(string.Format("Goon drinks healing potion: new health value = {0}. Gang has {1} remaining.", gHealth, gang.HealLimit), WMLog.TraceLog.INFORMATION);
                         }
@@ -886,7 +1056,7 @@ namespace WMaster.Manager
                         {
                             WMLog.Trace("      attack succeeds!", WMLog.TraceLog.INFORMATION);
 
-                            int damage = (m_SwordLevel + 1) * Math.Max(1, gang.Strength / 10);
+                            int damage = (SwordLevel + 1) * Math.Max(1, gang.Strength / 10);
                             if (gattack == EnumSkills.MAGIC)
                             {
                                 if (gMana <= 0)
@@ -1233,34 +1403,7 @@ namespace WMaster.Manager
 
             return true;
         }
-        /// <summary>
-        /// Get the number of business extorted.
-        /// </summary>
-        /// <returns>Number of business extorted.</returns>
-        public int GetNumBusinessExtorted()
-        {
-            return m_BusinessesExtort;
-        }
-        /// <summary>
-        /// Adjuste number of business extorted.
-        /// </summary>
-        /// <param name="n">Adjustement value of number of business extorted.</param>
-        /// <returns>Number of business extorted.</returns>
-        public int NumBusinessExtorted(int n)
-        {
-            // TODO : GAME - Check m_BusinessesExtort < Max value?
-            m_BusinessesExtort += n;
-            return m_BusinessesExtort;
-        }
 
-        /// <summary>
-        /// Return the weapon level of gang.
-        /// </summary>
-        /// <returns>The weapon level the gang.</returns>
-        public int GetWeaponLevel()
-        {
-            return m_SwordLevel;
-        }
         public int GetNetRestock()
         {
             return m_KeepNetsStocked;
@@ -1283,63 +1426,6 @@ namespace WMaster.Manager
             return m_KeepHealStocked;
         }
 
-        /// <summary>
-        /// Get the max number of healpotion a gang can use. (?)
-        /// </summary>
-        /// <remarks><para>`J` replaced with passing out of pots/nets in GangStartOfShift() for .06.01.09</para></remarks>
-        /// <returns>Max number of healpotion a gang can use.</returns>
-        public int HealingLimit()
-        {
-            if (m_PlayerGangList.Count.Equals(0) || m_NumHealingPotions  < 1)
-            {
-                return 0;
-            }
-            int limit;
-            // take the number of potions and divide by the the number of gangs
-            limit = m_NumHealingPotions / m_PlayerGangList.Count;
-            /*
-            *	if that rounds to less than zero, and there are still
-            *	potions available, make sure they get at least one to use
-            */
-            if ((limit < 1) && (m_NumHealingPotions > 0))
-            {
-                limit = 1;
-            }
-            return limit;
-        }
-
-        public bool ControlGangs()
-        {
-            return m_Control_Gangs;
-        }
-        public int GangGetsGirls()
-        {
-            return m_Gang_Gets_Girls;
-        }
-        public int GangGetsItems()
-        {
-            return m_Gang_Gets_Items;
-        }
-        public int Gang_Gets_Beast()
-        {
-            return m_Gang_Gets_Beast;
-        }
-        public bool ControlGangs(bool cg)
-        {
-            return m_Control_Gangs = cg;
-        }
-        public int GangGetsGirls(int g)
-        {
-            return m_Gang_Gets_Girls = g;
-        }
-        public int GangGetsItems(int g)
-        {
-            return m_Gang_Gets_Items = g;
-        }
-        public int GangGetsBeast(int g)
-        {
-            return m_Gang_Gets_Beast = g;
-        }
 
         /// <summary>
         /// Get the number of net a gang can use (?)
@@ -1403,62 +1489,64 @@ namespace WMaster.Manager
             // now, deal with player controlled gangs on missions
             foreach (Gang item in m_PlayerGangList)
             {
-                switch (item.m_MissionID)
-                {
-                    case GangMissions.GUARDING: // these are handled in GangStartOfShift()
-                    case GangMissions.SPYGIRLS:
-                        break;
-                    case GangMissions.CAPTUREGIRL:
-                        if (!Game.Brothels.RunawaysGirlList.Count.Equals(0))
-                        {
-                            RecaptureMission(item);
-                            break;
-                        }
-                        else
-                        {
-                            item.m_Events.AddMessage(
-                                LocalString.GetStringLine(LocalString.ResourceStringCategory.Global, "ThisGangWasSentToLookForRunawaysButThereAreNoneSoTheyWentLookingForAnyGirlToKidnapInstead"),
-                                ImageTypes.PROFILE, EventType.GANG);
-                            KidnappMission(item);
-                            break;
-                        }
-                    case GangMissions.KIDNAPP:
-                        KidnappMission(item);
-                        break;
-                    case GangMissions.SABOTAGE:
-                        SabotageMission(item);
-                        break;
-                    case GangMissions.EXTORTION:
-                        ExtortionMission(item);
-                        break;
-                    case GangMissions.PETYTHEFT:
-                        PettyTheftMission(item);
-                        break;
-                    case GangMissions.GRANDTHEFT:
-                        GrandTheftMission(item);
-                        break;
-                    case GangMissions.CATACOMBS:
-                        CatacombsMission(item);
-                        break;
-                    case GangMissions.TRAINING:
-                        GangTraining(item);
-                        break;
-                    case GangMissions.RECRUIT:
-                        GangRecruiting(item);
-                        break;
-                    case GangMissions.SERVICE:
-                        ServiceMission(item);
-                        break;
-                    default:
-                        // TODO : Replace m_MissionID to Mission name
-                        item.m_Events.AddMessage(
-                            LocalString.GetStringFormatLine(
-                                LocalString.ResourceStringCategory.Global,
-                                "ErrorNoMissionSetOrMissionNotFound[MissionName]",
-                                new List<FormatStringParameter>() { new FormatStringParameter("MissionName", item.m_MissionID.ToString()) }),
-                            ImageTypes.PROFILE, EventType.GANG);
-                        continue;
-                }
+                if (item.CurrentMission != null)
+                { item.CurrentMission.DoTheJob(); }
+                //switch (item.MissionType)
+                //{
+                //    case EnuGangMissions.Guarding: // these are handled in GangStartOfShift()
+                //    case EnuGangMissions.SpyGirls:
+                //        break;
+                //    case EnuGangMissions.RecaptureGirls:
+                //        if (!Game.Brothels.RunawaysGirlList.Count.Equals(0))
+                //        {
+                //            RecaptureMission(item);
+                //            break;
+                //        }
+                //        else
+                //        {
+                //            item.m_Events.AddMessage(
+                //                LocalString.GetStringLine(LocalString.ResourceStringCategory.Global, "ThisGangWasSentToLookForRunawaysButThereAreNoneSoTheyWentLookingForAnyGirlToKidnapInstead"),
+                //                ImageTypes.PROFILE, EventType.GANG);
+                //            KidnappMission(item);
+                //            break;
+                //        }
+                //    case EnuGangMissions.KidnappGirls:
+                //        KidnappMission(item);
+                //        break;
+                //    case EnuGangMissions.Sabotage:
+                //        SabotageMission(item);
+                //        break;
+                //    case EnuGangMissions.Extortion:
+                //        ExtortionMission(item);
+                //        break;
+                //    case EnuGangMissions.PettyTheft:
+                //        PettyTheftMission(item);
+                //        break;
+                //    case EnuGangMissions.GrandTheft:
+                //        GrandTheftMission(item);
+                //        break;
+                //    case EnuGangMissions.Catacombs:
+                //        CatacombsMission(item);
+                //        break;
+                //    case EnuGangMissions.Training:
+                //        GangTraining(item);
+                //        break;
+                //    case EnuGangMissions.Recruit:
+                //        GangRecruiting(item);
+                //        break;
+                //    case EnuGangMissions.Service:
+                //        ServiceMission(item);
+                //        break;
+                //    default:
+                //        // TODO : Replace m_MissionID to Mission name
+                //        item.m_Events.AddMessage(
+                //            LocalString.GetStringFormatLine(
+                //                LocalString.ResourceStringCategory.Global,
+                //                "ErrorNoMissionSetOrMissionNotFound[MissionName]",
+                //                new List<FormatStringParameter>() { new FormatStringParameter("MissionName", item.MissionType.ToString()) }),
+                //            ImageTypes.PROFILE, EventType.GANG);
+                //        continue;
+                //}
 
                 if (LoseGang(item))
                 {
@@ -1507,8 +1595,8 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="gangID">Index of gang in player list.</param>
         /// <param name="mission">Mission to affect to gang.</param>
-        [Obsolete("Use void SendGang(Gang gang, int missID)", false)]
-        public void SendGang(int gangID, GangMissions mission)
+        [Obsolete("Use GangMissionBase.SetGangMission(...) instead of SendGang(...)", false)]
+        public void SendGang(int gangID, EnuGangMissions mission)
         {
             SendGang(m_PlayerGangList[gangID], mission);
         }
@@ -1518,12 +1606,13 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="gang">Gang to send on mission.</param>
         /// <param name="mission">Mission to affect to gang.</param>
-        public void SendGang(Gang gang, GangMissions mission)
+        [Obsolete("Use GangMissionBase.SetGangMission(...) instead of SendGang(...)", false)]
+        public void SendGang(Gang gang, EnuGangMissions mission)
         {
             if (gang == null)
             { return; }
 
-            gang.m_MissionID = mission;
+            GangMissionBase.SetGangMission(mission, gang);
         }
 
         /// <summary>
@@ -1531,10 +1620,10 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="mission">Mission of gang to find.</param>
         /// <returns>First <see cref="Gang"/> assigned to <paramref name="mission"/>.</returns>
-        public Gang GetGangOnMission(GangMissions mission)
+        public Gang GetGangOnMission(EnuGangMissions mission)
         {
             return m_PlayerGangList
-                .Where(g => g.CurrentMission.Equals(mission))
+                .Where(g => g.MissionType.Equals(mission))
                 .FirstOrDefault();
         }
 
@@ -1547,10 +1636,10 @@ namespace WMaster.Manager
         /// <returns></returns>
         public Gang GetGangNotFull(int roomFor, bool recruiting)
         {
-            List<GangMissions> mission = new List<GangMissions>() { GangMissions.RECRUIT, GangMissions.TRAINING, GangMissions.SPYGIRLS, GangMissions.GUARDING, GangMissions.SERVICE };
+            List<EnuGangMissions> mission = new List<EnuGangMissions>() { EnuGangMissions.Recruit, EnuGangMissions.Training, EnuGangMissions.SpyGirls, EnuGangMissions.Guarding, EnuGangMissions.Service };
             foreach (Gang item in m_PlayerGangList)
             {
-                if (mission.Contains(item.m_MissionID))
+                if (mission.Contains(item.MissionType))
                 {
                     // TODO : Replace literal to Max gang member value
                     if (
@@ -1571,28 +1660,28 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="roomFor">Number of free room in gang to find.</param>
         /// <returns><see cref="Gang"/> with room to spare</returns>
-        public Gang GetGangRecruitingNotFull(int roomFor)
+        public static Gang GetGangRecruitingNotFull(int roomFor)
         {
-            List<GangMissions> mission = new List<GangMissions>() { GangMissions.RECRUIT, GangMissions.TRAINING, GangMissions.SPYGIRLS, GangMissions.GUARDING, GangMissions.SERVICE };
-            foreach (Gang item in m_PlayerGangList)
+            List<EnuGangMissions> mission = new List<EnuGangMissions>() { EnuGangMissions.Recruit, EnuGangMissions.Training, EnuGangMissions.SpyGirls, EnuGangMissions.Guarding, EnuGangMissions.Service };
+            foreach (Gang lGang in GangManager.Instance.m_PlayerGangList)
             {
-                if (item.MemberNum + roomFor <= 15)
+                if (lGang.MemberNum + roomFor <= 15)
                 {
-                    if (mission.Contains(item.m_MissionID))
+                    if (mission.Contains(lGang.MissionType))
                     {
-                        return item;
+                        return lGang;
                     }
                 }
             }
 
             // if none are found then get a gang that has room for at least 1
-            foreach (Gang item in m_PlayerGangList)
+            foreach (Gang lGang in GangManager.Instance.m_PlayerGangList)
             {
-                if (item.MemberNum < 15)
+                if (lGang.MemberNum < 15)
                 {
-                    if (mission.Contains(item.m_MissionID))
+                    if (mission.Contains(lGang.MissionType))
                     {
-                        return item;
+                        return lGang;
                     }
                 }
             }
@@ -1605,18 +1694,21 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="mission">The mission gang must be affected to.</param>
         /// <returns>List of all gang affected to <paramref name="mission"/>.</returns>
-        public List<Gang> GangsOnMission(GangMissions mission)
+        public List<Gang> GangsOnMission(EnuGangMissions mission)
         {
-            List<Gang> list = new List<Gang>(); // loop through the gangs
-            foreach (Gang item in m_PlayerGangList)
-            {
-                // if they're doing the job we are looking for, take them
-                if (item.m_MissionID.Equals(mission))
-                {
-                    list.Add(item);
-                }
-            }
-            return list;
+            return m_PlayerGangList
+                .Where(g => g.MissionType.Equals(mission))
+                .ToList();
+            //List<Gang> list = new List<Gang>(); // loop through the gangs
+            //foreach (Gang item in m_PlayerGangList)
+            //{
+            //    // if they're doing the job we are looking for, take them
+            //    if (item.MissionType.Equals(mission))
+            //    {
+            //        list.Add(item);
+            //    }
+            //}
+            //return list;
         }
 
         /// <summary>
@@ -1630,7 +1722,7 @@ namespace WMaster.Manager
             foreach (Gang item in m_PlayerGangList)
             {
                 // if they're doing the job we are looking for, take them
-                if (item.m_MissionID.Equals(GangMissions.GUARDING) || item.m_MissionID.Equals(GangMissions.SPYGIRLS))
+                if (item.MissionType.Equals(EnuGangMissions.Guarding) || item.MissionType.Equals(EnuGangMissions.SpyGirls))
                 {
                     list.Add(item);
                 }
@@ -1648,7 +1740,7 @@ namespace WMaster.Manager
         public int ChanceToCatch(sGirl girl)
         {
             int pc = 0;
-            List<Gang> gvec = GangsOnMission(GangMissions.SPYGIRLS); // get a vector containing all the spying gangs
+            List<Gang> gvec = GangsOnMission(EnuGangMissions.SpyGirls); // get a vector containing all the spying gangs
 
             WMLog.Trace(string.Format("GangManager.ChanceToCatch: {0} gangs spying.",gvec.Count), WMLog.TraceLog.INFORMATION);
 
@@ -1679,12 +1771,14 @@ namespace WMaster.Manager
             return pc;
         }
 
+        #region Mission
         /// <summary>
         /// Performe a gang sabotage mission against player's rival.
         /// <remarks><para>`J` returns true if they succeded, false if they failed - updated for .06.01.09</para></remarks>
         /// </summary>
         /// <param name="gang"><see cref="Gang"/> performing mission.</param>
         /// <returns><b>True</b> if mission is a sucess</returns>
+        [Obsolete("Use gang.CurrentMission.DoTheJob() when GangMissionSabotage is affected to gang", true)]
         public bool SabotageMission(Gang gang)
         {
             LocalString sabotageEvent = new LocalString();
@@ -2120,6 +2214,7 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="gang"><see cref="Gang"/> performing mission.</param>
         /// <returns><b>True</b> if mission is a sucess</returns>
+        [Obsolete("Use gang.CurrentMission.DoTheJob() when GangMissionRecaptureGirls is affected to gang", true)]
         public bool RecaptureMission(Gang gang)
         {
             LocalString recaptureEven = new LocalString();
@@ -2307,6 +2402,7 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="gang"><see cref="Gang"/> performing mission.</param>
         /// <returns><b>True</b> if mission is a sucess</returns>
+        [Obsolete("Use gang.CurrentMission.DoTheJob() when GangMissionExtortion is affected to gang", true)]
         public bool ExtortionMission(Gang gang)
         {
             LocalString extortionEven = new LocalString();
@@ -2501,6 +2597,7 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="gang"><see cref="Gang"/> performing mission.</param>
         /// <returns><b>True</b> if mission is a sucess</returns>
+        [Obsolete("Use gang.CurrentMission.DoTheJob() when GangMissionPettyTheft is affected to gang", true)]
         public bool PettyTheftMission(Gang gang)
         {
             LocalString pettyTheftEven = new LocalString();
@@ -2795,6 +2892,7 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="gang"><see cref="Gang"/> performing mission.</param>
         /// <returns><b>True</b> if mission is a sucess</returns>
+        [Obsolete("Use gang.CurrentMission.DoTheJob() when GangMissionGrandTheft is affected to gang", true)]
         public bool GrandTheftMission(Gang gang)
         {
             LocalString grandTheftEvent = new LocalString();
@@ -2929,6 +3027,7 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="gang"><see cref="Gang"/> performing mission.</param>
         /// <returns><b>True</b> if mission is a sucess</returns>
+        [Obsolete("Use gang.CurrentMission.DoTheJob() when GangMissionKidnappGirls is affected to gang", true)]
         public bool KidnappMission(Gang gang)
         {
             LocalString kidnappMissionEvent = new LocalString();
@@ -3164,6 +3263,7 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="gang"><see cref="Gang"/> performing mission.</param>
         /// <returns><b>True</b> if mission is a sucess</returns>
+        [Obsolete("Use gang.CurrentMission.DoTheJob() when GangMissionCatacombs is affected to gang", true)]
         public bool CatacombsMission(Gang gang)
         {
             LocalString catacombsMissionEvent = new LocalString();
@@ -3173,7 +3273,7 @@ namespace WMaster.Manager
                 "Gang[GangName]IsExploringTheCatacombs",
                 new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
 
-            if (!m_Control_Gangs) // use old code
+            if (!m_ControlGangs) // use old code
             {
                 catacombsMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global, "YouTellThemToGetWhateverTheyCanFind");
 
@@ -3386,7 +3486,7 @@ namespace WMaster.Manager
                 int gold = 0;
 
                 // do the intro text
-                string girlCatacombsLookFor = Game.Girls.catacombs_look_for(m_Gang_Gets_Girls, m_Gang_Gets_Items, m_Gang_Gets_Beast);
+                string girlCatacombsLookFor = Game.Girls.catacombs_look_for(m_GangGetsGirls, m_GangGetsItems, m_GangGetsBeast);
                 // TODO : Add string to event (verify g_Girls.catacombs_look_for use resources language string)
                 //catacombsMissionEvent.Append(girlCatacombsLookFor);
 
@@ -3396,7 +3496,7 @@ namespace WMaster.Manager
                     double choice = (WMRand.Random() % 10001) / 100.0;
                     gold += WMRand.Random() % (gang.MemberNum * 20);
 
-                    if (choice < m_Gang_Gets_Girls) // get girl = 10 point
+                    if (choice < m_GangGetsGirls) // get girl = 10 point
                     {
                         bool gotGirl = false;
                         sGirl tempGirl = Game.Girls.CreateRandomGirl(18, false, false, false, true); // `J` Legal Note: 18 is the Legal Age of Majority for the USA where I live
@@ -3444,7 +3544,7 @@ namespace WMaster.Manager
                             bringBackNum += 5;
                         }
                     }
-                    else if (choice < m_Gang_Gets_Girls + m_Gang_Gets_Items) // get item = 4 points
+                    else if (choice < m_GangGetsGirls + m_GangGetsItems) // get item = 4 points
                     {
                         bool gotitem = false;
                         if (WMRand.Percent(33)) // item is guarded
@@ -3588,7 +3688,7 @@ namespace WMaster.Manager
                         for (int i = 0; i < totalGirls; i++)
                         {
                             sGirl ugirl = null;
-                            bool unique = WMRand.Percent(cConfig.Instance.catacombs.unique_catacombs()); // chance of getting unique girl
+                            bool unique = WMRand.Percent(Config.Instance.catacombs.unique_catacombs()); // chance of getting unique girl
                             if (unique)
                             {
                                 ugirl = Game.Girls.GetRandomGirl(false, true);
@@ -3751,6 +3851,7 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="gang"><see cref="Gang"/> performing mission.</param>
         /// <returns><b>True</b> if mission is a sucess</returns>
+        [Obsolete("Use gang.CurrentMission.DoTheJob() when GangMissionService is affected to gang", true)]
         public bool ServiceMission(Gang gang)
         {
             LocalString serviceMissionEvent = new LocalString();
@@ -3952,6 +4053,7 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="gang"><see cref="Gang"/> performing mission.</param>
         /// <returns><b>True</b> if mission is a sucess</returns>
+        [Obsolete("Use gang.CurrentMission.DoTheJob() when GangMissionTraining is affected to gang", true)]
         public bool GangTraining(Gang gang)
         {
             LocalString gangTrainingEvent = new LocalString();
@@ -4046,6 +4148,7 @@ namespace WMaster.Manager
         /// </summary>
         /// <param name="gang"><see cref="Gang"/> performing mission.</param>
         /// <returns><b>True</b> if mission is a sucess</returns>
+        [Obsolete("Use gang.CurrentMission.DoTheJob() when GangMissionRecruit is affected to gang", true)]
         public bool GangRecruiting(Gang gang)
         {
             LocalString gangRecruitingEvent = new LocalString();
@@ -4213,35 +4316,35 @@ namespace WMaster.Manager
                         int passNumGotThere = 0;
                         for (int i = 0; i < passNum; i++)
                         {
-                            if (passTo.m_MissionID == GangMissions.RECRUIT)
+                            if (passTo.MissionType == EnuGangMissions.Recruit)
                             {
                                 if (WMRand.Percent(75))
                                 {
                                     passNumGotThere++;
                                 }
                             }
-                            if (passTo.m_MissionID == GangMissions.TRAINING)
+                            if (passTo.MissionType == EnuGangMissions.Training)
                             {
                                 if (WMRand.Percent(50))
                                 {
                                     passNumGotThere++;
                                 }
                             }
-                            if (passTo.m_MissionID == GangMissions.SPYGIRLS)
+                            if (passTo.MissionType == EnuGangMissions.SpyGirls)
                             {
                                 if (WMRand.Percent(95))
                                 {
                                     passNumGotThere++;
                                 }
                             }
-                            if (passTo.m_MissionID == GangMissions.GUARDING)
+                            if (passTo.MissionType == EnuGangMissions.Guarding)
                             {
                                 if (WMRand.Percent(30))
                                 {
                                     passNumGotThere++;
                                 }
                             }
-                            if (passTo.m_MissionID == GangMissions.SERVICE)
+                            if (passTo.MissionType == EnuGangMissions.Service)
                             {
                                 if (WMRand.Percent(90))
                                 {
@@ -4297,8 +4400,9 @@ namespace WMaster.Manager
             gang.HasSeenCombat = true; // though not actually combat, this prevents the automatic +1 member at the end of the week
             return false;
         }
+        #endregion
 
-        // TODO : Is there a good place for this methode?
+        // TODO : Is there a good place for this methode? Call GangMission.GetName function.
         /// <summary>
         /// Declaring losing gang general event.
         /// <remarks><para>`J` - updated for .06.01.09</para></remarks>
@@ -4310,58 +4414,58 @@ namespace WMaster.Manager
             if (gang.MemberNum <= 0)
             {
                 LocalString loseGangEvent = new LocalString();
-                GangMissions mission = gang.m_MissionID;
+                GangMissionBase mission = gang.CurrentMission ?? GangMissionBase.None;
                 loseGangEvent.AppendFormat(LocalString.ResourceStringCategory.Global,
-                    "[GangName]WasLostWhile",
-                    new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
-                // TODO : Translation of mission to move to mission object.
-                switch (mission)
-                {
-                    case GangMissions.GUARDING:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "Guarding");
-                        break;
-                    case GangMissions.SABOTAGE:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "AttackingYourRivals");
-                        break;
-                    case GangMissions.SPYGIRLS:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "SpyingOnYourGirls");
-                        // TODO : Log, a gang cant be lose while spying girl
-                        break;
-                    case GangMissions.CAPTUREGIRL:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "TryingToRecaptureARunaway");
-                        break;
-                    case GangMissions.EXTORTION:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "TryingToExtortNewBusinesses");
-                        break;
-                    case GangMissions.PETYTHEFT:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "PerformingPettyCrimes");
-                        break;
-                    case GangMissions.GRANDTHEFT:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "PerformingMajorCrimes");
-                        break;
-                    case GangMissions.KIDNAPP:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "TryingToKidnapGirls");
-                        break;
-                    case GangMissions.CATACOMBS:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "ExploringTheCatacombs");
-                        break;
-                    case GangMissions.TRAINING:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "Training");
-                        // TODO : Log, a gang cant be lose while training
-                        break;
-                    case GangMissions.RECRUIT:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "Recruiting");
-                        // TODO : Log, a gang cant be lose while recruiting
-                        break;
-                    case GangMissions.SERVICE:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "HelpingTheCommunity");
-                        break;
-                    default:
-                        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "OnAMission");
-                        // TODO : Log, GangMissions unknown
-                        break;
-                }
-                Game.MessageQue.AddToQue(loseGangEvent.ToString(), Constants.COLOR_RED);
+                    "[GangName]WasLostWhile[GangMissionName]",
+                    new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name), new FormatStringParameter("GangMissionName", mission.GetMissionName()) });
+
+                //switch (mission)
+                //{
+                //    case GangMissions.Guarding:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "Guarding");
+                //        break;
+                //    case GangMissions.Sabotage:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "AttackingYourRivals");
+                //        break;
+                //    case GangMissions.SpyGirls:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "SpyingOnYourGirls");
+                //        // TODO : Log, a gang cant be lose while spying girl
+                //        break;
+                //    case GangMissions.RecaptureGirls:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "TryingToRecaptureARunaway");
+                //        break;
+                //    case GangMissions.Extortion:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "TryingToExtortNewBusinesses");
+                //        break;
+                //    case GangMissions.PettyTheft:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "PerformingPettyCrimes");
+                //        break;
+                //    case GangMissions.GrandTheft:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "PerformingMajorCrimes");
+                //        break;
+                //    case GangMissions.KidnappGirls:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "TryingToKidnapGirls");
+                //        break;
+                //    case GangMissions.Catacombs:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "ExploringTheCatacombs");
+                //        break;
+                //    case GangMissions.Training:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "Training");
+                //        // TODO : Log, a gang cant be lose while training
+                //        break;
+                //    case GangMissions.Recruit:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "Recruiting");
+                //        // TODO : Log, a gang cant be lose while recruiting
+                //        break;
+                //    case GangMissions.Service:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "HelpingTheCommunity");
+                //        break;
+                //    default:
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "OnAMission");
+                //        // TODO : Log, GangMissions unknown
+                //        break;
+                //}
+                Game.MessageQue.Enqueue(loseGangEvent.ToString(), MessageCategory.COLOR_RED);
                 RemoveGang(gang);
                 return true;
             }
@@ -4376,11 +4480,11 @@ namespace WMaster.Manager
         public void CheckGangRecruit(Gang gang)
         {
             LocalString checkGangRecruitEvent = new LocalString();
-            if (gang.m_MissionID == GangMissions.SERVICE || gang.m_MissionID == GangMissions.TRAINING)
+            if (gang.MissionType == EnuGangMissions.Service || gang.MissionType == EnuGangMissions.Training)
             {
                 // `J` service and training can have as few as 1 member doing it.
-            } 
-            else if (gang.MemberNum <= 5 && gang.m_MissionID != GangMissions.RECRUIT)
+            }
+            else if (gang.MemberNum <= 5 && gang.MissionType != EnuGangMissions.Recruit)
             {
                 checkGangRecruitEvent.AppendLineFormat(
                     LocalString.ResourceStringCategory.Global,
@@ -4388,10 +4492,10 @@ namespace WMaster.Manager
                     new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
                 gang.m_Events.AddMessage(checkGangRecruitEvent.ToString(), ImageTypes.PROFILE, EventType.WARNING);
                 gang.AutoRecruit = true;
-                gang.m_LastMissID = gang.m_MissionID;
-                gang.m_MissionID = GangMissions.RECRUIT;
+                gang.LastMission = gang.CurrentMission;
+                GangMissionBase.SetGangMission(EnuGangMissions.Recruit, gang);
             }
-            else if (gang.m_MissionID == GangMissions.RECRUIT && gang.MemberNum >= 15)
+            else if (gang.MissionType == EnuGangMissions.Recruit && gang.MemberNum >= 15)
             {
                 if (gang.AutoRecruit)
                 {
@@ -4399,7 +4503,7 @@ namespace WMaster.Manager
                         LocalString.ResourceStringCategory.Global,
                         "Gang[GangName]WerePlacedBackOnTheirPreviousMissionNowThatTheirNumbersAreBackToNormal",
                         new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
-                    gang.m_MissionID = gang.m_LastMissID;
+                    gang.CurrentMission = gang.LastMission;
                     gang.AutoRecruit = false;
                 }
                 else
@@ -4408,12 +4512,13 @@ namespace WMaster.Manager
                         LocalString.ResourceStringCategory.Global,
                         "Gang[GangName]WerePlacedOnGuardDutyFromRecruitmentAsTheirNumbersAreFull",
                         new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
-                    gang.m_MissionID = GangMissions.GUARDING;
+                    GangMissionBase.SetGangMission(EnuGangMissions.Guarding, gang);
                 }
                 gang.m_Events.AddMessage(checkGangRecruitEvent.ToString(), ImageTypes.PROFILE, EventType.WARNING);
             }
         }
 
+        // TODO : Extract all mission relative to corresponding GangMission object
         /// <summary>
         /// Reffiling gang net and healing pot.
         /// <remarks><para>`J` - Added for .06.01.09</para></remarks>
@@ -4452,7 +4557,7 @@ namespace WMaster.Manager
                         LocalString.ResourceStringCategory.Global,
                         "AllOfTheMenInGang[GangName]HaveDied",
                         new List<FormatStringParameter>() { new FormatStringParameter("GangName", currentGang.Name) });
-                    Game.MessageQue.AddToQue(gangStartOfShiftEvent.ToString(), Constants.COLOR_RED);
+                    Game.MessageQue.Enqueue(gangStartOfShiftEvent.ToString(), MessageCategory.COLOR_RED);
 
                     RemoveGang(currentGang);
                     continue;
@@ -4460,20 +4565,20 @@ namespace WMaster.Manager
 
                 currentGang.HasSeenCombat = false;
                 currentGang.m_Events.Clear();
-                cost += tariff.goon_mission_cost(currentGang.m_MissionID); // sum up the cost of all the goon missions
+                cost += tariff.goon_mission_cost(currentGang.MissionType); // sum up the cost of all the goon missions
                 currentGang.NetLimit = 0;
                 currentGang.HealLimit = 0;
 
                 CheckGangRecruit(currentGang);
 
-                if (currentGang.m_MissionID == GangMissions.SPYGIRLS)
+                if (currentGang.MissionType == EnuGangMissions.SpyGirls)
                 {
                     string localString = LocalString.GetStringFormatLine(LocalString.ResourceStringCategory.Global,
                             "Gang[GangName]IsSpyingOnYourGirls",
                             new List<FormatStringParameter>() { new FormatStringParameter("GangName", currentGang.Name) } );
                     currentGang.m_Events.AddMessage(localString, ImageTypes.PROFILE, EventType.GANG);
                 }
-                if (currentGang.m_MissionID == GangMissions.GUARDING)
+                if (currentGang.MissionType == EnuGangMissions.Guarding)
                 {
                     string localString = LocalString.GetStringFormatLine(LocalString.ResourceStringCategory.Global,
                             "Gang[GangName]IsGuarding",
@@ -4495,19 +4600,19 @@ namespace WMaster.Manager
             // check numbers needed
             foreach (Gang currentGang in m_PlayerGangList)
             {
-                switch (currentGang.m_MissionID)
+                switch (currentGang.MissionType)
                 {
-                    case GangMissions.SPYGIRLS:
-                    case GangMissions.GUARDING:
-                    case GangMissions.SABOTAGE:
-                    case GangMissions.EXTORTION:
-                    case GangMissions.PETYTHEFT:
-                    case GangMissions.GRANDTHEFT:
+                    case EnuGangMissions.SpyGirls:
+                    case EnuGangMissions.Guarding:
+                    case EnuGangMissions.Sabotage:
+                    case EnuGangMissions.Extortion:
+                    case EnuGangMissions.PettyTheft:
+                    case EnuGangMissions.GrandTheft:
                         gangsNeedingPots++;
                         break;
-                    case GangMissions.CAPTUREGIRL:
-                    case GangMissions.KIDNAPP:
-                    case GangMissions.CATACOMBS:
+                    case EnuGangMissions.RecaptureGirls:
+                    case EnuGangMissions.KidnappGirls:
+                    case EnuGangMissions.Catacombs:
                         gangsNeedingPots++;
                         gangsNeedingNets++;
                         break;
@@ -4541,20 +4646,20 @@ namespace WMaster.Manager
                     giveNets = totalNets - netsPassedOut;
                 }
 
-                switch (currentGang.m_MissionID)
+                switch (currentGang.MissionType)
                 {
-                    case GangMissions.GUARDING:
-                    case GangMissions.SPYGIRLS:
-                    case GangMissions.SABOTAGE:
-                    case GangMissions.EXTORTION:
-                    case GangMissions.PETYTHEFT:
-                    case GangMissions.GRANDTHEFT:
+                    case EnuGangMissions.Guarding:
+                    case EnuGangMissions.SpyGirls:
+                    case EnuGangMissions.Sabotage:
+                    case EnuGangMissions.Extortion:
+                    case EnuGangMissions.PettyTheft:
+                    case EnuGangMissions.GrandTheft:
                         currentGang.HealLimit = givePots;
                         potsPassedOut += givePots;
                         break;
-                    case GangMissions.CAPTUREGIRL:
-                    case GangMissions.KIDNAPP:
-                    case GangMissions.CATACOMBS:
+                    case EnuGangMissions.RecaptureGirls:
+                    case EnuGangMissions.KidnappGirls:
+                    case EnuGangMissions.Catacombs:
                         currentGang.HealLimit = givePots;
                         potsPassedOut += givePots;
                         currentGang.NetLimit = giveNets;

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="870ce21f-4b22-4465-9076-1a19c139c2f4"
+  name="WMaster"
+  visibility="Private" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <referencesInternal>
+    <reference
+      Id="5940ba4f-17a3-4503-aea5-e931ea439550"
+      handle="viewcode://./CodeSchema_Namespace?Namespace%3DWMaster"
+      tag="ViewCode" />
+  </referencesInternal>
+  <packagedElements>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="0c6b8aa5-48af-46e0-94be-dbd6f631a5a4"
+        LastKnownName="Entity"
+        LastKnownLocation="Package1_1923.uml" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="c0a41067-abb2-4936-a5d2-c0ab0479876b"
+        LastKnownName="ClassOrStructurToImplement"
+        LastKnownLocation="Package3_1923.uml" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="21ba554b-aed3-4c63-abc7-4a321e11cd84"
+        LastKnownName="Concept"
+        LastKnownLocation="Package4_1923.uml" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="2006c9f9-9c4c-472c-a143-c10940caf422"
+        LastKnownName="Manager"
+        LastKnownLocation="Package7_1923.uml" />
+    </packageHasNamedElement>
+  </packagedElements>
+</package>

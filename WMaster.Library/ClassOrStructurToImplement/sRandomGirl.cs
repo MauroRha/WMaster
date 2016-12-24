@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WMaster.Enums;
 using WMaster.Concept;
 using WMaster.Entity.Item;
+using WMaster.Concept.Attributs;
 
 namespace WMaster.ClassOrStructurToImplement
 {

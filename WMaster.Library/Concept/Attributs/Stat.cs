@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace WMaster.Concept
+namespace WMaster.Concept.Attributs
 {
 
     /// <summary>
     /// Skill value of en entity (player, girl, gang, rival...)
-    /// <remarks><para>Class used to fix <see cref="EntityAttribute&lt;EnumSkills&gt"/> to <see cref="EnumSkills"/>;</para></remarks>
+    /// <remarks><para>Class used to fix EntityAttribute&lt;Skills&gt;</para></remarks>
     /// </summary>
-    public class Skill : Attribute<EnumSkills>
+    public class Stat : Attribute<EnumStats>
     {
         /// <summary>
         /// Minimum value attribut can take.
@@ -35,7 +35,7 @@ namespace WMaster.Concept
         /// </summary>
         public override int LowerBoundLimit
         {
-            get { return Skill.LOWER_BOUND_LIMIT; }
+            get { return Stat.LOWER_BOUND_LIMIT; }
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace WMaster.Concept
         /// </summary>
         public override int UpperBoundLimit
         {
-            get { return Skill.UPPER_BOUND_LIMIT; }
+            get { return Stat.UPPER_BOUND_LIMIT; }
         }
     }
 }

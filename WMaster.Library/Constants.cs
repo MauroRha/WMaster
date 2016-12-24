@@ -144,17 +144,18 @@ namespace WMaster
         [Obsolete("IHM value must move to IHM project", true)]
         public const uint LISTBOX_COLUMNS = 25;
 
-        // Listbox Constants moved from cListBox.h
-        [Obsolete("IHM value must move to IHM project", false)]
-        public const int COLOR_BLUE = 0;
-        [Obsolete("IHM value must move to IHM project", false)]
-        public const int COLOR_RED = 1;
-        [Obsolete("IHM value must move to IHM project", false)]
-        public const int COLOR_DARKBLUE = 2;
-        [Obsolete("IHM value must move to IHM project", false)]
-        public const int COLOR_GREEN = 3;
-        [Obsolete("IHM value must move to IHM project", false)]
-        public const int COLOR_YELLOW = 4; // `J` added
+        //Move to MessageCategory enumeration
+        //// Listbox Constants moved from cListBox.h
+        //[Obsolete("IHM value must move to IHM project", false)]
+        //public const int COLOR_BLUE = 0;
+        //[Obsolete("IHM value must move to IHM project", false)]
+        //public const int COLOR_RED = 1;
+        //[Obsolete("IHM value must move to IHM project", false)]
+        //public const int COLOR_DARKBLUE = 2;
+        //[Obsolete("IHM value must move to IHM project", false)]
+        //public const int COLOR_GREEN = 3;
+        //[Obsolete("IHM value must move to IHM project", false)]
+        //public const int COLOR_YELLOW = 4; // `J` added
 
         // Constants determining which screen is currently showing. This will help with hotkeys and help menu. --PP
         // The variable that uses this constant is int g_CurrentScreen;

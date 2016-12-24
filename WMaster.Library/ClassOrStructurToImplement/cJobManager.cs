@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WMaster.Concept;
+using WMaster.Concept.Attributs;
 using WMaster.Entity.Living;
 
 namespace WMaster.ClassOrStructurToImplement

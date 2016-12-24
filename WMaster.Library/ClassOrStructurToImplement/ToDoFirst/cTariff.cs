@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WMaster.Enums;
-
-namespace WMaster.ClassOrStructurToImplement
+﻿namespace WMaster.ClassOrStructurToImplement
 {
+    using System;
+    using WMaster.Concept.GangMission;
+    using WMaster.Entity.Living;
+
     public class cTariff
     {
         double slave_base_price(sGirl girl)
@@ -17,7 +14,7 @@ namespace WMaster.ClassOrStructurToImplement
 
         public int goon_weapon_upgrade(int level)
         { throw new NotImplementedException(); }
-        public int goon_mission_cost(GangMissions mission)
+        public int goon_mission_cost(EnuGangMissions mission)
         { throw new NotImplementedException(); }
         public int healing_price(int n)
         { throw new NotImplementedException(); }

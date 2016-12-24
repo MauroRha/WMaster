@@ -20,7 +20,7 @@
 
 //<!-- -------------------------------------------------------------------------------------------------------------------- -->
 //<file>
-//  <copyright file="ActionTypes.cs" company="The Pink Petal Devloment Team">
+//  <copyright file="GangMissionNone.cs" company="The Pink Petal Devloment Team">
 //      Copyright © 2009, 2010 - The Pink Petal Devloment Team.
 //  </copyright>
 //  <author>Graben</author>
@@ -33,55 +33,32 @@
 //  </remarks>
 //</file>
 //<!-- -------------------------------------------------------------------------------------------------------------------- -->
-namespace WMaster.Enums
+using WMaster.Entity.Living;
+namespace WMaster.Concept.GangMission
 {
-    using System;
 
     /// <summary>
-    /// Actions girls can disobey against
-    /// <remarks><para>`J` When modifying Action types, search for "J-Change-Action-Types"  :  found in >> Constants.h</para></remarks>
+    /// No mission affecte to gang.
     /// </summary>
-    public enum ActionTypes
+    public sealed class GangMissionNone : GangMissionBase
     {
-        Combat = 0,
-        Sex,
-        Workescort,
-        Workcleaning,
-        Workmatron,
-        Workbar,
-        Workhall,
-        Workshow,
-        Worksecurity,
-        Workadvertising,
-        Worktorturer,
-        Workcaring,
-        Workdoctor,
-        Workmovie,
-        Workcustserv,
-        Workcentre,
-        Workclub,
-        Workharem,
-        Workrecruit,
-        Worknurse,
-        Workmechanic,
-        Workcounselor,
-        Workmusic,
-        Workstrip,
-        Workmilk,
-        Workmasseuse,
-        Workfarm,
-        Worktraining,
-        Workrehab,
-        Workmakepotions,
-        Workmakeitems,
-        Workcooking,
-        Worktherapy,
-        Workhousepet,
+        /// <summary>
+        /// Initialise base instantce of gang mission.
+        /// </summary>
+        /// <param name="gang"><see cref="Gang"/> who perform the mission.</param>
+        internal GangMissionNone(Gang gang)
+            : base(EnuGangMissions.None, gang)
+        {
+        }
 
-        // General must be the last sction type
-        General,
-
-        [Obsolete("The NUM_ACTIONTYPES enum value of eActionTypes must be replace by enum extention function returning the number of value in enum. Enum value must be only enum value!", false)]
-        NUM_ACTIONTYPES
-    };
+        /// <summary>
+        /// Return localized mission name.
+        /// <remarks><para>Will be use like "GangName is [...]."</para></remarks>
+        /// </summary>
+        /// <returns>The name of mission.</returns>
+        public override string GetMissionName()
+        {
+            return LocalString.GetString(LocalString.ResourceStringCategory.Global, "GangMissionNone");
+        }
+    }
 }

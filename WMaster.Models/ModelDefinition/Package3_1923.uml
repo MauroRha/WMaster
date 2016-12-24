@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="c0a41067-abb2-4936-a5d2-c0ab0479876b"
+  name="ClassOrStructurToImplement"
+  visibility="Private" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <referencesInternal>
+    <reference
+      Id="66f5900b-0341-45e9-9d48-61c3ee182439"
+      handle="viewcode://./CodeSchema_Namespace?Namespace%3DWMaster.ClassOrStructurToImplement"
+      tag="ViewCode" />
+  </referencesInternal>
+  <packagedElements>
+    <packageHasNamedElement>
+      <Interface
+        Id="23f412aa-eebe-41ea-ba08-31146326141a"
+        name="IXmlElement"
+        isAbstract="false"
+        isLeaf="false">
+        <referencesInternal>
+          <reference
+            Id="41b8ad7d-c752-45a5-9e66-f6d720bd87a6"
+            handle="viewcode://./CodeSchema_Interface?Assembly%3Dfile:%2F%2F%2FD:%2FProjets%2FPersoFV%2FWMaster%2FWMaster%2FWMaster.Library%2Fbin%2FDebug%2FWMaster.Library.dll Namespace%3DWMaster.ClassOrStructurToImplement Type%3DIXmlElement"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="6b4cdf4f-9979-4116-b5ec-3cb9ff6d761b"
+            name="interface"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="ccc4e83f-387e-41af-8bad-3951160bea3f">
+                <propertyInstance
+                  Id="aa25e349-6f5c-460b-a462-5f1f7831c9ab"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="3d21363f-21de-4205-a1ad-9ee7fb07fbcc">
+                <propertyInstance
+                  Id="78f5688c-fd44-4a7c-aff0-7e87dda7d4b3"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="96ad96cd-fb68-44d8-86ac-f583fcbad3e2">
+                <propertyInstance
+                  Id="c9ceb39b-813b-4225-ab9e-e528c33b5f88"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="4a9df35f-0c00-4ddc-8b32-c4e0e7570823">
+                <propertyInstance
+                  Id="c0889183-0760-41c2-9055-81460260c886"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </Interface>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="b790ea33-9e0a-4521-86b0-227add36b909"
+        name="IXmlHandle"
+        isAbstract="false"
+        isLeaf="false">
+        <referencesInternal>
+          <reference
+            Id="bbc86dab-cd06-4c6f-98c1-8be5598d71c7"
+            handle="viewcode://./CodeSchema_Interface?Assembly%3Dfile:%2F%2F%2FD:%2FProjets%2FPersoFV%2FWMaster%2FWMaster%2FWMaster.Library%2Fbin%2FDebug%2FWMaster.Library.dll Namespace%3DWMaster.ClassOrStructurToImplement Type%3DIXmlHandle"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="795505e1-8e7c-4e8c-8249-44e6eaffd750"
+            name="interface"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="7332c1d5-4415-4840-935b-12058dcdae6e">
+                <propertyInstance
+                  Id="c34b9606-e7fa-4a9d-a2d3-3423253bf515"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="16e0ab0c-d67d-4e16-b04d-ce5f401441fa">
+                <propertyInstance
+                  Id="7c69f87c-2b72-41ff-957f-b8d4aa1c9d15"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="e87a301b-9784-4493-93f9-e9d1cb897128">
+                <propertyInstance
+                  Id="ef20890f-1859-4888-88ad-7737257f04ea"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="0bdfcf8f-6a57-4eff-ab3b-7f9b81db8f4e">
+                <propertyInstance
+                  Id="da169ef1-8258-450c-b631-84165ae6bab4"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </Interface>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="e5b270aa-005f-4c3e-a21d-4c5c3466a4bb"
+        name="sGirl"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="724f32a7-f3d1-4f37-b9b2-36e74dd6ab8a"
+            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FD:%2FProjets%2FPersoFV%2FWMaster%2FWMaster%2FWMaster.Library%2Fbin%2FDebug%2FWMaster.Library.dll Namespace%3DWMaster.ClassOrStructurToImplement Type%3DsGirl"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="58f6e03c-58e5-4630-a4b7-d9043646af1b"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="eb72ef21-e8f7-45f0-b2d2-e981954dff95">
+                <propertyInstance
+                  Id="a11bd75f-4385-44e0-9910-88c3c88b5c8d"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="e659861f-9e27-4fa4-bf3b-5b2ba938cf2f">
+                <propertyInstance
+                  Id="6a202d78-c57b-41c0-b317-50120de97336"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="eaf0240a-7fa9-4192-adc8-62f7121b04ed">
+                <propertyInstance
+                  Id="9c0d9fea-64fb-4811-99ac-9e7519d95741"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="64cb13d7-f31c-43c8-90b2-9c3fb1185a97">
+                <propertyInstance
+                  Id="61d1ddbc-7fd2-48d0-a979-394cab509033"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="fa1e800a-698a-431d-8ebf-814106f0680f">
+                <propertyInstance
+                  Id="cd7c9935-24ee-4153-8f1f-d45beb5bfd11"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </class>
+    </packageHasNamedElement>
+  </packagedElements>
+</package>

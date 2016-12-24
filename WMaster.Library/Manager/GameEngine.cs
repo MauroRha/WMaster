@@ -85,7 +85,7 @@ namespace WMaster.Manager
 
         private bool quitAccepted = false;
 
-        public cConfig cfg = new cConfig();
+        public Config cfg = new Config();
         private int g_CurrBrothel = 0;
         private int g_Building = 0;
         private int g_CurrClinic = 0;

@@ -22,6 +22,8 @@ namespace WMaster.Entity.Living
     using System;
     using WMaster.ClassOrStructurToImplement;
     using WMaster.Concept;
+    using WMaster.Concept.Attributs;
+    using WMaster.Concept.GangMission;
     using WMaster.Enums;
     using WMaster.Manager;
 
@@ -45,6 +47,7 @@ namespace WMaster.Entity.Living
             set { this.m_Num = Math.Max(value, 0); }
         }
 
+        #region Gang attribut
         /// <summary>
         /// List of all skills of the gang.
         /// </summary>
@@ -68,44 +71,75 @@ namespace WMaster.Entity.Living
         {
             get { return this.m_Stats; }
         }
+        #endregion
 
+        #region Gang mission
         /// <summary>
-        /// The type of mission currently performing.
+        /// Current mission affected to gang.
         /// </summary>
-        public GangMissions m_MissionID;
+        private GangMissionBase m_CurrentMission;
         /// <summary>
-        /// Get or set the type of mission currently performing.
+        /// Get or set current mission affected to gang.
         /// </summary>
-        public GangMissions CurrentMission
+        public GangMissionBase CurrentMission
         {
-            get { return this.m_MissionID; }
-            set { this.m_MissionID = value; }
+            get { return this.m_CurrentMission; }
+            set
+            {
+                this.m_CurrentMission = value ?? GangMissionBase.None;
+            }
+        }
+        
+        /// <summary>
+        /// Get the type of mission currently performing.
+        /// </summary>
+        public EnuGangMissions MissionType
+        {
+            get
+            {
+                if (this.m_CurrentMission == null)
+                { return EnuGangMissions.None; }
+                return this.m_CurrentMission.Mission;
+            }
+            //set { this.m_MissionID = value; }
         }
 
         /// <summary>
         /// The last mission if auto changed to recruit mission.
         /// </summary>
-        public GangMissions m_LastMissID;
-        /// <summary>
-        /// Get or set the last mission if auto changed to recruit mission.
-        /// </summary>
-        public GangMissions LastMission
+        private GangMissionBase m_LastMission;
+        public GangMissionBase LastMission
         {
-            get { return this.m_LastMissID; }
-            set { this.m_LastMissID = value; }
+            get { return this.m_LastMission; }
+            set { this.m_LastMission = value; }
         }
+
+        /// <summary>
+        /// Get the last mission if auto changed to recruit mission.
+        /// </summary>
+        public EnuGangMissions LastMissionType
+        {
+            get
+            {
+                if (this.m_LastMission == null)
+                { return EnuGangMissions.None; }
+                return this.m_LastMission.Mission;
+            }
+            //set { this.m_LastMissID = value; }
+        }
+        #endregion
 
         /// <summary>
         /// Number of potions the gang has.
         /// </summary>
-        private int m_Heal_Limit;
+        private int m_HealLimit;
         /// <summary>
         /// Get or set the number of potions the gang has.
         /// </summary>
         public int HealLimit
         {
-            get { return this.m_Heal_Limit; }
-            set { this.m_Heal_Limit = Math.Max(value, 0); }
+            get { return this.m_HealLimit; }
+            set { this.m_HealLimit = Math.Max(value, 0); }
         }
         /// <summary>
         /// Adjust heal potion number adding <paramref name="n"/> item.
@@ -119,14 +153,14 @@ namespace WMaster.Entity.Living
         /// <summary>
         /// Number of nets the gang has.
         /// </summary>
-        private int m_Net_Limit;
+        private int m_NetLimit;
         /// <summary>
         /// Get or set the number of nets the gang has.
         /// </summary>
         public int NetLimit
         {
-            get { return this.m_Net_Limit; }
-            set { this.m_Net_Limit = Math.Max(value, 0); }
+            get { return this.m_NetLimit; }
+            set { this.m_NetLimit = Math.Max(value, 0); }
         }
         /// <summary>
         /// Adjust net number adding <paramref name="n"/> item.
@@ -430,8 +464,8 @@ namespace WMaster.Entity.Living
             Name = "Unnamed";
             m_Num = 0;
 
-            m_MissionID = GangMissions.GUARDING;
-            m_LastMissID = GangMissions.NONE;
+            GangMissionBase.SetGangMission(EnuGangMissions.Guarding, this);
+            LastMission = GangMissionBase.None;
 
             HasSeenCombat = false;
             AutoRecruit = false;

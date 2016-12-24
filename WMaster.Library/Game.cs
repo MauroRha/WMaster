@@ -52,13 +52,13 @@ namespace WMaster
     /// </summary>
     public static class Game
     {
-        public static WMaster.ClassOrStructurToImplement.cConfig Configuration
+        public static Config Configuration
         {
             get { return GameEngine.Instance.cfg; }
         }
 
-        private static cMessageQue m_MessageQue = new cMessageQue();
-        public static cMessageQue MessageQue
+        private static MessageQue m_MessageQue = new MessageQue();
+        public static MessageQue MessageQue
         {
             get { return Game.m_MessageQue; }
         }

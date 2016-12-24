@@ -20,7 +20,7 @@
 
 //<!-- -------------------------------------------------------------------------------------------------------------------- -->
 //<file>
-//  <copyright file="Stats.cs" company="The Pink Petal Devloment Team">
+//  <copyright file="Skills.cs" company="The Pink Petal Devloment Team">
 //      Copyright © 2009, 2010 - The Pink Petal Devloment Team.
 //  </copyright>
 //  <author>Graben</author>
@@ -33,7 +33,7 @@
 //  </remarks>
 //</file>
 //<!-- -------------------------------------------------------------------------------------------------------------------- -->
-namespace WMaster.Concept
+namespace WMaster.Concept.Attributs
 {
     using System;
     using System.Xml.Serialization;
@@ -41,56 +41,44 @@ namespace WMaster.Concept
     // TODO : REFACTORING - Rename enum value to lower case UC first
 
     /// <summary>
-    /// Editable Character Stats (used for traits).
+    /// Editable Character skills (used for traits).
     /// <remarks><para>`J` When modifying Stats or Skills, search for "J-Change-Stats-Skills"  :  found in >> Constants.h</para></remarks>
     /// </summary>
     [Flags] // Need Flags attribut for XmlSerialisation of Enum
-    public enum EnumStats
+    public enum EnumSkills
     {
         /// <summary>
         /// Anal performing skill.
         /// </summary>
-        [XmlEnum("STAT_CHARISMA")]
-        CHARISMA = /*    */ 0x00001,
-        HAPPINESS = /*   */ 0x00010,
-        LIBIDO = /*      */ 0x00011,
-        CONSTITUTION = /**/ 0x00100,
-        INTELLIGENCE = /**/ 0x00101,
-        CONFIDENCE = /*  */ 0x00110,
-        MANA = /*        */ 0x00111,
-        AGILITY = /*     */ 0x01000,
-        FAME = /*        */ 0x01001,
-        LEVEL = /*       */ 0x01010,
-        ASKPRICE = /*    */ 0x01011,
-        HOUSE = /*       */ 0x01100,
-        EXP = /*         */ 0x01101,
-        AGE = /*         */ 0x01110,
-        OBEDIENCE = /*   */ 0x01111,
-        SPIRIT = /*      */ 0x10000,
-        BEAUTY = /*      */ 0x10001,
-        TIREDNESS = /*   */ 0x10010,
-        HEALTH = /*      */ 0x10011,
-        PCFEAR = /*      */ 0x10100,
-        PCLOVE = /*      */ 0x10101,
-        PCHATE = /*      */ 0x10110,
-        MORALITY = /*    */ 0x10111,
-        REFINEMENT = /*  */ 0x11000,
-        DIGNITY = /*     */ 0x11001,
-        LACTATION = /*   */ 0x11010,
-        STRENGTH = /*    */ 0x11011,
-        /// <summary>
-        /// Will be used for when a girl has a bf/gf to do different events
-        /// </summary>
-        NPCLOVE = /*     */ 0x11100,
-        /// <summary>
-        /// SIN: Life is hard here...
-        /// </summary>
-        SANITY = /*      */ 0x11101,
+        [XmlEnum("SKILL_ANAL")]
+        ANAL = /*          */ 0x00001,
+        MAGIC = /*         */ 0x00010,
+        BDSM = /*          */ 0x00011,
+        NORMALSEX = /*     */ 0x00100,
+        BEASTIALITY = /*   */ 0x00101,
+        GROUP = /*         */ 0x00110,
+        LESBIAN = /*       */ 0x00111,
+        SERVICE = /*       */ 0x01000,
+        STRIP = /*         */ 0x01001,
+        COMBAT = /*        */ 0x01010,
+        ORALSEX = /*       */ 0x01011,
+        TITTYSEX = /*      */ 0x01100,
+        MEDICINE = /*      */ 0x01101,
+        PERFORMANCE = /*   */ 0x01110,
+        HANDJOB = /*       */ 0x01111,
+        CRAFTING = /*      */ 0x10000,
+        HERBALISM = /*     */ 0x10001,
+        FARMING = /*       */ 0x10010,
+        BREWING = /*       */ 0x10011,
+        ANIMALHANDLING = /**/ 0x10100,
+        FOOTJOB = /*       */ 0x10101,
+        COOKING = /*       */ 0x10110,
 
         /// <summary>
-        /// 1 more than the last stat.
+        /// 1 more than the last skill.
         /// </summary>
-        [Obsolete("The NUM_STATS enum value of eStats must be replace by enum extention function returning the number of value in enum. Enum value must be only enum value!", false)]
-        NUM_STATS
+        [Obsolete("The NUM_SKILLS enum value of eSkills must be replace by enum extention function returning the number of value in enum. Enum value must be only enum value!", false)]
+        NUM_SKILLS, // 
+        //const unsigned int SKILL_MAST		= ;
     }
 }

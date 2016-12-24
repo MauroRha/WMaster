@@ -1,12 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/*
+ * Original source code in C++ from :
+ * Copyright 2009, 2010, The Pink Petal Development Team.
+ * The Pink Petal Devloment Team are defined as the game's coders 
+ * who meet on http://pinkpetal.org     // old site: http://pinkpetal .co.cc
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-namespace WMaster.ClassOrStructurToImplement
+//<!-- -------------------------------------------------------------------------------------------------------------------- -->
+//<file>
+//  <copyright file="ConfigData.cs" company="The Pink Petal Devloment Team">
+//      Copyright © 2009, 2010 - The Pink Petal Devloment Team.
+//  </copyright>
+//  <author>Graben</author>
+//  <datecreated>2016-12-13</datecreated>
+//  <summary>
+//  </summary>
+//  <remarks>
+//      <para name="Rem">Extract from GitHub : relased find in December 2016</para>
+//      <para name="Review_2016-12">Gbn - 12/2016 : Create / Convert to C# / Refactoring</para>
+//  </remarks>
+//</file>
+//<!-- -------------------------------------------------------------------------------------------------------------------- -->
+namespace WMaster
 {
-    public class sConfigData
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    public class ConfigData
     {
         /*
         *	initialisation
@@ -237,48 +272,48 @@ namespace WMaster.ClassOrStructurToImplement
 
         public string override_dir;
 
-        sConfigData(string filename = "config.xml")
+        ConfigData(string filename = "config.xml")
         { throw new NotImplementedException(); }
 
-        void set_defaults()
-        { throw new NotImplementedException(); }
-        void get_income_factors(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_expense_factors(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_tax_factors(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_gambling_factors(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_preg_factors(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_gang_factors(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_pros_factors(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_catacombs_data(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_slave_market_data(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_item_data(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_font_data(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_initial_values(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_folders_data(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_resolution_data(IXmlElement el)
-        { throw new NotImplementedException(); }
-        void get_att(IXmlElement el, string name, ref int data)
-        { throw new NotImplementedException(); }
-        void get_att(IXmlElement el, string name, ref double data)
-        { throw new NotImplementedException(); }
-        void get_att(IXmlElement el, string name, string s)
-        { throw new NotImplementedException(); }
-        void get_att(IXmlElement el, string name, ref bool bval)
-        { throw new NotImplementedException(); }
-        void get_debug_flags(IXmlElement el)
-        { throw new NotImplementedException(); }
+        //void set_defaults()
+        //{ throw new NotImplementedException(); }
+        //void get_income_factors(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_expense_factors(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_tax_factors(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_gambling_factors(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_preg_factors(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_gang_factors(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_pros_factors(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_catacombs_data(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_slave_market_data(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_item_data(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_font_data(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_initial_values(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_folders_data(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_resolution_data(IXmlElement el)
+        //{ throw new NotImplementedException(); }
+        //void get_att(IXmlElement el, string name, ref int data)
+        //{ throw new NotImplementedException(); }
+        //void get_att(IXmlElement el, string name, ref double data)
+        //{ throw new NotImplementedException(); }
+        //void get_att(IXmlElement el, string name, string s)
+        //{ throw new NotImplementedException(); }
+        //void get_att(IXmlElement el, string name, ref bool bval)
+        //{ throw new NotImplementedException(); }
+        //void get_debug_flags(IXmlElement el)
+        //{ throw new NotImplementedException(); }
     }
 }
