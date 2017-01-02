@@ -96,7 +96,7 @@
 
                     // Create and add a new default trace listener.
                     System.Diagnostics.DefaultTraceListener defaultListener = new System.Diagnostics.DefaultTraceListener();
-                    defaultListener.LogFileName = Log._logFilename;
+                    defaultListener.LogFileName = Log.LogFilename;
 
                     System.Diagnostics.Trace.Listeners.Add(defaultListener);
             }

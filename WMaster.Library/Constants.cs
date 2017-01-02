@@ -46,6 +46,11 @@ namespace WMaster
     public static class Constants
     {
         /// <summary>
+        /// Source control revision ?
+        /// </summary>
+        public const string SVN_REVISION = "Crazy and PP's mod version .06.02.41";
+
+        /// <summary>
         /// Obtain the major version number
         /// <remarks>Old name = g_MajorVersion</remarks>
         /// </summary>
@@ -56,10 +61,20 @@ namespace WMaster
         }
 
         /// <summary>
-        /// Obtain the minor version number
+        /// Obtain the major revision version number
         /// <remarks>Old name = g_MinorVersionA</remarks>
         /// </summary>
         public static int MinorVersionA
+        {
+            get
+            { return typeof(WMaster.Constants).Assembly.GetName().Version.MajorRevision; }
+        }
+
+        /// <summary>
+        /// Obtain the minor version number
+        /// <remarks>Old name = g_MinorVersionB</remarks>
+        /// </summary>
+        public static int MinorVersionB
         {
             get
             { return typeof(WMaster.Constants).Assembly.GetName().Version.Minor; }
@@ -67,22 +82,12 @@ namespace WMaster
 
         /// <summary>
         /// Obtain the minor revision version number
-        /// <remarks>Old name = g_MinorVersionB</remarks>
-        /// </summary>
-        public static int MinorVersionB
-        {
-            get
-            { return typeof(WMaster.Constants).Assembly.GetName().Version.MinorRevision; }
-        }
-
-        /// <summary>
-        /// Obtain the major revision version number
         /// <remarks>Old name = g_StableVersion</remarks>
         /// </summary>
         public static int StableVersion
         {
             get
-            { return typeof(WMaster.Constants).Assembly.GetName().Version.MajorRevision; }
+            { return typeof(WMaster.Constants).Assembly.GetName().Version.MinorRevision; }
         }
 
         // the game flags

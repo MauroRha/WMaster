@@ -5,7 +5,8 @@
     using System.Windows.Forms;
     using System.Xml.Serialization;
     using WMaster;
-    using WMaster.DAL;
+    using WMaster.Win32;
+    using WMaster.Win32.Diagnostics;
 
     static class Program
     {
@@ -24,24 +25,11 @@
 
         static void Initialize()
         {
-            SaveGame sg = new SaveGame();
-            sg.Resources.GirlResources.Add(new Resource() { Filename = "Aaliyah Love.girlsx" });
-            sg.Resources.GirlResources.Add(new Resource() { Filename = "Abbey Brooks.girlsx" });
-            sg.Resources.GirlResources.Add(new Resource() { Filename = "Abbie Cat.girlsx" });
-            sg.Resources.GirlResources.Add(new Resource() { Filename = "Abby Cross.girlsx" });
-            sg.Resources.GirlResources.Add(new Resource() { Filename = "Abby Lee Brazil.girlsx" });
-            sg.Resources.GirlResources.Add(new Resource() { Filename = "Abella Anderson.girlsx" });
-            sg.Resources.GirlResources.Add(new Resource() { Filename = "Abigail Mac.girlsx" });
-            sg.Resources.GirlResources.Add(new Resource() { Filename = "Abigaile Johnson.girlsx" });
-            sg.Resources.GirlResources.Add(new Resource() { Filename = "Adele Stephens.girlsx" });
-            sg.Resources.GirlResources.Add(new Resource() { Filename = "Adriana Chechik.girlsx" });
-            sg.Resources.GirlResources.Add(new Resource() { Filename = "Adriana Malao.girlsx" });
+            // Set Win32 log instance switch to log information.
+            Log.LogInstance.Switch = WMLog.LogSwitch.INFORMATION;
+            Game.GameInitialize(FacadeOS.Entry, FacadeIHM.Entry, Log.LogInstance);
 
-            XmlSerializer xs = new XmlSerializer(typeof(SaveGame));
-            using (StreamWriter wr = new StreamWriter("test.xml"))
-            {
-                xs.Serialize(wr, sg);
-            }
+            return;
         }
     }
 }

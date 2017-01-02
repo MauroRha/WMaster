@@ -127,7 +127,7 @@ namespace WMaster
         /// Initialise the log manager with <see cref="ILog"/> derived instnce.
         /// </summary>
         /// <param name="log"></param>
-        public static void InitialiseLog(ILog log)
+        internal static void InitialiseLog(ILog log)
         {
             WMLog._log = log;
         }
@@ -175,7 +175,10 @@ namespace WMaster
         /// <param name="typeTrace"><see cref="WMLog.TraceLog"/> severity level trace. <see cref="WMLog.TraceLog.ERROR"/> par default.</param>
         public static void Trace(string message, WMLog.TraceLog typeTrace = WMLog.TraceLog.INFORMATION)
         {
-            // TODO : if ILog WMLog._log is null --> throw ApplicationException/NullReferenceException
+            // Game wasn't initialized -> Log may not be initialised
+            if (!Game.IsInitialized && (WMLog._log == null))
+            { return; }
+
             WMLog.LogSwitch lSwitch = WMLog._log.Switch;
             if (lSwitch == WMLog.LogSwitch.NONE)
             { return; }

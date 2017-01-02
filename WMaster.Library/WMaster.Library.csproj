@@ -45,10 +45,10 @@
     <Compile Include="ClassOrStructurToImplement\cActionTemplate.cs" />
     <Compile Include="ClassOrStructurToImplement\ToDoFirst\cGoldBase.cs" />
     <Compile Include="ClassOrStructurToImplement\cAbstractGirls.cs" />
-    <Compile Include="DAL\Gold.cs" />
-    <Compile Include="DAL\Resource.cs" />
-    <Compile Include="DAL\ResourcesCollection.cs" />
-    <Compile Include="DAL\SaveGame.cs" />
+    <Compile Include="Tool\IFacadeIHM.cs" />
+    <Compile Include="Tool\IFacadeOS.cs" />
+    <Compile Include="Tool\ISerialisableEntity.cs" />
+    <Compile Include="Tool\Serialiser.cs" />
     <Compile Include="Concept\GangMission\GangMissionBase.cs" />
     <Compile Include="Concept\GangMission\GangMissionRecaptureGirls.cs" />
     <Compile Include="Concept\GangMission\GangMissionCatacombs.cs" />
@@ -91,7 +91,7 @@
     <Compile Include="ClassOrStructurToImplement\cTriggerList.cs" />
     <Compile Include="ClassOrStructurToImplement\cTriggerQue.cs" />
     <Compile Include="ClassOrStructurToImplement\GirlPredicate.cs" />
-    <Compile Include="Config.cs" />
+    <Compile Include="Configuration.cs" />
     <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cGameScript.cs" />
     <Compile Include="ClassOrStructurToImplement\cGirlGangFight.cs" />
     <Compile Include="ClassOrStructurToImplement\cGirlTorture.cs" />
@@ -174,7 +174,6 @@
     <None Include="ClassOrStructurToImplement\IHMFileExclude\SDL_Color.cs" />
     <None Include="ClassOrStructurToImplement\IHMFileExclude\sInterfaceIDs.cs" />
     <None Include="ClassOrStructurToImplement\IHMFileExclude\sMessage.cs" />
-    <Compile Include="sConfigData.cs" />
     <None Include="ClassOrStructurToImplement\IHMFileExclude\CAnimatedSprite.cs" />
     <None Include="ClassOrStructurToImplement\IHMFileExclude\cAnimatedSurface.cs" />
     <None Include="ClassOrStructurToImplement\IHMFileExclude\cArenaScreen.cs" />
@@ -286,7 +285,9 @@
     <Compile Include="Tool\ResourceManager.cs" />
     <Compile Include="Tool\WMRand.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="DAL\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Windows.Forms;
+    using WMaster.Win32.Diagnostics;
 
     static class Program
     {
@@ -20,9 +21,9 @@
 
         static void Initialize()
         {
-            // Set Win32 log instance to log manager.
-            WMLog.InitialiseLog(WMaster.Win32.Diagnostics.Log.LogInstance);
-            Win32.Diagnostics.Log.LogInstance.Switch = WMLog.LogSwitch.INFORMATION;
+            // Set Win32 log instance switch to log information.
+            Log.LogInstance.Switch = WMLog.LogSwitch.INFORMATION;
+            Game.GameInitialize(FacadeOS.Entry, FacadeIHM.Entry, Log.LogInstance);
         }
     }
 }

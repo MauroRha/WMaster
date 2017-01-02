@@ -297,8 +297,8 @@ namespace WMaster.Manager
         {
             Gang newGang = new Gang();
 
-            int maxMembers = Config.Instance.Gangs.InitMemberMax;
-            int minMembers = Config.Instance.Gangs.InitMemberMin;
+            int maxMembers = Configuration.Gangs.InitMemberMax;
+            int minMembers = Configuration.Gangs.InitMemberMin;
             newGang.MemberNum = minMembers + WMRand.Random() % (maxMembers + 1 - minMembers);
             if (boosted)
             {
@@ -497,7 +497,7 @@ namespace WMaster.Manager
         {
             if (gang != null)
             {
-                if (this.m_HireableGangList.Count < Config.Instance.Gangs.MaxRecruitList)
+                if (this.m_HireableGangList.Count < Configuration.Gangs.MaxRecruitList)
                 {
                     gang.HasSeenCombat = gang.AutoRecruit = false;
                     gang.LastMission = GangMissionBase.None;
@@ -1462,7 +1462,7 @@ namespace WMaster.Manager
             cTariff tariff = new cTariff();
 
             // maintain recruitable gangs list, potentially pruning some old ones
-            int removeChance = Game.Configuration.Gangs.ChanceRemoveUnwanted;
+            double removeChance = Configuration.Gangs.ChanceRemoveUnwanted;
             foreach(Gang item in m_HireableGangList)
             {
                 if (WMRand.Percent(removeChance))
@@ -1473,12 +1473,12 @@ namespace WMaster.Manager
             }
 
             // maybe add some new gangs to the recruitable list
-            int addMin = Game.Configuration.Gangs.AddNewWeeklyMin;
-            int addMax = Game.Configuration.Gangs.AddNewWeeklyMax;
+            int addMin = Configuration.Gangs.AddNewWeeklyMin;
+            int addMax = Configuration.Gangs.AddNewWeeklyMax;
             int addRecruits = WMRand.Bell(addMin, addMax);
             for (int i = 0; i < addRecruits; i++)
             {
-                if (m_HireableGangList.Count >= Game.Configuration.Gangs.MaxRecruitList)
+                if (m_HireableGangList.Count >= Configuration.Gangs.MaxRecruitList)
                 {
                     break;
                 }
@@ -3688,7 +3688,7 @@ namespace WMaster.Manager
                         for (int i = 0; i < totalGirls; i++)
                         {
                             sGirl ugirl = null;
-                            bool unique = WMRand.Percent(Config.Instance.catacombs.unique_catacombs()); // chance of getting unique girl
+                            bool unique = WMRand.Percent(Configuration.Catacombs.UniqueCatacombs); // chance of getting unique girl
                             if (unique)
                             {
                                 ugirl = Game.Girls.GetRandomGirl(false, true);

@@ -37,14 +37,12 @@
 namespace WMaster
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using System.Xml.Linq;
     using WMaster.ClassOrStructurToImplement;
     using WMaster.Entity.Item;
     using WMaster.Manager;
     using WMaster.Tool;
+    using WMaster.Tool.Diagnostics;
 
     /// <summary>
     /// Static wrapper to <see cref="WMaster.Manager.GameEngine"/> providing easy access to it's functionality.
@@ -52,17 +50,53 @@ namespace WMaster
     /// </summary>
     public static class Game
     {
-        public static Config Configuration
+        /// <summary>
+        /// Specific OS functionality.
+        /// </summary>
+        private static IFacadeOS m_SpecificOS;
+        /// <summary>
+        /// Get facade to specific OS functionality.
+        /// </summary>
+        public static IFacadeOS OS
         {
-            get { return GameEngine.Instance.cfg; }
+            get { return Game.m_SpecificOS; }
         }
 
+        /// <summary>
+        /// Specific IHM functionality.
+        /// </summary>
+        private static IFacadeIHM m_SpecificIHM;
+        /// <summary>
+        /// Get facade to specific IHM functionality.
+        /// </summary>
+        public static IFacadeIHM IHM
+        {
+            get { return Game.m_SpecificIHM; }
+        }
+
+        /// <summary>
+        /// Indicate if game was initialisez (Game.GameInitialize(...) was call)
+        /// </summary>
+        private static bool m_IsInitialized = false;
+        /// <summary>
+        /// Indicate if game was initialisez (Game.GameInitialize(...) was call)
+        /// </summary>
+        public static bool IsInitialized
+        {
+            get { return Game.m_IsInitialized; }
+        }
+
+        /// <summary>
+        /// Queue of message not directly relative to game entity information. Like reason of gang disband with gang doesn't exists.
+        /// </summary>
         private static MessageQue m_MessageQue = new MessageQue();
+        /// <summary>
+        /// Get the  message queue not directly relative to game entity information. Like reason of gang disband with gang doesn't exists.
+        /// </summary>
         public static MessageQue MessageQue
         {
             get { return Game.m_MessageQue; }
         }
-
 
         /// <summary>
         /// Get or set the current year in game.
@@ -128,7 +162,7 @@ namespace WMaster
         {
             get { return GameEngine.Instance.Resources; }
         }
-        
+
         ///// <summary>
         ///// Resource manager (localized string, images, sound, ect.).
         ///// </summary>
@@ -225,5 +259,55 @@ namespace WMaster
             get { return GameEngine.Instance.g_InvManager; }
         }
         #endregion
+
+        /// <summary>
+        /// Get Game engine instance.
+        /// </summary>
+        public static GameEngine GameEngine
+        {
+            get
+            { return GameEngine.Instance; }
+        }
+
+        /// <summary>
+        /// Game initialisation. Must be call when game is load to initialise OS and IHM access and specific log manager.
+        /// </summary>
+        /// <param name="facadeOSSpecific"><see cref="IFacadeOS"/> providing all access to specific OS functionality.</param>
+        /// <param name="facadeIHMSpecific"><see cref="IFacadeIHM"/> providing all access to specific IHM functionality.</param>
+        /// <param name="logGame"><see cref="ILog"/> manager for tracing game error and informations.</param>
+        /// <returns></returns>
+        public static void GameInitialize(IFacadeOS facadeOSSpecific, IFacadeIHM facadeIHMSpecific, ILog logGame)
+        {
+            try
+            {
+                Game.m_IsInitialized = false;
+                if (logGame == null)
+                {
+                    throw new ArgumentNullException("logGame", "ILog logGame mustn't be null!");
+                }
+                WMLog.InitialiseLog(logGame);
+
+                if (facadeOSSpecific == null)
+                {
+                    throw new ArgumentNullException("facadeOSSpecific", "IFacadeOS facadeOSSpecific mustn't be null!");
+                }
+                Game.m_SpecificOS = facadeOSSpecific;
+
+                if (facadeIHMSpecific == null)
+                {
+                    throw new ArgumentNullException("facadeIHMSpecific", "IFacadeIHM facadeIHMSpecific mustn't be null!");
+                }
+                Game.m_SpecificIHM = facadeIHMSpecific;
+
+                Game.m_IsInitialized = true;
+
+                Configuration.LoadConfiguration();
+            }
+            catch (Exception ex)
+            {
+                WMLog.Trace(ex, WMLog.TraceLog.ERROR);
+                throw ex;
+            }
+        }
     }
 }

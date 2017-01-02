@@ -31,17 +31,20 @@ namespace WMaster.Manager
     public sealed class GameEngine
     {
         /// <summary>
-        /// Singleton of GameEngine
+        /// Singleton of GameEngine.
         /// </summary>
         private static GameEngine _instance;
         /// <summary>
-        /// Get Game engine instance
+        /// Get Game engine instance.
         /// </summary>
-        public static GameEngine Instance
+        internal static GameEngine Instance
         {
             get
             {
-                if (GameEngine._instance == null)
+                if (!Game.IsInitialized)
+                { throw new InvalidOperationException("Can't get GameEngine.Instance if Game wasn't initialized!"); }
+
+                if ((GameEngine._instance == null) && Game.IsInitialized)
                 {
                     GameEngine._instance = new GameEngine();
                     GameEngine._instance.Init();
@@ -85,7 +88,7 @@ namespace WMaster.Manager
 
         private bool quitAccepted = false;
 
-        public Config cfg = new Config();
+        //public Configuration cfg = new Configuration(); // -> Get from Configuration.Instance
         private int g_CurrBrothel = 0;
         private int g_Building = 0;
         private int g_CurrClinic = 0;

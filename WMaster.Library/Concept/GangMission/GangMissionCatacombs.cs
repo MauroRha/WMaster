@@ -496,7 +496,7 @@ namespace WMaster.Concept.GangMission
                         for (int i = 0; i < totalGirls; i++)
                         {
                             sGirl ugirl = null;
-                            bool unique = WMRand.Percent(Config.Instance.catacombs.unique_catacombs()); // chance of getting unique girl
+                            bool unique = WMRand.Percent(Configuration.Catacombs.UniqueCatacombs); // chance of getting unique girl
                             if (unique)
                             {
                                 ugirl = Game.Girls.GetRandomGirl(false, true);

@@ -16,5 +16,10 @@ namespace WMaster.Sandbox
         {
             InitializeComponent();
         }
+
+        private void btnCheckXMLSerialisation_Click(object sender, EventArgs e)
+        {
+            XmlSaveLoadReflexion.TestReflexion();
+        }
     }
 }
