@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SequenceDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" dslVersion="1.0.0.0" Id="a77c319f-63bd-4c47-9025-7b625164a6ca" name="Initialise" linkedPackageId="a2bd714b-f846-43d9-8544-4e57c496369d" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="80fd2551-6df2-4c2f-98dc-7a02dc748838">
+      <profileInstance Id="b300f58f-54d2-45e6-af98-ae0580d44c26" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="22972d76-34c3-4ba3-9707-4ea1a1f9e122">
+      <profileInstance Id="5ec8a921-b04f-423b-90e0-b60cd4cc50a5" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="1930a39b-e4be-4382-977b-c402a22a20bc">
+      <profileInstance Id="0d7bdcac-4504-4af8-ad1a-ac92c7ea0298" name="CSharpProfile">
+        <elementDefinition Id="9d07e53b-ca8b-48b9-905e-8e04f5a07b20" />
+      </profileInstance>
+      <elementDefinition Id="2e3f75b8-8f0b-4323-ae69-6a58bf78ac99" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <packageHasNamedElement>
+      <interaction Id="8468c3f6-891b-4766-96e7-33427e0354df" name="Initialise" collapseFragmentsFlag="false" isActiveClass="false" isAbstract="false" isLeaf="false" isReentrant="false">
+        <elementDefinition Id="62b7070f-a2f8-41b7-8d75-b05fce61e8f4" />
+        <lifelines>
+          <lifeline Id="74b9826b-d708-4190-b902-474787a2b58b" name="Lifeline1" isActor="false" lifelineDisplayName="Lifeline1">
+            <elementDefinition Id="3f306633-0ef9-48f4-a4eb-9d0e67280e4f" />
+          </lifeline>
+        </lifelines>
+      </interaction>
+    </packageHasNamedElement>
+  </packagedElements>
+  <package Id="a2bd714b-f846-43d9-8544-4e57c496369d" name="WMaster.Models">
+    <elementDefinition Id="656c4012-5a40-44b8-8b90-77e3508a6bb9" />
+  </package>
+</SequenceDesignerModel>

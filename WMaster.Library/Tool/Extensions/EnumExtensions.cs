@@ -138,5 +138,16 @@ namespace WMaster
         {
             return System.Enum.GetNames(typeof(T)).Length;
         }
+
+        /// <summary>
+        /// Return number of element in Enumeration T
+        /// </summary>
+        /// <typeparam name="T">Type of enumeration to get number of elements.</typeparam>
+        /// <returns>Number of elements in enumeration T</returns>
+        public static int Count<T>() where T : struct
+        {
+            // TODO : Check T is enum
+            return System.Enum.GetNames(typeof(T)).Length;
+        }
     }
 }

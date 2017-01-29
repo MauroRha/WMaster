@@ -23,7 +23,7 @@ namespace WMaster.Entity.Living
     using WMaster.ClassOrStructurToImplement;
     using WMaster.Concept;
     using WMaster.Concept.Attributs;
-    using WMaster.Concept.GangMission;
+    using WMaster.Entity.Living.GangMission;
     using WMaster.Enums;
     using WMaster.Manager;
 
@@ -194,7 +194,7 @@ namespace WMaster.Entity.Living
             set { m_Combat = value; }
         }
 
-        public Events m_Events = new Events();
+        public EventManager m_Events = new EventManager();
 
         public IXmlElement SaveGangXML(IXmlElement pRoot)
         {

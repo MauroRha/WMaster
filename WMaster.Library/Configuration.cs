@@ -153,7 +153,6 @@ namespace WMaster
         [XmlRoot("Initial")]
         public class InitialData : ISerialisableEntity
         {
-            // TODO : GirlMeet, GirlsHousePerc and SlaveHousePerc is percentage but stay between 0 to 100. all others value ingame is 0.0 to 1.0
             #region Private fields
             /// <summary>
             /// How much gold player start the game with.
@@ -405,31 +404,25 @@ namespace WMaster
             /// <returns><b>True</b> if no error occure.</returns>
             public bool Deserialise(XElement data)
             {
-                if (data == null)
-                { return false; }
+                if (data == null) { return false; }
 
-                int convertInt;
-                double convertDouble;
-                bool convertBool;
                 try
                 {
                     Serialiser.SetInvarientCulture();
-                    if (int.TryParse(data.Attribute("Gold").Value, out convertInt)) /*                 */ { this.Gold = convertInt; }
-                    if (!string.IsNullOrWhiteSpace(data.Attribute("GirlMeet").Value) && double.TryParse(data.Attribute("GirlMeet").Value.Replace("%", string.Empty), out convertDouble))
-                    { this.GirlMeet = convertDouble; }
-                    if (!string.IsNullOrWhiteSpace(data.Attribute("GirlsHousePerc").Value) && double.TryParse(data.Attribute("GirlsHousePerc").Value.Replace("%", string.Empty), out convertDouble))
-                    { this.GirlsHousePerc = convertDouble; }
-                    if (bool.TryParse(data.Attribute("GirlsKeepTips").Value, out convertBool)) /*      */ { this.GirlsKeepTips = convertBool; }
-                    if (!string.IsNullOrWhiteSpace(data.Attribute("SlaveHousePerc").Value) && double.TryParse(data.Attribute("SlaveHousePerc").Value.Replace("%", string.Empty), out convertDouble))
-                    { this.SlaveHousePerc = convertDouble; }
-                    if (bool.TryParse(data.Attribute("SlavePayOutOfPocket").Value, out convertBool)) /**/ { this.SlavePayOutOfPocket = convertBool; }
-                    if (bool.TryParse(data.Attribute("SlaveKeepTips").Value, out convertBool)) /*      */ { this.SlaveKeepTips = convertBool; }
-                    if (int.TryParse(data.Attribute("GirlsAccom").Value, out convertInt)) /*           */ { this.GirlsAccom = convertInt; }
-                    if (int.TryParse(data.Attribute("SlaveAccom").Value, out convertInt)) /*           */ { this.SlaveAccom = convertInt; }
-                    if (bool.TryParse(data.Attribute("AutoUseItems").Value, out convertBool)) /*       */ { this.AutoUseItems = convertBool; }
-                    if (bool.TryParse(data.Attribute("AutoCombatEquip").Value, out convertBool)) /*    */ { this.AutoCombatEquip = convertBool; }
-                    if (int.TryParse(data.Attribute("TortureTraitWeekMod").Value, out convertInt)) /*  */ { this.TortureMod = convertInt; }
-                    if (int.TryParse(data.Attribute("HoroscopeType").Value, out convertInt)) /*        */ { this.HoroscopeType = convertInt; }
+                    Serialiser.SetValue(data.Attribute("Gold").Value, ref this.m_Gold);
+
+                    Serialiser.SetPercentage(data.Attribute("GirlMeet").Value, ref this.m_GirlMeet);
+                    Serialiser.SetPercentage(data.Attribute("GirlsHousePerc").Value, ref this.m_GirlsHousePerc);
+                    Serialiser.SetValue(data.Attribute("GirlsKeepTips").Value, ref this.m_GirlsKeepTips);
+                    Serialiser.SetPercentage(data.Attribute("SlaveHousePerc").Value, ref this.m_SlaveHousePerc);
+                    Serialiser.SetValue(data.Attribute("SlavePayOutOfPocket").Value, ref this.m_SlavePayOutOfPocket);
+                    Serialiser.SetValue(data.Attribute("SlaveKeepTips").Value, ref this.m_SlaveKeepTips);
+                    Serialiser.SetValue(data.Attribute("GirlsAccom").Value, ref this.m_GirlsAccom);
+                    Serialiser.SetValue(data.Attribute("SlaveAccom").Value, ref this.m_SlaveAccom);
+                    Serialiser.SetValue(data.Attribute("AutoUseItems").Value, ref this.m_AutoUseItems);
+                    Serialiser.SetValue(data.Attribute("AutoCombatEquip").Value, ref this.m_AutoCombatEquip);
+                    Serialiser.SetValue(data.Attribute("TortureTraitWeekMod").Value, ref this.m_TortureMod);
+                    Serialiser.SetValue(data.Attribute("HoroscopeType").Value, ref this.m_HoroscopeType);
                     return true;
                 }
                 catch (Exception ex)
@@ -466,7 +459,7 @@ namespace WMaster
             /// <summary>
             /// Multiplicator of money generate from movie.
             /// </summary>
-            private double m_MovieIncome = 1.0; // `J` ?not used?
+            private double m_Movie = 1.0; // `J` ?not used?
             /// <summary>
             /// Multiplicator of money generate from girl stripper.
             /// </summary>
@@ -480,21 +473,53 @@ namespace WMaster
             /// </summary>
             private double m_SlaveSales = 1.0;
             /// <summary>
+            /// Multiplicator of money generate when selling a creature (for when a girl gives birth to a monster).
+            /// </summary>
+            private double m_CreatureSales = 1.0;
+            /// <summary>
             /// Multiplicator of money generate when selling an item.
             /// </summary>
             private double m_ItemSales = 0.5;
             /// <summary>
             /// Multiplicator of money generate at the clinic.
             /// </summary>
-            private double m_ClinicIncome = 1.0; // `J` ?not used?
+            private double m_Clinic = 1.0;
             /// <summary>
             /// Multiplicator of money generate at the arena.
             /// </summary>
-            private double m_ArenaIncome = 1.0; // `J` ?not used?
+            private double m_Arena = 1.0;
             /// <summary>
             /// Multiplicator of money generate at the farm.
             /// </summary>
-            private double m_FarmIncome = 1.0; // `J` ?not used?
+            private double m_Farm = 1.0;
+            /// <summary>
+            /// Multiplicator of money generate by the bar.
+            /// </summary>
+            private double m_Bar = 1.0;
+            /// <summary>
+            /// Multiplicator of money generate by gambling.
+            /// </summary>
+            private double m_GamblingProfits = 1.0;
+            /// <summary>
+            /// Multiplicator of money of reward objective.
+            /// </summary>
+            private double m_ObjectiveReward = 1.0;
+            /// <summary>
+            /// Multiplicator of money obtain by plunden.
+            /// </summary>
+            private double m_Plunder = 1.0;
+            /// <summary>
+            /// Multiplicator of money obtain by petty theft.
+            /// </summary>
+            private double m_PettyTheft = 1.0;
+            /// <summary>
+            /// Multiplicator of money obtain by grand theft.
+            /// </summary>
+            private double m_GrandTheft = 1.0;
+            /// <summary>
+            /// Multiplicator of money obtain by catacomb loot.
+            /// </summary>
+            private double m_CatacombLoot = 1.0;
             #endregion
 
             #region Public properties
@@ -532,10 +557,10 @@ namespace WMaster
             /// Get or set the multiplicator of money generate from movie.
             /// </summary>
             [XmlAttribute("MovieIncome")]
-            public double MovieIncome
+            public double Movie
             {
-                get { return m_MovieIncome; }
-                set { m_MovieIncome = Math.Min(value, 0.0); }
+                get { return m_Movie; }
+                set { m_Movie = Math.Min(value, 0.0); }
             }
 
             /// <summary>
@@ -569,6 +594,16 @@ namespace WMaster
             }
 
             /// <summary>
+            /// Get or set the multiplicator of money generate when selling a creature (for when a girl gives birth to a monster).
+            /// </summary>
+            [XmlAttribute("CreatureSales")]
+            public double CreatureSales
+            {
+                get { return m_CreatureSales; }
+                set { m_CreatureSales = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
             /// Get or set the multiplicator of money generate when selling an item.
             /// </summary>
             [XmlAttribute("ItemSales")]
@@ -582,30 +617,100 @@ namespace WMaster
             /// Get or set the multiplicator of money generate at the clinic.
             /// </summary>
             [XmlAttribute("ClinicIncome")]
-            public double ClinicIncome
+            public double Clinic
             {
-                get { return m_ClinicIncome; }
-                set { m_ClinicIncome = Math.Min(value, 0.0); }
+                get { return m_Clinic; }
+                set { m_Clinic = Math.Min(value, 0.0); }
             }
 
             /// <summary>
             /// Get or set the multiplicator of money generate at the arena.
             /// </summary>
             [XmlAttribute("ArenaIncome")]
-            public double ArenaIncome
+            public double Arena
             {
-                get { return m_ArenaIncome; }
-                set { m_ArenaIncome = Math.Min(value, 0.0); }
+                get { return m_Arena; }
+                set { m_Arena = Math.Min(value, 0.0); }
             }
 
             /// <summary>
             /// Get or set the multiplicator of money generate at the farm.
             /// </summary>
             [XmlAttribute("FarmIncome")]
-            public double FarmIncome
+            public double Farm
             {
-                get { return m_FarmIncome; }
-                set { m_FarmIncome = Math.Min(value, 0.0); }
+                get { return m_Farm; }
+                set { m_Farm = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
+            /// Get or set the multiplicator of money generate by the bar.
+            /// </summary>
+            [XmlAttribute("BarIncome")]
+            public double Bar
+            {
+                get { return m_Bar; }
+                set { m_Bar = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
+            /// Get or set the multiplicator of money generate by gambling.
+            /// </summary>
+            [XmlAttribute("GamblingProfits")]
+            public double GamblingProfits
+            {
+                get { return m_GamblingProfits; }
+                set { m_GamblingProfits = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
+            /// Get or set the multiplicator of money of reward objective.
+            /// </summary>
+            [XmlAttribute("ObjectiveReward")]
+            public double ObjectiveReward
+            {
+                get { return m_ObjectiveReward; }
+                set { m_ObjectiveReward = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
+            /// Get or set the multiplicator of money obtain by plunder.
+            /// </summary>
+            [XmlAttribute("PlunderIncome")]
+            public double Plunder
+            {
+                get { return m_Plunder; }
+                set { m_Plunder = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
+            /// Get or set the multiplicator of money obtain by petty theft.
+            /// </summary>
+            [XmlAttribute("PettyTheftIncome")]
+            public double PettyTheft
+            {
+                get { return m_PettyTheft; }
+                set { m_PettyTheft = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
+            /// Get or set the multiplicator of money obtain by grand theft.
+            /// </summary>
+            [XmlAttribute("GrandTheftIncome")]
+            public double GrandTheft
+            {
+                get { return m_GrandTheft; }
+                set { m_GrandTheft = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
+            /// Get or set the multiplicator of money obtain by catacomb loot.
+            /// </summary>
+            [XmlAttribute("CatacombLootIncome")]
+            public double CatacombLoot
+            {
+                get { return m_CatacombLoot; }
+                set { m_CatacombLoot = Math.Min(value, 0.0); }
             }
             #endregion
 
@@ -626,14 +731,22 @@ namespace WMaster
                     data.Add(new XAttribute("ExtortionIncome", this.Extortion));
                     data.Add(new XAttribute("GirlsWorkBrothel", this.BrothelWork));
                     data.Add(new XAttribute("GirlsWorkStreet", this.StreetWork));
-                    data.Add(new XAttribute("MovieIncome", this.MovieIncome));
+                    data.Add(new XAttribute("MovieIncome", this.Movie));
                     data.Add(new XAttribute("StripperIncome", this.StripperWork));
                     data.Add(new XAttribute("BarmaidIncome", this.BarmaidWork));
                     data.Add(new XAttribute("SlaveSales", this.SlaveSales));
+                    data.Add(new XAttribute("CreatureSales", this.CreatureSales));
                     data.Add(new XAttribute("ItemSales", this.ItemSales));
-                    data.Add(new XAttribute("ClinicIncome", this.ClinicIncome));
-                    data.Add(new XAttribute("ArenaIncome", this.ArenaIncome));
-                    data.Add(new XAttribute("FarmIncome", this.FarmIncome));
+                    data.Add(new XAttribute("ClinicIncome", this.Clinic));
+                    data.Add(new XAttribute("ArenaIncome", this.Arena));
+                    data.Add(new XAttribute("FarmIncome", this.Farm));
+                    data.Add(new XAttribute("BarIncome", this.Bar));
+                    data.Add(new XAttribute("GamblingProfits", this.GamblingProfits));
+                    data.Add(new XAttribute("ObjectiveReward", this.ObjectiveReward));
+                    data.Add(new XAttribute("PlunderIncome", this.Plunder));
+                    data.Add(new XAttribute("PettyTheftIncome", this.PettyTheft));
+                    data.Add(new XAttribute("GrandTheftIncome", this.GrandTheft));
+                    data.Add(new XAttribute("CatacombLootIncome", this.CatacombLoot));
 
                     return true;
                 }
@@ -656,21 +769,30 @@ namespace WMaster
                 if (data == null)
                 { return false; }
 
-                double convertDouble;
                 try
                 {
                     Serialiser.SetInvarientCulture();
-                    if (double.TryParse(data.Attribute("ExtortionIncome").Value, out convertDouble)) /* */ { this.Extortion = convertDouble; }
-                    if (double.TryParse(data.Attribute("GirlsWorkBrothel").Value, out convertDouble)) /**/ { this.BrothelWork = convertDouble; }
-                    if (double.TryParse(data.Attribute("GirlsWorkStreet").Value, out convertDouble)) /* */ { this.StreetWork = convertDouble; }
-                    if (double.TryParse(data.Attribute("MovieIncome").Value, out convertDouble)) /*     */ { this.MovieIncome = convertDouble; }
-                    if (double.TryParse(data.Attribute("StripperIncome").Value, out convertDouble)) /*  */ { this.StripperWork = convertDouble; }
-                    if (double.TryParse(data.Attribute("BarmaidIncome").Value, out convertDouble)) /*   */ { this.BarmaidWork = convertDouble; }
-                    if (double.TryParse(data.Attribute("SlaveSales").Value, out convertDouble)) /*      */ { this.SlaveSales = convertDouble; }
-                    if (double.TryParse(data.Attribute("ItemSales").Value, out convertDouble)) /*       */ { this.ItemSales = convertDouble; }
-                    if (double.TryParse(data.Attribute("ClinicIncome").Value, out convertDouble)) /*    */ { this.ClinicIncome = convertDouble; }
-                    if (double.TryParse(data.Attribute("ArenaIncome").Value, out convertDouble)) /*     */ { this.ArenaIncome = convertDouble; }
-                    if (double.TryParse(data.Attribute("FarmIncome").Value, out convertDouble)) /*      */ { this.FarmIncome = convertDouble; }
+
+                    Serialiser.SetValue(data.Attribute("ExtortionIncome").Value, ref this.m_Extortion);
+                    Serialiser.SetValue(data.Attribute("GirlsWorkBrothel").Value, ref  this.m_BrothelWork);
+                    Serialiser.SetValue(data.Attribute("GirlsWorkStreet").Value, ref  this.m_StreetWork);
+                    Serialiser.SetValue(data.Attribute("MovieIncome").Value, ref  this.m_Movie);
+                    Serialiser.SetValue(data.Attribute("StripperIncome").Value, ref  this.m_StripperWork);
+                    Serialiser.SetValue(data.Attribute("BarmaidIncome").Value, ref  this.m_BarmaidWork);
+                    Serialiser.SetValue(data.Attribute("SlaveSales").Value, ref  this.m_SlaveSales);
+                    Serialiser.SetValue(data.Attribute("CreatureSales").Value, ref  this.m_CreatureSales);
+                    Serialiser.SetValue(data.Attribute("ItemSales").Value, ref  this.m_ItemSales);
+                    Serialiser.SetValue(data.Attribute("ClinicIncome").Value, ref  this.m_Clinic);
+                    Serialiser.SetValue(data.Attribute("ArenaIncome").Value, ref  this.m_Arena);
+                    Serialiser.SetValue(data.Attribute("FarmIncome").Value, ref  this.m_Farm);
+                    Serialiser.SetValue(data.Attribute("BarIncome").Value, ref  this.m_Bar);
+                    Serialiser.SetValue(data.Attribute("GamblingProfits").Value, ref  this.m_GamblingProfits);
+                    Serialiser.SetValue(data.Attribute("ObjectiveReward").Value, ref  this.m_ObjectiveReward);
+                    Serialiser.SetValue(data.Attribute("PlunderIncome").Value, ref  this.m_Plunder);
+                    Serialiser.SetValue(data.Attribute("PettyTheftIncome").Value, ref  this.m_PettyTheft);
+                    Serialiser.SetValue(data.Attribute("GrandTheftIncome").Value, ref  this.m_GrandTheft);
+                    Serialiser.SetValue(data.Attribute("CatacombLootIncome").Value, ref  this.m_CatacombLoot);
+
                     return true;
                 }
                 catch (Exception ex)
@@ -760,6 +882,30 @@ namespace WMaster
             /// Multiplicator of money cost for advertising.
             /// </summary>
             private double m_Advertising = 1.0;
+            /// <summary>
+            /// Multiplicator of money cost for bulding maintenance.
+            /// </summary>
+            private double m_BuildingUpkeep = 1.0;
+            /// <summary>
+            /// Multiplicator of money cost for training girl.
+            /// </summary>
+            private double m_GirlTraining = 1.0;
+            /// <summary>
+            /// Multiplicator of money cost for tax.
+            /// </summary>
+            private double m_Tax = 1.0;
+            /// <summary>
+            /// Multiplicator of money cost for center upkeep.
+            /// </summary>
+            private double m_CentreCosts = 1.0;
+            /// <summary>
+            /// Multiplicator of money cost for arena upkeep.
+            /// </summary>
+            private double m_ArenaCosts = 1.0;
+            /// <summary>
+            /// Multiplicator of money cost for rival raids.
+            /// </summary>
+            private double m_RivalRaids = 1.0;
             #endregion
 
             #region Public properties
@@ -932,6 +1078,66 @@ namespace WMaster
                 get { return m_Advertising; }
                 set { m_Advertising = Math.Min(value, 0.0); }
             }
+
+            /// <summary>
+            /// Get or set the multiplicator of money cost for bulding maintenance.
+            /// </summary>
+            [XmlAttribute("BuildingUpkeep")]
+            public double BuildingUpkeep
+            {
+                get { return m_BuildingUpkeep; }
+                set { m_BuildingUpkeep = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
+            /// Get or set the multiplicator of money cost for training girl.
+            /// </summary>
+            [XmlAttribute("GirlTraining")]
+            public double GirlTraining
+            {
+                get { return m_GirlTraining; }
+                set { m_GirlTraining = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
+            /// Get or set the multiplicator of money cost for tax.
+            /// </summary>
+            [XmlAttribute("Tax")]
+            public double Tax
+            {
+                get { return m_Tax; }
+                set { m_Tax = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
+            /// Get or set the multiplicator of money cost for center upkeep.
+            /// </summary>
+            [XmlAttribute("CentreCosts")]
+            public double CentreCosts
+            {
+                get { return m_Tax; }
+                set { m_Tax = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
+            /// Get or set the multiplicator of money cost for arena upkeep.
+            /// </summary>
+            [XmlAttribute("ArenaCosts")]
+            public double ArenaCosts
+            {
+                get { return m_ArenaCosts; }
+                set { m_ArenaCosts = Math.Min(value, 0.0); }
+            }
+
+            /// <summary>
+            /// Get or set the multiplicator of money cost for rival raids.
+            /// </summary>
+            [XmlAttribute("RivalRaids")]
+            public double RivalRaids
+            {
+                get { return m_RivalRaids; }
+                set { m_RivalRaids = Math.Min(value, 0.0); }
+            }
             #endregion
 
             #region Serialisation
@@ -965,6 +1171,12 @@ namespace WMaster
                     data.Add(new XAttribute("Bribes", this.Bribes));
                     data.Add(new XAttribute("Fines", this.Fines));
                     data.Add(new XAttribute("Advertising", this.Advertising));
+                    data.Add(new XAttribute("BuildingUpkeep", this.BuildingUpkeep));
+                    data.Add(new XAttribute("GirlTraining", this.GirlTraining));
+                    data.Add(new XAttribute("Tax", this.Tax));
+                    data.Add(new XAttribute("CentreCosts", this.CentreCosts));
+                    data.Add(new XAttribute("ArenaCosts", this.ArenaCosts));
+                    data.Add(new XAttribute("RivalRaids", this.RivalRaids));
 
                     return true;
                 }
@@ -987,27 +1199,33 @@ namespace WMaster
                 if (data == null)
                 { return false; }
 
-                double convertDouble;
                 try
                 {
                     Serialiser.SetInvarientCulture();
-                    if (double.TryParse(data.Attribute("Training").Value, out convertDouble)) /*      */ { this.Training = convertDouble; }
-                    if (double.TryParse(data.Attribute("ActressWages").Value, out convertDouble)) /*  */ { this.ActressWages = convertDouble; }
-                    if (double.TryParse(data.Attribute("MovieCost").Value, out convertDouble)) /*     */ { this.MovieCost = convertDouble; }
-                    if (double.TryParse(data.Attribute("GoonWages").Value, out convertDouble)) /*     */ { this.GoonWages = convertDouble; }
-                    if (double.TryParse(data.Attribute("MatronWages").Value, out convertDouble)) /*   */ { this.MatronWages = convertDouble; }
-                    if (double.TryParse(data.Attribute("StaffWages").Value, out convertDouble)) /*    */ { this.StaffWages = convertDouble; }
-                    if (double.TryParse(data.Attribute("GirlSupport").Value, out convertDouble)) /*   */ { this.GirlSupport = convertDouble; }
-                    if (double.TryParse(data.Attribute("Consumables").Value, out convertDouble)) /*   */ { this.Consumables = convertDouble; }
-                    if (double.TryParse(data.Attribute("Items").Value, out convertDouble)) /*         */ { this.ItemCost = convertDouble; }
-                    if (double.TryParse(data.Attribute("SlavesBought").Value, out convertDouble)) /*  */ { this.SlaveCost = convertDouble; }
-                    if (double.TryParse(data.Attribute("BuyBrothel").Value, out convertDouble)) /*    */ { this.BrothelCost = convertDouble; }
-                    if (double.TryParse(data.Attribute("BrothelSupport").Value, out convertDouble)) /**/ { this.BrothelSupport = convertDouble; }
-                    if (double.TryParse(data.Attribute("BarSupport").Value, out convertDouble)) /*    */ { this.BarCost = convertDouble; }
-                    if (double.TryParse(data.Attribute("CasinoSupport").Value, out convertDouble)) /* */ { this.CasinoCost = convertDouble; }
-                    if (double.TryParse(data.Attribute("Bribes").Value, out convertDouble)) /*        */ { this.Bribes = convertDouble; }
-                    if (double.TryParse(data.Attribute("Fines").Value, out convertDouble)) /*         */ { this.Fines = convertDouble; }
-                    if (double.TryParse(data.Attribute("Advertising").Value, out convertDouble)) /*   */ { this.Advertising = convertDouble; }
+
+                    Serialiser.SetValue(data.Attribute("Training").Value, ref this.m_Training);
+                    Serialiser.SetValue(data.Attribute("ActressWages").Value, ref this.m_ActressWages);
+                    Serialiser.SetValue(data.Attribute("MovieCost").Value, ref this.m_MovieCost);
+                    Serialiser.SetValue(data.Attribute("GoonWages").Value, ref this.m_GoonWages);
+                    Serialiser.SetValue(data.Attribute("MatronWages").Value, ref this.m_MatronWages);
+                    Serialiser.SetValue(data.Attribute("StaffWages").Value, ref this.m_StaffWages);
+                    Serialiser.SetValue(data.Attribute("GirlSupport").Value, ref this.m_GirlSupport);
+                    Serialiser.SetValue(data.Attribute("Consumables").Value, ref this.m_Consumables);
+                    Serialiser.SetValue(data.Attribute("Items").Value, ref this.m_ItemCost);
+                    Serialiser.SetValue(data.Attribute("SlavesBought").Value, ref this.m_SlaveCost);
+                    Serialiser.SetValue(data.Attribute("BuyBrothel").Value, ref this.m_BrothelCost);
+                    Serialiser.SetValue(data.Attribute("BrothelSupport").Value, ref this.m_BrothelSupport);
+                    Serialiser.SetValue(data.Attribute("BarSupport").Value, ref this.m_BarCost);
+                    Serialiser.SetValue(data.Attribute("CasinoSupport").Value, ref this.m_CasinoCost);
+                    Serialiser.SetValue(data.Attribute("Bribes").Value, ref this.m_Bribes);
+                    Serialiser.SetValue(data.Attribute("Fines").Value, ref this.m_Fines);
+                    Serialiser.SetValue(data.Attribute("Advertising").Value, ref this.m_Advertising);
+                    Serialiser.SetValue(data.Attribute("BuildingUpkeep").Value, ref this.m_BuildingUpkeep);
+                    Serialiser.SetValue(data.Attribute("GirlTraining").Value, ref this.m_GirlTraining);
+                    Serialiser.SetValue(data.Attribute("Tax").Value, ref this.m_Tax);
+                    Serialiser.SetValue(data.Attribute("CentreCosts").Value, ref this.m_CentreCosts);
+                    Serialiser.SetValue(data.Attribute("ArenaCosts").Value, ref this.m_ArenaCosts);
+                    Serialiser.SetValue(data.Attribute("RivalRaids").Value, ref this.m_RivalRaids);
                     return true;
                 }
                 catch (Exception ex)
@@ -1166,13 +1384,12 @@ namespace WMaster
                 try
                 {
                     Serialiser.SetInvarientCulture();
-                    if (!string.IsNullOrWhiteSpace(data.Attribute("Odds").Value) && double.TryParse(data.Attribute("Odds").Value.Replace("%", string.Empty), out convertDouble))
-                    { this.Odds = convertDouble; }
 
-                    if (int.TryParse(data.Attribute("Base").Value, out convertInt)) /*                */ { this.Base = convertInt; }
-                    if (int.TryParse(data.Attribute("Spread").Value, out convertInt)) /*              */ { this.Spread = convertInt; }
-                    if (double.TryParse(data.Attribute("HouseFactor").Value, out convertDouble)) /*   */ { this.HouseFactor = convertDouble; }
-                    if (double.TryParse(data.Attribute("CustomerFactor").Value, out convertDouble)) /**/ { this.CustomerFactor = convertDouble; }
+                    Serialiser.SetPercentage(data.Attribute("Odds").Value, ref this.m_Odds);
+                    Serialiser.SetValue(data.Attribute("Base").Value, ref this.m_Base);
+                    Serialiser.SetValue(data.Attribute("Spread").Value, ref this.m_Spread);
+                    Serialiser.SetValue(data.Attribute("HouseFactor").Value, ref this.m_HouseFactor);
+                    Serialiser.SetValue(data.Attribute("CustomerFactor").Value, ref this.m_CustomerFactor);
                     return true;
                 }
                 catch (Exception ex)
@@ -1296,12 +1513,10 @@ namespace WMaster
                 try
                 {
                     Serialiser.SetInvarientCulture();
-                    if (!string.IsNullOrWhiteSpace(data.Attribute("Rate").Value) && double.TryParse(data.Attribute("Rate").Value.Replace("%", string.Empty), out convertDouble))
-                    { this.Rate = convertDouble / 100; }
-                    if (!string.IsNullOrWhiteSpace(data.Attribute("Rate").Value) && double.TryParse(data.Attribute("Minimum").Value.Replace("%", string.Empty), out convertDouble))
-                    { this.Minimum = convertDouble / 100; }
-                    if (!string.IsNullOrWhiteSpace(data.Attribute("Rate").Value) && double.TryParse(data.Attribute("Laundry").Value.Replace("%", string.Empty), out convertDouble))
-                    { this.Laundry = convertDouble / 100; }
+
+                    Serialiser.SetPercentage(data.Attribute("Rate").Value, ref this.m_Rate);
+                    Serialiser.SetPercentage(data.Attribute("Minimum").Value, ref this.m_Minimum);
+                    Serialiser.SetPercentage(data.Attribute("Laundry").Value, ref this.m_Laundry);
                     return true;
                 }
                 catch (Exception ex)
@@ -2015,6 +2230,8 @@ namespace WMaster
                     { this.GangGetsItems = convertDouble; }
                     if (!string.IsNullOrWhiteSpace(data.Attribute("GangGetsBeast").Value) && double.TryParse(data.Attribute("GangGetsBeast").Value.Replace("%", string.Empty), out convertDouble))
                     { this.GangGetsBeast = convertDouble; }
+
+                    this.CheckCatacombsData();
                     return true;
                 }
                 catch (Exception ex)
@@ -2200,6 +2417,10 @@ namespace WMaster
             /// <remarks><para>A random number between <b>AddNewWeeklyMin</b> and <b>AddNewWeeklyMax</b> is picked.</para></remarks>
             /// </summary>
             private int m_AddNewWeeklyMax = 2;
+            /// <summary>
+            /// Max sword level.
+            /// </summary>
+            private int m_SwordLevelMax = 4;
             #endregion
 
             #region Public properties
@@ -2293,6 +2514,16 @@ namespace WMaster
                 get { return m_AddNewWeeklyMax; }
                 set { m_AddNewWeeklyMax = Math.Min(value, 0); }
             }
+
+            /// <summary>
+            /// Get or set the maximum level of gang weapon.
+            /// </summary>
+            [XmlAttribute("SwordLevelMax")]
+            public int SwordLevelMax
+            {
+                get { return m_SwordLevelMax; }
+                set { m_SwordLevelMax = Math.Min(value, 0); }
+            }
             #endregion
 
             #region Serialisation
@@ -2317,6 +2548,7 @@ namespace WMaster
                     data.Add(new XAttribute("ChanceRemoveUnwanted", this.ChanceRemoveUnwanted.ToString("0.00%")));
                     data.Add(new XAttribute("AddNewWeeklyMin", this.AddNewWeeklyMin));
                     data.Add(new XAttribute("AddNewWeeklyMax", this.AddNewWeeklyMax));
+                    data.Add(new XAttribute("SwordLevelMax", this.SwordLevelMax));
 
                     return true;
                 }
@@ -2339,20 +2571,20 @@ namespace WMaster
                 if (data == null)
                 { return false; }
 
-                int convertInt;
-                double convertDouble;
                 try
                 {
                     Serialiser.SetInvarientCulture();
-                    if (int.TryParse(data.Attribute("MaxRecruitList").Value, out convertInt)) /*      */ { this.MaxRecruitList = convertInt; }
-                    if (int.TryParse(data.Attribute("StartRandom").Value, out convertInt)) /*         */ { this.StartRandom = convertInt; }
-                    if (int.TryParse(data.Attribute("StartBoosted").Value, out convertInt)) /*        */ { this.StartBoosted = convertInt; }
-                    if (int.TryParse(data.Attribute("InitMemberMin").Value, out convertInt)) /*       */ { this.InitMemberMin = convertInt; }
-                    if (int.TryParse(data.Attribute("InitMemberMax").Value, out convertInt)) /*       */ { this.InitMemberMax = convertInt; }
-                    if (!string.IsNullOrWhiteSpace(data.Attribute("ChanceRemoveUnwanted").Value) && double.TryParse(data.Attribute("ChanceRemoveUnwanted").Value.Replace("%", string.Empty), out convertDouble))
-                    { this.ChanceRemoveUnwanted = convertDouble; }
-                    if (int.TryParse(data.Attribute("AddNewWeeklyMin").Value, out convertInt)) /*     */ { this.AddNewWeeklyMin = convertInt; }
-                    if (int.TryParse(data.Attribute("AddNewWeeklyMax").Value, out convertInt)) /*     */ { this.AddNewWeeklyMax = convertInt; }
+
+                    Serialiser.SetValue(data.Attribute("MaxRecruitList").Value, ref this.m_MaxRecruitList);
+                    Serialiser.SetValue(data.Attribute("StartRandom").Value, ref  this.m_StartRandom);
+                    Serialiser.SetValue(data.Attribute("StartBoosted").Value, ref  this.m_StartBoosted);
+                    Serialiser.SetValue(data.Attribute("InitMemberMin").Value, ref  this.m_InitMemberMin);
+                    Serialiser.SetValue(data.Attribute("InitMemberMax").Value, ref  this.m_InitMemberMax);
+                    Serialiser.SetValue(data.Attribute("ChanceRemoveUnwanted").Value, ref this.m_ChanceRemoveUnwanted);
+                    Serialiser.SetValue(data.Attribute("AddNewWeeklyMin").Value, ref  this.m_AddNewWeeklyMin);
+                    Serialiser.SetValue(data.Attribute("AddNewWeeklyMax").Value, ref  this.m_AddNewWeeklyMax);
+                    Serialiser.SetValue(data.Attribute("SwordLevelMax").Value, ref this.m_SwordLevelMax);
+
                     return true;
                 }
                 catch (Exception ex)
@@ -2401,7 +2633,6 @@ namespace WMaster
                 {
                     Serialiser.SetInvarientCulture();
                     data.Add(new XAttribute("Active", this.Active));
-
                     return true;
                 }
                 catch (Exception ex)
@@ -2423,11 +2654,10 @@ namespace WMaster
                 if (data == null)
                 { return false; }
 
-                bool convertBool;
                 try
                 {
                     Serialiser.SetInvarientCulture();
-                    if (bool.TryParse(data.Attribute("Active").Value, out convertBool)) /**/ { this.Active = convertBool; }
+                    Serialiser.SetValue(data.Attribute("Active").Value, ref this.m_Active);
                     return true;
                 }
                 catch (Exception ex)
@@ -2534,6 +2764,17 @@ namespace WMaster
             }
             #endregion
 
+            /// <summary>
+            /// Initialise the debug flags to true if LogAll is set.
+            /// </summary>
+            public void CheckDebugFlag()
+            {
+                if (this.LogAll)
+                {
+                    this.LogGirls = this.LogRGirls = this.LogGirlFights = this.LogItems = this.LogFonts = this.LogTorture = this.LogDebug = this.LogExtraDetails = this.LogShowNumbers = this.LogAll;
+                }
+            }
+
             #region Serialisation
             /// <summary>
             /// Serialise instance into <see cref="XElement"/> <paramref name="data"/>.
@@ -2542,8 +2783,7 @@ namespace WMaster
             /// <returns><b>True</b> if no error occure.</returns>
             public bool Serialise(XElement data)
             {
-                if (data == null)
-                { return false; }
+                if (data == null) { return false; }
 
                 try
                 {
@@ -2558,7 +2798,6 @@ namespace WMaster
                     data.Add(new XAttribute("LogDebug", this.LogDebug));
                     data.Add(new XAttribute("LogExtraDetails", this.LogExtraDetails));
                     data.Add(new XAttribute("LogShowNumbers", this.LogShowNumbers));
-
                     return true;
                 }
                 catch (Exception ex)
@@ -2577,23 +2816,23 @@ namespace WMaster
             /// <returns><b>True</b> if no error occure.</returns>
             public bool Deserialise(XElement data)
             {
-                if (data == null)
-                { return false; }
+                if (data == null) { return false; }
 
                 bool convertBool;
                 try
                 {
                     Serialiser.SetInvarientCulture();
-                    if (bool.TryParse(data.Attribute("LogAll").Value, out convertBool)) /*         */ { this.LogAll = convertBool; }
-                    if (bool.TryParse(data.Attribute("LogGirls").Value, out convertBool)) /*       */ { this.LogGirls = convertBool; }
-                    if (bool.TryParse(data.Attribute("LogRGirls").Value, out convertBool)) /*      */ { this.LogRGirls = convertBool; }
-                    if (bool.TryParse(data.Attribute("LogGirlFights").Value, out convertBool)) /*  */ { this.LogGirlFights = convertBool; }
-                    if (bool.TryParse(data.Attribute("LogItems").Value, out convertBool)) /*       */ { this.LogItems = convertBool; }
-                    if (bool.TryParse(data.Attribute("LogFonts").Value, out convertBool)) /*       */ { this.LogFonts = convertBool; }
-                    if (bool.TryParse(data.Attribute("LogTorture").Value, out convertBool)) /*     */ { this.LogTorture = convertBool; }
-                    if (bool.TryParse(data.Attribute("LogDebug").Value, out convertBool)) /*       */ { this.LogDebug = convertBool; }
-                    if (bool.TryParse(data.Attribute("LogExtraDetails").Value, out convertBool)) /**/ { this.LogExtraDetails = convertBool; }
-                    if (bool.TryParse(data.Attribute("LogShowNumbers").Value, out convertBool)) /* */ { this.LogShowNumbers = convertBool; }
+                    Serialiser.SetValue(data.Attribute("LogAll").Value, ref this.m_LogAll);
+                    Serialiser.SetValue(data.Attribute("LogGirls").Value, ref this.m_LogGirls);
+                    Serialiser.SetValue(data.Attribute("LogRGirls").Value, ref this.m_LogRGirls);
+                    Serialiser.SetValue(data.Attribute("LogGirlFights").Value, ref this.m_LogGirlFights);
+                    Serialiser.SetValue(data.Attribute("LogItems").Value, ref this.m_LogItems);
+                    Serialiser.SetValue(data.Attribute("LogFonts").Value, ref this.m_LogFonts);
+                    Serialiser.SetValue(data.Attribute("LogTorture").Value, ref this.m_LogTorture);
+                    Serialiser.SetValue(data.Attribute("LogDebug").Value, ref this.m_LogDebug);
+                    Serialiser.SetValue(data.Attribute("LogExtraDetails").Value, ref this.m_LogExtraDetails);
+                    Serialiser.SetValue(data.Attribute("LogShowNumbers").Value, ref this.m_LogShowNumbers);
+                    this.CheckDebugFlag();
                     return true;
                 }
                 catch (Exception ex)
@@ -2619,7 +2858,7 @@ namespace WMaster
             /// <summary>
             /// If set to true, the game will save in both the game's default save folder as well as the folder set here.
             /// </summary>
-            private bool m_Backupsaves = false;
+            private bool m_BackupSaves = false;
             /// <summary>
             /// If set to true, the game will try to use default images before trying to find alternate images from the image tree.
             /// </summary>
@@ -2665,8 +2904,8 @@ namespace WMaster
             [XmlAttribute("BackupSaves")]
             public bool BackupSaves
             {
-                get { return this.m_Backupsaves; }
-                set { this.m_Backupsaves = value; }
+                get { return this.m_BackupSaves; }
+                set { this.m_BackupSaves = value; }
             }
 
             /// <summary>
@@ -2768,23 +3007,17 @@ namespace WMaster
             /// <returns><b>True</b> if no error occure.</returns>
             public bool Serialise(XElement data)
             {
-                if (data == null)
-                { return false; }
+                if (data == null) { return false; }
 
                 try
                 {
                     Serialiser.SetInvarientCulture();
                     data.Add(new XAttribute("BackupSaves", this.BackupSaves));
                     data.Add(new XAttribute("PreferDefault", this.PreferDefault));
-                    if (this.ConfigXMLCharacters)
-                    { data.Add(new XAttribute("Characters", this.Characters)); }
-                    if (this.ConfigXMLSave)
-                    { data.Add(new XAttribute("Saves", this.Saves)); }
-                    if (this.ConfigXMLItems)
-                    { data.Add(new XAttribute("Items", this.Items)); }
-                    if (this.ConfigXMLDefaultImageLoc)
-                    { data.Add(new XAttribute("DefaultImages", this.DefaultImageLoc)); }
-
+                    if (this.ConfigXMLCharacters) /*      */ { data.Add(new XAttribute("Characters", this.Characters)); }
+                    if (this.ConfigXMLSave) /*            */ { data.Add(new XAttribute("Saves", this.Saves)); }
+                    if (this.ConfigXMLItems) /*           */ { data.Add(new XAttribute("Items", this.Items)); }
+                    if (this.ConfigXMLDefaultImageLoc) /* */ { data.Add(new XAttribute("DefaultImages", this.DefaultImageLoc)); }
                     return true;
                 }
                 catch (Exception ex)
@@ -2803,36 +3036,19 @@ namespace WMaster
             /// <returns><b>True</b> if no error occure.</returns>
             public bool Deserialise(XElement data)
             {
-                if (data == null)
-                { return false; }
+                if (data == null) { return false; }
 
                 bool convertBool;
                 try
                 {
                     Serialiser.SetInvarientCulture();
-                    if (bool.TryParse(data.Attribute("BackupSaves").Value, out convertBool)) /* */ { this.BackupSaves = convertBool; }
-                    if (bool.TryParse(data.Attribute("PreferDefault").Value, out convertBool)) /*       */ { this.PreferDefault = convertBool; }
+                    Serialiser.SetValue(data.Attribute("BackupSaves").Value, ref this.m_BackupSaves);
+                    Serialiser.SetValue(data.Attribute("PreferDefault").Value, ref this.m_PreferDefault);
 
-                    if (data.Attribute("Characters").Value != null)
-                    {
-                        this.Characters = data.Attribute("Characters").Value;
-                        this.m_ConfigXMLCharacters = true;
-                    }
-                    if (data.Attribute("Saves").Value != null)
-                    {
-                        this.Saves = data.Attribute("Saves").Value;
-                        this.m_ConfigXMLSave = true;
-                    }
-                    if (data.Attribute("Items").Value != null)
-                    {
-                        this.Items = data.Attribute("Items").Value;
-                        this.m_ConfigXMLItems = true;
-                    }
-                    if (data.Attribute("DefaultImages").Value != null)
-                    {
-                        this.DefaultImageLoc = data.Attribute("DefaultImages").Value;
-                        this.m_ConfigXMLDefaultImageLoc = true;
-                    }
+                    if (Serialiser.SetValue(data.Attribute("Characters").Value, ref this.m_Characters)) { this.m_ConfigXMLCharacters = true; }
+                    if (Serialiser.SetValue(data.Attribute("Saves").Value, ref this.m_Saves)) { this.m_ConfigXMLSave = true; }
+                    if (Serialiser.SetValue(data.Attribute("Items").Value, ref this.m_Items)) { this.m_ConfigXMLItems = true; }
+                    if (Serialiser.SetValue(data.Attribute("DefaultImages").Value, ref this.m_DefaultImageLoc)) { this.m_ConfigXMLDefaultImageLoc = true; }
                     return true;
                 }
                 catch (Exception ex)
@@ -2985,14 +3201,6 @@ namespace WMaster
             get { return Configuration.Instance.m_Folders; }
         }
         #endregion
-
-        public void get_debug_flags(XElement el)
-        {
-            if (Debug.LogAll)
-            {
-                Debug.LogGirls = Debug.LogRGirls = Debug.LogGirlFights = Debug.LogItems = Debug.LogFonts = Debug.LogTorture = Debug.LogDebug = Debug.LogExtraDetails = Debug.LogShowNumbers = Debug.LogAll;
-            }
-        }
 
         /// <summary>
         /// Serialise this instance data into <see cref="XElement"/>.

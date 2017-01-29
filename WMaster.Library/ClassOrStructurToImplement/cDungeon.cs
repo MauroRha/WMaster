@@ -29,7 +29,7 @@ namespace WMaster.ClassOrStructurToImplement
         public void Dispose()
         { throw new NotImplementedException(); } // destructor
 
-        void Free()
+        public void Free()
         { throw new NotImplementedException(); }
         IXmlElement SaveDungeonDataXML(IXmlElement pRoot)
         { throw new NotImplementedException(); }// saves dungeon data

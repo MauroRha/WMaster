@@ -43,33 +43,38 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassOrStructurToImplement\cActionTemplate.cs" />
-    <Compile Include="ClassOrStructurToImplement\ToDoFirst\cGoldBase.cs" />
+    <Compile Include="Concept\GoldBase.cs" />
     <Compile Include="ClassOrStructurToImplement\cAbstractGirls.cs" />
+    <Compile Include="Concept\MainMenu.cs" />
+    <Compile Include="Concept\NewGameInfo.cs" />
+    <Compile Include="Manager\GameManager.cs" />
+    <Compile Include="Manager\IManager.cs" />
     <Compile Include="Tool\IFacadeIHM.cs" />
     <Compile Include="Tool\IFacadeOS.cs" />
     <Compile Include="Tool\ISerialisableEntity.cs" />
+    <Compile Include="Tool\Percentage.cs" />
     <Compile Include="Tool\Serialiser.cs" />
-    <Compile Include="Concept\GangMission\GangMissionBase.cs" />
-    <Compile Include="Concept\GangMission\GangMissionRecaptureGirls.cs" />
-    <Compile Include="Concept\GangMission\GangMissionCatacombs.cs" />
-    <Compile Include="Concept\GangMission\GangMissionDungeon.cs" />
-    <Compile Include="Concept\GangMission\GangMissionExtortion.cs" />
-    <Compile Include="Concept\GangMission\GangMissionGrandTheft.cs" />
-    <Compile Include="Concept\GangMission\GangMissionGuarding.cs" />
-    <Compile Include="Concept\GangMission\GangMissionKidnappGirls.cs" />
-    <Compile Include="Concept\GangMission\GangMissionNone.cs" />
-    <Compile Include="Concept\GangMission\GangMissionPettyTheft.cs" />
-    <Compile Include="Concept\GangMission\GangMissionRecruit.cs" />
-    <Compile Include="Concept\GangMission\GangMissionSabotage.cs" />
-    <Compile Include="Concept\GangMission\GangMissionService.cs" />
-    <Compile Include="Concept\GangMission\GangMissionSpyGirls.cs" />
-    <Compile Include="Concept\GangMission\GangMissionTraining.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionBase.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionRecaptureGirls.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionCatacombs.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionDungeon.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionExtortion.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionGrandTheft.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionGuarding.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionKidnappGirls.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionNone.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionPettyTheft.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionRecruit.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionSabotage.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionService.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionSpyGirls.cs" />
+    <Compile Include="Entity\Living\GangMission\GangMissionTraining.cs" />
     <Compile Include="Enums\EventType.cs" />
     <Compile Include="Enums\MessageCategory.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Concept\Attributs\Attribute[TEnumType].cs" />
     <Compile Include="Concept\ICaracteristicOwnEntity.cs" />
-    <Compile Include="Manager\ITurnable.cs" />
+    <Compile Include="Concept\ITurnable.cs" />
     <Compile Include="Concept\Attributs\IValuableAttribut.cs" />
     <Compile Include="Concept\Attributs\Skill.cs" />
     <Compile Include="Concept\Attributs\Stat.cs" />
@@ -102,7 +107,7 @@
     <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cLuaStateInner.cs" />
     <Compile Include="ClassOrStructurToImplement\CResource.cs" />
     <Compile Include="ClassOrStructurToImplement\CResourceManager.cs" />
-    <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cScriptManager.cs" />
+    <Compile Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cScriptManager.cs" />
     <None Include="ClassOrStructurToImplement\HFileToImport\Scripting_Lua\cScriptManagerInner.cs" />
     <Compile Include="ClassOrStructurToImplement\cTrainable.cs" />
     <Compile Include="ClassOrStructurToImplement\IdealAttr.cs" />
@@ -207,14 +212,14 @@
     <Compile Include="ClassOrStructurToImplement\sDungeonGirl.cs" />
     <Compile Include="ClassOrStructurToImplement\sCustomer.cs" />
     <Compile Include="Entity\Living\Gang.cs" />
-    <Compile Include="Entity\Item\Inventory.cs" />
-    <Compile Include="Manager\Events.cs" />
-    <Compile Include="ClassOrStructurToImplement\ToDoFirst\cGold.cs" />
+    <Compile Include="Entity\Inert\Inventory.cs" />
+    <Compile Include="Manager\EventManager.cs" />
+    <Compile Include="Concept\Gold.cs" />
     <Compile Include="ClassOrStructurToImplement\cBuilding.cs" />
-    <Compile Include="ClassOrStructurToImplement\ToDoFirst\cTariff.cs" />
+    <Compile Include="Concept\Tariff.cs" />
     <Compile Include="ClassOrStructurToImplement\sBoundedVar.cs" />
     <Compile Include="ClassOrStructurToImplement\sBoundedVar_Provides.cs" />
-    <Compile Include="ClassOrStructurToImplement\ToDoFirst\sEvents.cs" />
+    <Compile Include="Concept\Event.cs" />
     <Compile Include="ClassOrStructurToImplement\sFacility.cs" />
     <Compile Include="ClassOrStructurToImplement\sEffect.cs" />
     <Compile Include="ClassOrStructurToImplement\sFilm.cs" />
@@ -239,7 +244,7 @@
     <None Include="ClassOrStructurToImplement\UnknowUsfullClass\ImagePath.cs" />
     <None Include="ClassOrStructurToImplement\UnknowUsfullClass\INPUT_MODE.cs" />
     <Compile Include="Enums\Summary.cs" />
-    <Compile Include="Manager\GameEngine.cs" />
+    <Compile Include="Concept\GameEngine.cs" />
     <Compile Include="TempConfiguration.cs" />
     <Compile Include="Tool\DoubleNameList.cs" />
     <Compile Include="Tool\FormatStringParameter.cs" />
@@ -247,10 +252,10 @@
     <Compile Include="Tool\Message.cs" />
     <Compile Include="Tool\NameList.cs" />
     <Compile Include="ClassOrStructurToImplement\cRivalManager.cs" />
-    <Compile Include="ClassOrStructurToImplement\cRival.cs" />
+    <Compile Include="ClassOrStructurToImplement\ToDoFirst\cRival.cs" />
     <Compile Include="ClassOrStructurToImplement\cJobManager.cs" />
     <Compile Include="ClassOrStructurToImplement\cDungeon.cs" />
-    <Compile Include="ClassOrStructurToImplement\cPlayer.cs" />
+    <Compile Include="ClassOrStructurToImplement\ToDoFirst\cPlayer.cs" />
     <Compile Include="ClassOrStructurToImplement\sBrothel.cs" />
     <Compile Include="ClassOrStructurToImplement\sGirl.cs" />
     <Compile Include="ClassOrStructurToImplement\sInventoryItem.cs" />
@@ -265,10 +270,10 @@
     <Compile Include="Enums\DungeonReasons.cs" />
     <Compile Include="Enums\Fetishs.cs" />
     <Compile Include="Enums\FreeFireSellDump.cs" />
-    <Compile Include="Concept\GangMission\EnuGangMissions.cs" />
+    <Compile Include="Entity\Living\GangMission\EnuGangMissions.cs" />
     <Compile Include="Enums\Gender.cs" />
     <Compile Include="Enums\Goals.cs" />
-    <Compile Include="Enums\ImageTypes.cs" />
+    <Compile Include="Enums\ImageType.cs" />
     <Compile Include="Enums\ItemRarity.cs" />
     <Compile Include="Enums\ItemType.cs" />
     <Compile Include="Enums\JobFilter.cs" />
@@ -287,6 +292,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DAL\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Language\Resources.EN.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

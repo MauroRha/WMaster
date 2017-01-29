@@ -18,7 +18,7 @@ namespace WMaster.ClassOrStructurToImplement
         public void Dispose()
         { throw new NotImplementedException(); }
 
-        void Free()
+        public void Free()
         { throw new NotImplementedException(); } // Delete all the loaded data
 
         void LoadTraits(string filename)

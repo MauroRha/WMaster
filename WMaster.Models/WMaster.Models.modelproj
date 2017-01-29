@@ -22,6 +22,13 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="'$(VSToolsPath)' != ''" />
   <ItemGroup>
+    <Content Include="NewGame.sequencediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="NewGame.sequencediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>NewGame.sequencediagram</DependentUpon>
+    </Content>
     <Folder Include="ModelDefinition\" />
     <Content Include="GangManager.classdiagram">
       <SubType>Content</SubType>
@@ -29,6 +36,13 @@
     <Content Include="GangManager.classdiagram.layout">
       <SubType>Content</SubType>
       <DependentUpon>GangManager.classdiagram</DependentUpon>
+    </Content>
+    <Content Include="Initialise.sequencediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Initialise.sequencediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>Initialise.sequencediagram</DependentUpon>
     </Content>
     <Content Include="ModelDefinition\Package1_1923.uml">
       <SubType>Content</SubType>

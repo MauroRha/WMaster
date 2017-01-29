@@ -117,7 +117,7 @@ namespace WMaster
         /// </summary>
         public const int NUM_SHOPITEMS = 40;
 
-        public static readonly int PREG_OFFSET = (int)ImageTypes.PREGNANT + 1;
+        public static readonly int PREG_OFFSET = (int)ImageType.PREGNANT + 1;
 
 
         public const int NUM_GIRLFLAGS = 30;
@@ -137,6 +137,75 @@ namespace WMaster
         /// Maximum number of items a Rival can have in inventory.
         /// </summary>
         public const int MAXNUM_RIVAL_INVENTORY = 40;
+
+        /// <summary>
+        /// Price for one healing pot.
+        /// </summary>
+        public const int UNITARY_HEALING_PRICE = 10;
+        /// <summary>
+        /// Price for one nets.
+        /// </summary>
+        public const int UNITARY_NETS_PRICE = 5;
+        /// <summary>
+        /// Price for one anti preg pill.
+        /// </summary>
+        public const int UNITARY_ANTI_PREG_PRICE = 2;
+
+        /// <summary>
+        /// Tarif for strip bar.
+        /// </summary>
+        public const int STRIP_BAR_TARIF = 2500;
+        /// <summary>
+        /// Tarif for gambling hall.
+        /// </summary>
+        public const int GAMBLING_HALL_TARIF = 15000;
+
+        /// <summary>
+        /// Base cost for movies.
+        /// </summary>
+        public const int BASE_MOVIE_COST = 15000;
+
+        /// <summary>
+        /// Base cost for movies.
+        /// </summary>
+        public const int BASE_BAS_STAFF_WAGES = 20;
+
+        /// <summary>
+        /// Base cost for empty bar.
+        /// </summary>
+        public const int BASE_EMPTY_BAR_COST = 20;
+        /// <summary>
+        /// Base cost for active bar.
+        /// </summary>
+        public const int BASE_ACTIVE_BAR_COST = 50;
+
+        /// <summary>
+        /// Base cost for empty casino.
+        /// </summary>
+        public const int BASE_EMPTY_CASINO_COST = 50;
+        /// <summary>
+        /// Base cost for active casino.
+        /// </summary>
+        public const int BASE_ACTIVE_CASINO_COST = 150;
+
+        /// <summary>
+        /// Base cost for active casino.
+        /// </summary>
+        public const int BASE_MALE_SLAVE_SELL_PRICE = 200;
+        /// <summary>
+        /// Base cost for active casino.
+        /// </summary>
+        public const int BASE_CREATURE_SELL_PRICE = 100;
+
+        /// <summary>
+        /// Base cost for new room.
+        /// </summary>
+        public const int BASE_ROOM_COST = 1000;
+
+        /// <summary>
+        /// Base cost for girl training.
+        /// </summary>
+        public const int BASE_GIRL_TRAINING_COST = 5;
 
         /// <summary>
         /// how tall (in pixels) each list item is.

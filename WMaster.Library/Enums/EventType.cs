@@ -41,21 +41,23 @@ namespace WMaster.Enums
     /// Event type
     /// <remarks><para>`J` When modifying Action types, search for "J-Change-Action-Types"  :  found in >> Constants.h</para></remarks>
     /// </summary>
+    [Flags]
     public enum EventType
     {
-        DayShift = 0,
-        NightShift = 1,
-        WARNING = 2,
-        DANGER = 3,
-        GOODNEWS = 4,
-        SUMMARY = 5,
-        DUNGEON = 6, // For torturer reports
-        MATRON = 7, // For Matron reports
-        GANG = 8,
-        BROTHEL = 9,
-        NOWORK = 10,
-        BACKTOWORK = 11,
-        LEVELUP = 12, // `J` added
-        DEBUG
+        None /*       */ = 0x0000,
+        DayShift /*   */ = 0x0001,
+        NightShift /* */ = 0x0010,
+        Warning /*    */ = 0x0011,
+        Danger /*     */ = 0x0100,
+        GoodNews /*   */ = 0x0101,
+        Summary /*    */ = 0x0110,
+        Dungeon /*    */ = 0x0111, // For torturer reports
+        Matron /*     */ = 0x1000, // For Matron reports
+        Gang /*       */ = 0x1001,
+        Brothel /*    */ = 0x1010,
+        NoWork /*     */ = 0x1011,
+        BackToWork /* */ = 0x1100,
+        LevelUp /*    */ = 0x1101, // `J` added
+        Debug /*      */ = 0x1110
     };
 }

@@ -39,7 +39,7 @@ namespace WMaster.Manager
             Free();
         }
 
-        void Free()
+        public void Free()
         { throw new NotImplementedException(); }
         void LoadList(string filename)
         { throw new NotImplementedException(); }
@@ -57,15 +57,15 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); }
         void RemoveFromQue(cTrigger trigger)
         { throw new NotImplementedException(); }
-        cTriggerQue GetNextQueItem()
+        public cTriggerQue GetNextQueItem()
         { throw new NotImplementedException(); }
 
         public cTrigger CheckForScript(int Type, bool trigger, int[] values)
         { throw new NotImplementedException(); }
 
-        void ProcessTriggers()
+        public void ProcessTriggers()
         { throw new NotImplementedException(); } // function that process the triggers in the list and adds them to the que if the conditions are met
-        void ProcessNextQueItem(string fileloc)
+        public void ProcessNextQueItem(string fileloc)
         { throw new NotImplementedException(); }
 
         // set script targets

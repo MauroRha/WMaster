@@ -20,7 +20,7 @@ namespace WMaster.ClassOrStructurToImplement
         public sBoundedVar m_secure = new sBoundedVar();
         public sBoundedVar m_stealth = new sBoundedVar();
         public bool new_flag;
-        public cTariff tariff = new cTariff();
+        public Tariff tariff = new Tariff();
 
         public sFacility()
         {
@@ -76,7 +76,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int price()
         {
-            return tariff.buy_facility(m_base_price);
+            return tariff.BuyFacility(m_base_price);
         }
         public int glitz()
         {

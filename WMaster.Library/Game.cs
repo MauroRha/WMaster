@@ -37,19 +37,20 @@
 namespace WMaster
 {
     using System;
-    using System.Xml.Linq;
     using WMaster.ClassOrStructurToImplement;
-    using WMaster.Entity.Item;
+    using WMaster.Concept;
+    using WMaster.Entity.Inert;
     using WMaster.Manager;
     using WMaster.Tool;
     using WMaster.Tool.Diagnostics;
 
     /// <summary>
-    /// Static wrapper to <see cref="WMaster.Manager.GameEngine"/> providing easy access to it's functionality.
-    /// <remarks><para>All methodes and properties are linked to same member of <see cref="WMaster.Manager.GameEngine"/> unique instance.</para></remarks>
+    /// Static wrapper to <see cref="WMaster.Concept.GameEngine"/> providing easy access to it's functionality.
+    /// <remarks><para>All methodes and properties are linked to same member of <see cref="WMaster.Concept.GameEngine"/> unique instance.</para></remarks>
     /// </summary>
     public static class Game
     {
+        #region Facade property
         /// <summary>
         /// Specific OS functionality.
         /// </summary>
@@ -72,6 +73,15 @@ namespace WMaster
         public static IFacadeIHM IHM
         {
             get { return Game.m_SpecificIHM; }
+        }
+        #endregion
+
+        /// <summary>
+        /// Get the unique <see cref="MainMenu"/>instance.
+        /// </summary>
+        public static MainMenu MainMenu
+        {
+            get { return MainMenu.Instance; }
         }
 
         /// <summary>
@@ -99,35 +109,10 @@ namespace WMaster
         }
 
         /// <summary>
-        /// Get or set the current year in game.
-        /// </summary>
-        public static int Year
-        {
-            get { return GameEngine.Instance.Year; }
-            set { GameEngine.Instance.Year = value; }
-        }
-        /// <summary>
-        /// Get or set the current month in game.
-        /// </summary>
-        public static int Month
-        {
-            get { return GameEngine.Instance.Month; }
-            set { GameEngine.Instance.Month = value; }
-        }
-        /// <summary>
-        /// Get or set the current day in game.
-        /// </summary>
-        public static int Day
-        {
-            get { return GameEngine.Instance.Day; }
-            set { GameEngine.Instance.Day = value; }
-        }
-
-        /// <summary>
         /// Player gold
         /// </summary>
         [Obsolete("Move gold to player instance?", false)]
-        public static WMaster.ClassOrStructurToImplement.cGold Gold
+        public static Gold Gold
         { get { return GameEngine.Instance.Gold; } }
 
         /// <summary>
@@ -222,7 +207,7 @@ namespace WMaster
         /// <summary>
         /// Get arena Manager.
         /// </summary>
-        private static cArenaManager Arena
+        public static cArenaManager Arena
         {
             get { return GameEngine.Instance.g_Arena; }
         }
@@ -230,7 +215,7 @@ namespace WMaster
         /// <summary>
         /// Get centre Manager.
         /// </summary>
-        private static cCentreManager Centre
+        public static cCentreManager Centre
         {
             get { return GameEngine.Instance.g_Centre; }
         }

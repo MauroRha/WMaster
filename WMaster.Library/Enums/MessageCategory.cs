@@ -40,13 +40,13 @@ namespace WMaster.Enums
     /// </summary>
     public enum MessageCategory
     {
-        COLOR_BLUE = 0,
+        Blue = 0,
         /// <summary>
         /// Warning message.
         /// </summary>
-        COLOR_RED = 1,
-        COLOR_DARKBLUE = 2,
-        COLOR_GREEN = 3,
-        COLOR_YELLOW = 4 // `J` added
+        Red = 1,
+        Darkblue = 2,
+        Green = 3,
+        Yellow = 4 // `J` added
     }
 }

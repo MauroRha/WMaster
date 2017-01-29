@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Resources>
+  <Global>
+    <Resource Code="WhoPeople" Value="people" />
+    <Resource Code="WhoKids" Value="kids" />
+    <Resource Code="WhoLittleOldLadies" Value="little old ladies" />
+    <Resource Code="WhoNobleMenAndWomen" Value="noble men and women" />
+    <Resource Code="WhoSmallStalls" Value="small stalls" />
+    <Resource Code="WhoTraders" Value="traders" />
+    <Resource Code="PlacePlace" Value="place" />
+    <Resource Code="PlaceSmallShop" Value="small shop" />
+    <Resource Code="PlaceSmithy" Value="smithy" />
+    <Resource Code="PlaceJeweler" Value="jeweler" />
+    <Resource Code="PlaceTradeCaravan" Value="trade caravan" />
+    <Resource Code="PlaceBank" Value="bank" />
+    <Resource Code="One[ItemName]" Value="one [[:ItemName:]]" />
+    <Resource Code="Unique" Value="   (unique)" />
+    <Resource Code="GlobalBeasts" Value="Beasts" />
+    <Resource Code="AttributService" Value="Service" />
+    <Resource Code="AttributCharisma" Value="Charisma" />
+    <Resource Code="AttributIntelligence" Value="Intelligence" />
+    <Resource Code="AttributAgility" Value="Agility" />
+    <Resource Code="AttributMagic" Value="Magic" />
+    <Resource Code="AttributCombat" Value="Combat" />
+    <Resource Code="AttributToughness" Value="Toughness" />
+    <Resource Code="AttributStrength" Value="Strength" />
+    <Resource Code="TitleEventTypeDayShift" Value="Day Shift" />
+    <Resource Code="TitleEventTypeNightShift" Value="Night Shift" />
+    <Resource Code="TitleEventTypeWarning" Value="Warning" />
+    <Resource Code="TitleEventTypeDanger" Value="!!!DANGER!!!" />
+    <Resource Code="TitleEventTypeGoodNews" Value="!!!GOODNEWS!!!" />
+    <Resource Code="TitleEventTypeSummary" Value="Summary" />
+    <Resource Code="TitleEventTypeDungeon" Value="Dungeon" />
+    <Resource Code="TitleEventTypeMatron" Value="Matron" />
+    <Resource Code="TitleEventTypeGang" Value="Gang Report" />
+    <Resource Code="TitleEventTypeBrothel" Value="Brothel" />
+    <Resource Code="TitleEventTypeNoWork" Value="Refused Job" />
+    <Resource Code="TitleEventTypeBackToWork" Value="Back to Work" />
+    <Resource Code="TitleEventTypeLevelUp" Value="!!!LEVEL UP!!!" />
+    <Resource Code="TitleEventTypeDebug" Value="#DEBUG#" />
+    <Resource Code="PleaseReportThisToThePinkPetalDevlomentTeamAtHttppinkpetalorg" Value="Please report this to the Pink Petal Devloment Team at http://pinkpetal.org" />
+  </Global>
+  <Player>
+    <Resource Code="YouHaveDealt[RivalName]AFatalBlowTheirCriminalOrganizationCrumblesToNothingBeforeYou" Value="You have dealt [[:RivalName:]] a fatal blow. Their criminal organization crumbles to nothing before you." />
+    <Resource Code="YourInventoryIsFull" Value="Your inventory is full" />
+    <Resource Code="PlayerSuspicion" Value="Suspicion" />
+    <Resource Code="PlayerCustomerFear" Value="Customer Fear" />
+    <Resource Code="PlayerDisposition" Value="Disposition" />
+    <Resource Code="TheLocalAuthoritiesPerformABustOnYourOperations" Value="The local authorities perform a bust on your operations: " />
+    <Resource Code="TheGuardCaptainLecturesYouOnTheImportanceOfCrimePreventionWhilstAlsoPassingOnTheMayorsHeartfeltBestWishes" Value="the guard captain lectures you on the importance of crime prevention, whilst also passing on the Mayor's heartfelt best wishes." />
+    <Resource Code="TheGuardCaptainCondemnsYourOperationAsAHotbedOfCriminalActivityAndFinesYou[Fine]GoldForLivingWithoutDueCareAndAttention" Value="the guard captain condemns your operation as a hotbed of criminal activity and fines you [[:Fine:]] gold for 'living without due care and attention'." />
+    <Resource Code="OnHisWayOutTheCaptainSmilesAndSaysThatThe[RivalName]SendTheirRegards" Value="On his way out the captain smiles and says that the [[:RivalName:]] send their regards." />
+    <Resource Code="TheyPronounceYourOperationToBeEntirelyInAccordanceWithTheLaw" Value="they pronounce your operation to be entirely in accordance with the law." />
+    <Resource Code="TheyFindYouInTechnicalViolationOfSomeHealthAndSafetyOrdinancesAndTheyFineYou[Fine]Gold" Value="they find you in technical violation of some health and safety ordinances, and they fine you [[:Fine:]] gold." />
+    <Resource Code="TheyFindSomeMinorCriminalitiesAndFineYou[Fine]Gold" Value="they find some minor criminalities and fine you [[:Fine:]] gold." />
+    <Resource Code="TheyFindEvidenceOfDodgyDealingsAndFineYou[Fine]Gold" Value="they find evidence of dodgy dealings and fine you [[:Fine:]] gold." />
+    <Resource Code="TheyFindALotOfIllegalActivitiesAndFineYou[Fine]GoldItAlsoCostsYouAnExtra[Bribe]ToPayThemOffFromArrestingYou" Value="they find a lot of illegal activities and fine you [[:Fine:]] gold, it also costs you an extra [[:Bribe:]] to pay them off from arresting you." />
+    <Resource Code="TheyFindEnoughDirtToPutYouBehindBarsForLifeItCostsYou[Bribe]ToStayOutOfPrisonPlusAnother[Fine]InFinesOnTopOfThat" Value="they find enough dirt to put you behind bars for life. It costs you [[:Bribe:]] to stay out of prison, plus another [[:Fine:]] in fines on top of that." />
+    <Resource Code="TheCaptainDeclaresYourPremisesToBeASinkholeOfTheUtmostViceAndDepravityAndItIsOnlyWithDifficultyThatYouDissuadeHimFromSeizingAllYourPropertyOnTheSpotYouPay[Fine]GoldInFinesButOnlyAfterSlippingTheCaptain[Bribe]NotToDragYouOffToPrison" Value="the captain declares your premises to be a sinkhole of the utmost vice and depravity, and it is only with difficulty that you dissuade him from seizing all your property on the spot. You pay [[:Fine::] gold in fines, but only after slipping the captain [[:Bribe::] not to drag you off to prison." />
+    <Resource Code="[GirlName]HasDiedFromHerInjuriesTheOtherGirlsAllFearAndHateYouALittleMore" Value="[[:GirlName:]] has died from her injuries, the other girls all fear and hate you a little more." />
+    <Resource Code="[GirlName]HasDiedFromHerInjuriesHerBodyWillBeRemovedByTheEndOfTheWeek" Value="[[:GirlName:]] has died from her injuries.  Her body will be removed by the end of the week." />
+    <Resource Code="ARunnawaySlaveHasBeenRecapturedByTheAuthoritiesAndReturnedToYou" Value="A runnaway slave has been recaptured by the authorities and returned to you." />
+    <Resource Code="AManCannotPaySoHeSellsYouHisDaughter[GirlRealname]ToClearHisDebtToYou" Value="A man cannot pay so he sells you his daughter [[:GirlRealname:]] to clear his debt to you." />
+    <Resource Code="YouGain[Gold]GoldFromThe[NumBusinessExtorted]BusinessesUnderYourControl" Value="You gain [[:Gold:]] gold from the [[:NumBusinessExtorted:]] businesses under your control." />
+    <Resource Code="YouGot[Gold]Gold[AmountPercent]" Value="You got [[:Gold:]] gold ([[:AmountPercent:]]%)." />
+    <Resource Code="YouKeep[Gold]Gold[AmountPercent]" Value="You keep [[:Gold:]] gold ([[:AmountPercent:]]%)." />
+  </Player>
+  <Brothel>
+    <Resource Code="BrothelSecurity" Value="Security" />
+    <Resource Code="[TotalCustomers]CustomersVisitedTheBuilding" Value="[[:TotalCustomers:]] customers visited the building." />
+    <Resource Code="[RejectCustomersRestrict]WereTurnedAwayBecauseOfYourSexRestrictions" Value="[[:RejectCustomersRestrict:]] were turned away because of your sex restrictions." />
+    <Resource Code="[RejectCustomersDisease]WereTurnedAwayBecauseTheyHadAnSTD" Value="[[:RejectCustomersDisease:]] were turned away because they had an STD." />
+    <Resource Code="YourAdvertisingBudgetForThisBrothelIs[AdvertisingBudget]Gold" Value="Your advertising budget for this brothel is [[:AdvertisingBudget:]] gold." />
+    <Resource Code="HoweverDueToYourConfigurationYouInsteadHadToPay[AdvertisingCosts]Gold" Value=" However, due to your configuration, you instead had to pay [[:AdvertisingCosts:]] gold." />
+    <Resource Code="YouKeepARegularStockOf[Number]AntiPregnancyPotionsInThisBrothel" Value="You keep a regular stock of [[:Number:]] Anti-Pregnancy potions in this brothel." />
+    <Resource Code="YouHaveAStockOf[Number]AntiPregnancyPotionsInThisBrothel" Value="You have a stock of [[:Number:]] Anti-Pregnancy potions in this brothel." />
+    <Resource Code="YouHadAStockOf[Number]AntiPregnancyPotionsInThisBrothel" Value="You had a stock of [[:Number:]] Anti-Pregnancy potions in this brothel." />
+    <Resource Code="YouHaveNoAntiPregnancyPotionsInThisBrothel" Value="You have no Anti-Pregnancy potions in this brothel." />
+    <Resource Code="NoneWereUsed" Value="None were used." />
+    <Resource Code="AllHaveBeenUsed" Value="All have been used." />
+    <Resource Code="[Number]WereNeededThisWeek" Value="[[:Number:]] were needed this week." />
+    <Resource Code="[Number]WereUsedThisWeek" Value="[[:Number:]] were used this week." />
+    <Resource Code="[Number]WereUsedThisWeekLeaving[AntiPregNumber]InStock" Value="[[:Number:]] were used this week leaving [[:AntiPregNumber:]] in stock." />
+    <Resource Code="[Number]MoreThanWereInStockWereNeededSoAnEmergencyRestockHadToBeMade" Value="[[:Number:]] more than were in stock were needed so an emergency restock had to be made." />
+    <Resource Code="NormallyTheyCost[AntiPregPrice]GoldButOurSupplierChargesFiveTimesTheNormalPriceForUnscheduledDeliveries" Value="Normally they cost [[:AntiPregPrice:]] gold, but our supplier charges five times the normal price for unscheduled deliveries." />
+    <Resource Code="YourBudgetForAntiPregnancyPotionsForThisBrothelIs[Cost]Gold" Value="Your budget for Anti-Pregnancy potions for this brothel is [[:Cost:]] gold." />
+    <Resource Code="TheMatronOfThisBrothelHasIncreasedTheQuantityOfAntiPregnancyPotionsForFurtherOrdersTo[AntiPregPotions]" Value="The Matron of this brothel has increased the quantity of Anti-Pregnancy potions for further orders to [[:AntiPregPotions:]]." />
+    <Resource Code="YourBrothelHadAnOverallDeficitOf[Deficit]Gold" Value="Your brothel had an overall deficit of [[:Deficit:]] gold." />
+    <Resource Code="YouMadeAOverallProfitOf[Profit]Gold" Value="You made a overall profit of [[:Profit:]] gold." />
+    <Resource Code="YouAreBreakingEvenMadeAsMuchMoneyAsYouSpent" Value="You are breaking even (made as much money as you spent)." />
+    <Resource Code="YourMatronTakes[GirlName]OffDutyToRestDueToHerTiredness" Value="Your matron takes [[:GirlName:]] off duty to rest due to her tiredness." />
+    <Resource Code="YourMatronHelps[GirlName]ToRelax" Value="Your matron helps [[:GirlName:]] to relax." />
+  </Brothel>
+  <Girl>
+    <Resource Code="[GirlName]WasRecapturedBy[GangName]SheGaveUpWithoutAFight" Value="[[:GirlName:]] was recaptured by [[:GangName:]]. She gave up without a fight." />
+    <Resource Code="[GirlName]WasCapturedInANetAndDraggedBackToTheDungeonBy[GangName]" Value="[[:GirlName:]] was captured in a net and dragged back to the dungeon by [[:GangName:]]." />
+    <Resource Code="[GirlName]FoughtWith[GangName]ButLostSheWasDraggedBackToTheDungeon" Value="[[:GirlName:]] fought with [[:GangName:]] but lost. She was dragged back to the dungeon." />
+    <Resource Code="[GirlName]WasSurroundedBy[GangName]AndGaveUpWithoutAFight" Value="[[:GirlName:]] was surrounded by [[:GangName:]] and gave up without a fight." />
+    <Resource Code="[GirlName]WasSurroundedBy[GangName]AndGaveUpWithoutAnymoreOfAFight" Value="[[:GirlName:]] was surrounded by [[:GangName:]] and gave up without anymore of a fight." />
+    <Resource Code="[GirlName]TriedToStop[GangName]FromComittingPettyTheftButLostSheWasDraggedBackToTheDungeon" Value="[[:GirlName:]] tried to stop [[:GangName:]] from comitting petty theft but lost. She was dragged back to the dungeon." />
+    <Resource Code="[GirlName]WasTalkedIntoWorkingForYouBy[GangName]" Value="[[:GirlName:]] was talked into working for you by [[:GangName:]]." />
+    <Resource Code="[GirlName]WasCapturedInTheCatacombsBy[GangName]" Value="[[:GirlName:]] was captured in the catacombs by [[:GangName:]]" />
+    <Resource Code="[GirlRealname]sFatherCouldNotPayHisDebtToYouSoHeGaveHerToYouAsPayment" Value="[[:GirlRealname:]]'s father could not pay his debt to you so he gave her to you as payment." />
+    <Resource Code="TheMatronPuts[GirlName]BackToWork" Value="The Matron puts [[:GirlName:]] back to work." />
+    <Resource Code="WARNING[GirlName]IsDoingNothing" Value="WARNING [[:GirlName:]] is doing nothing!" />
+    <Resource Code="[GirlName]WasRestingSoMadeNoMoney" Value="[GirlName]WasRestingSoMadeNoMoney" />
+    <Resource Code="[GirlName]ContinuedToHelpTheOtherGirlsThroughoutTheNight" Value="[[:GirlName:]] continued to help the other girls throughout the night." />
+    <Resource Code="YouOwnHerAndYouDontPayYourSlaves" Value="You own her and you don't pay your slaves." />
+    <Resource Code="[GirlName]RefusedToWorkSoMadeNoMoney" Value="[[:GirlName:]] refused to work so made no money." />
+    <Resource Code="[GirlName]EarnedATotalOf[TotalGold]Gold" Value="[[:GirlName:]] earned a total of [::TotalGold :]] gold" />
+    <Resource Code="DirectlyFromYouSheGetsToKeepItAll" Value=" directly from you. She gets to keep it all." />
+    <Resource Code="AndSheGetsToKeepItAll" Value=" and she gets to keep it all." />
+    <Resource Code="SheKeepsThe[TotalTips]SheGotInTipsAndHerCut[AmountPercent]OfThePaymentAmountingTo[Gole]Gold" Value="She keeps the [[:TotalTips:]] she got in tips and her cut ([[:AmountPercent:]]%) of the payment amounting to [[:Gole:]] gold." />
+    <Resource Code="SheKeeps[Gold]Gold[AmountPercent]" Value="She keeps [[:Gold:]] gold. ([[:AmountPercent:]]%)." />
+    <Resource Code="[GirlName]MadeNoMoney" Value="[[:GirlName:]] made no money." />
+    <Resource Code="ERRORSheHasALossOf[TotalGold]GoldGirlName[Realname]Job[JobName]Pay[Pay]Tips[Tips]Total[TotalGold]" Value="ERROR: She has a loss of [[:TotalGold:]] gold. Girl Name: [[:Realname:]], Job: [[:JobName:]], Pay: [[:Pay:]], Tips: [[:Tips:]], Total: [[:TotalGold:]]" />
+    <Resource Code="CAUTIONThisGirlDesparatlyNeedRestGiveHerSomeFreeTime" Value="CAUTION! This girl desparatly need rest. Give her some free time." />
+    <Resource Code="YourMatronHelpsCheerUp[GirlName]AfterSheFeelsSad" Value="Your matron helps cheer up [[:GirlName:]] after she feels sad." />
+    <Resource Code="[GirlName]IsTakenOffDutyByYourMatronToRestDueToHerLowHealth" Value="[[:GirlName:]] is taken off duty by your matron to rest due to her low health." />
+    <Resource Code="YourMatronHelpsHeal[GirlName]" Value="Your matron helps heal [[:GirlName:]]." />
+    <Resource Code="DANGER[GirlName]sHealthIsVeryLow" Value="DANGER [[:GirlName:]]'s health is very low!" />
+    <Resource Code="SheMustRestOrSheWillDie" Value="She must rest or she will die!" />
+  </Girl>
+  <Gang>
+    <Resource Code="[GangName]LostOneMan" Value="[[:GangName:]] lost one man." />
+    <Resource Code="[GangName]Lost[Number]Men" Value="[[:GangName:]] lost [[:Number:]] men." />
+  </Gang>
+  <GangMission>
+    <Resource Code="Gang[GangName]IsAttackingRivals" Value="Gang   [[:GangName:]]   is attacking rivals." />
+    <Resource Code="TheyFailedToFindAnyEnemyAssetsToHit" Value="They failed to find any enemy assets to hit." />
+    <Resource Code="ScoutedTheCityInVainSeekingWouldbeChallengersToYourDominance" Value="Scouted the city in vain, seeking would-be challengers to your dominance." />
+    <Resource Code="YourMenRunIntoAGangFrom[GangName]AndABrawlBreaksOut" Value="Your men run into a gang from [[:GangName:]] and a brawl breaks out." />
+    <Resource Code="YourGang[GangName]FailsToReportBackFromTheirSabotageMissionLaterYouLearnThatTheyWereWipedOutToTheLastMan" Value="Your gang [[:GangName:]] fails to report back from their sabotage mission.[[:NewLine:]]Later you learn that they were wiped out to the last man." />
+    <Resource Code="YourMenLostTheLoneSurvivorFightsHisWayBackToFriendlyTerritory" Value="Your men lost. The lone survivor fights his way back to friendly territory." />
+    <Resource Code="YourMenLostThe[GangMemberNum]SurvivorsFightTheirWayBackToFriendlyTerritory" Value="Your men lost. The [[:GangMemberNum:]] survivors fight their way back to friendly territory." />
+    <Resource Code="YourMenWin" Value="Your men win." />
+    <Resource Code="TheEnemyGangIsDestroyed[RivalName]HasNoMoreGangsLeft" Value="The enemy gang is destroyed. [[:RivalName:]] has no more gangs left!" />
+    <Resource Code="TheEnemyGangIsDestroyed[RivalName]HasAFewGangsLeft" Value="The enemy gang is destroyed. [[:RivalName:]] has a few gangs left." />
+    <Resource Code="TheEnemyGangIsDestroyed[RivalName]HasALotOfGangsLeft" Value="The enemy gang is destroyed. [[:RivalName:]] has a lot of gangs left." />
+    <Resource Code="YourMenEncounterNoResistanceWhenYouGoAfter[RivalGangName]" Value="Your men encounter no resistance when you go after [[:RivalGangName:]]." />
+    <Resource Code="YourMenDestroy[Number]OfTheirBusinesses[RivalName]HaveNoMoreBusinessesLeft" Value="Your men destroy [[:Number:]] of their businesses. [[:RivalName:]] have no more businesses left!" />
+    <Resource Code="YourMenDestroy[Number]OfTheirBusinesses[RivalName]HaveAFewBusinessesLeft" Value="Your men destroy [[:Number:]] of their businesses. [[:RivalName:]] have a few businesses left." />
+    <Resource Code="YourMenDestroy[Number]OfTheirBusinesses[RivalName]HaveALotOfBusinessesLeft" Value="Your men destroy [[:Number:]] of their businesses. [[:RivalName:]] have a lot of businesses left." />
+    <Resource Code="[RivalName]HaveNoBusinessesToAttack" Value="[[:RivalName:]] have no businesses to attack." />
+    <Resource Code="YourMenSteal[GoldAmount]GoldFromThemMuhahahaha[RivalName]IsPennilessNow" Value="Your men steal [[:GoldAmount:]] gold from them. Mu-hahahaha!  [[:RivalName:]] is penniless now!" />
+    <Resource Code="YourMenSteal[GoldAmount]GoldFromThem[RivalName]IsLookingPrettyPoor" Value="Your men steal [[:GoldAmount:]] gold from them. [[:RivalName:]] is looking pretty poor." />
+    <Resource Code="YourMenSteal[GoldAmount]GoldFromThemItLooksLike[RivalName]StillHasALotOfGold" Value="Your men steal [[:GoldAmount:]] gold from them. It looks like [[:RivalName:]] still has a lot of gold." />
+    <Resource Code="AsYourMenAreFleeingOneOfThemHasToJumpThroughAWallOfFireWhenHeDoesHeDropsAGoldBearerBondWorth10kGoldEach[BurnedBondsCost]GoldJustWentUpInSmoke" Value="As your men are fleeing, one of them has to jump through a wall of fire. When he does, he drops a Gold Bearer Bond worth 10k gold each. [[:BurnedBondsCost:]] gold just went up in smoke." />
+    <Resource Code="AsYourMenAreFleeingOneOfThemHasToJumpThroughAWallOfFireWhenHeDoesHeDropsAStackOfGoldBearerBondsWorth10kGoldEach[BurnedBondsCost]GoldJustWentUpInSmoke" Value="As your men are fleeing, one of them has to jump through a wall of fire. When he does, he drops a stack of Gold Bearer Bonds worth 10k gold each. [[:BurnedBondsCost:]] gold just went up in smoke." />
+    <Resource Code="AsYourMenAreFleeingOneOfThemHasToJumpThroughAWallOfFireWhenHeDoesHeDrops[BurnedBonds]GoldBearerBondsWorth10kGoldEach[BurnedBondsCost]GoldJustWentUpInSmoke" Value="As your men are fleeing, one of them has to jump through a wall of fire. When he does, he drops [[:BurnedBonds:]] Gold Bearer Bonds worth 10k gold each. [[:BurnedBondsCost:]] gold just went up in smoke." />
+    <Resource Code="AsTheyAreBeingChasedThroughTheStreetsBy[RivalName]sPeopleOneOfYourGangMembersCutsOpenASackOfGoldSpillingItsContentsInTheStreetAsTheThrongsOfCiviliansStreamInToCollectTheCoinsTheyBlockThePursuersAndAllowYouMenToGetAwaySafely" Value="As they are being chased through the streets by [[:RivalName:]]'s people, one of your gang members cuts open a sack of gold spilling its contents in the street. As the throngs of civilians stream in to collect the coins, they block the pursuers and allow you men to get away safely." />
+    <Resource Code="AsYourGangLeaveYourRivalsTerritoryOnTheWayBackToYourBrothelTheyComeUponABandOfLocalPoliceThatAreHuntingThemTheirBossDemands[BribePercent]OfWhatYourGangIsCarryingInOrderToLetThemGoTheyPayThem[Bribe]GoldAndContinueOnHome" Value="As your gang leave your rival's territory on the way back to your brothel, they come upon a band of local police that are hunting them. Their boss demands [[:BribePercent:]]% of what your gang is carrying in order to let them go. They pay them [[:Bribe:]] gold and continue on home." />
+    <Resource Code="[GangName]ReturnsWith[GoldAmount]Gold" Value="[[:GangName:]] returns with [[:GoldAmount:]] gold." />
+    <Resource Code="TheLosersHaveNoGoldToTake" Value="The losers have no gold to take." />
+    <Resource Code="YourMenStealAnItemFromThemOne[ItemName]" Value="Your men steal an item from them, one [[:ItemName:]]." />
+    <Resource Code="YourMenBurnDownOneOf[RivalName]sBrothels[RivalName]HasNoBrothelsLeft" Value="Your men burn down one of [[:RivalName:]]'s Brothels. [[:RivalName:]] has no Brothels left." />
+    <Resource Code="YourMenBurnDownOneOf[RivalName]sBrothels[RivalName]IsInControlOfVeryFewBrothels" Value="Your men burn down one of [[:RivalName:]]'s Brothels. [[:RivalName:]] is in control of very few Brothels." />
+    <Resource Code="YourMenBurnDownOneOf[RivalName]sBrothels[RivalName]HasManyBrothelsLeft" Value="Your men burn down one of [[:RivalName:]]'s Brothels. [[:RivalName:]] has many Brothels left." />
+    <Resource Code="YourMenBurnDownOneOf[RivalName]sGamblingHalls[RivalName]HasNoGamblingHallsLeft" Value="Your men burn down one of [[:RivalName:]]'s Gambling Halls. [[:RivalName:]] has no Gambling Halls left." />
+    <Resource Code="YourMenBurnDownOneOf[RivalName]sGamblingHalls[RivalName]IsInControlOfVeryFewGamblingHalls" Value="Your men burn down one of [[:RivalName:]]'s Gambling Halls. [[:RivalName:]] is in control of very few Gambling Halls." />
+    <Resource Code="YourMenBurnDownOneOf[RivalName]sGamblingHalls[RivalName]HasManyGamblingHallsLeft" Value="Your men burn down one of [[:RivalName:]]'s Gambling Halls. [[:RivalName:]] has many Gambling Halls left." />
+    <Resource Code="YourMenBurnDownOneOf[RivalName]sBars[RivalName]HasNoBarsLeft" Value="Your men burn down one of [[:RivalName:]]'s Bars. [[:RivalName:]] has no Bars left." />
+    <Resource Code="YourMenBurnDownOneOf[RivalName]sBars[RivalName]IsInControlOfVeryFewBars" Value="Your men burn down one of [[:RivalName:]]'s Bars. [[:RivalName:]] is in control of very few Bars" />
+    <Resource Code="YourMenBurnDownOneOf[RivalName]sBars[RivalName]HasManyBarsLeft" Value="Your men burn down one of [[:RivalName:]]'s Bars. [[:RivalName:]] has many Bars left" />
+    <Resource Code="Gang[GangName]IsLookingForEscapedGirls" Value="Gang   [[:GangName:]]   is looking for escaped girls." />
+    <Resource Code="ThereAreNoneOfYourGirlsWhoHaveRunAwaySoTheyHaveNooneToLookFor" Value="There are none of your girls who have run away, so they have noone to look for." />
+    <Resource Code="YourGoonsFind[GirlName]AndSheComesQuietlyWithoutPuttingUpAFight" Value="Your goons find [[:GirlName:]] and she comes quietly without putting up a fight." />
+    <Resource Code="YourGoonsFind[GirlName]AndTheyTryToCatchHerInTheirNets" Value="Your goons find [[:GirlName:]] and they try to catch her in their nets." />
+    <Resource Code="[GirlName]ManagedToDamage[Number]OfTheirNetsBeforeTheyFinallyCaughtHerInTheTatteredRemainsOfTheirLastNet" Value="[[:GirlName:]] managed to damage [[:Number:]] of their nets before they finally caught her in the tattered remains of their last net." />
+    <Resource Code="[GirlName]ManagedToDamage[Number]OfTheirNetsBeforeTheyFinallyCaughtHerInTheirLastNet" Value="[[:GirlName:]] managed to damage [[:Number:]] of their nets before they finally caught her in their last net." />
+    <Resource Code="[GirlName]ManagedToDamage[Number]OfTheirNetsBeforeTheyFinallyCaughtHerInTheirNets" Value="[[:GirlName:]] managed to damage [[:Number:]] of their nets before they finally caught her in their nets." />
+    <Resource Code="SheStrugglesAgainstTheNetYourMenUseButItIsPointlessSheIsInYourDungeonNow" Value="She struggles against the net your men use, but it is pointless. She is in your dungeon now." />
+    <Resource Code="[GirlName]ManagedToDamageAllOfTheirNetsSoTheyHaveToDoThingsTheHardWay" Value="[[:GirlName:]] managed to damage all of their nets so they have to do things the hard way." />
+    <Resource Code="[GangName]AttemptToRecaptureHer" Value="[[:GangName:]] attempt to recapture her." />
+    <Resource Code="SheFightsBackButYourMenSucceedInCapturingHer" Value="She fights back but your men succeed in capturing her." />
+    <Resource Code="TheGirlFightsBackAndDefeatsYourMenBeforeEscapingIntoTheStreets" Value="The girl fights back and defeats your men before escaping into the streets." />
+    <Resource Code="[GangName]RecaptureHerSuccessfullyWithoutAFussSheIsInYourDungeonNow" Value="[[:GangName:]] recapture her successfully without a fuss. She is in your dungeon now." />
+    <Resource Code="AfterDodgingAllOfTheirNetsSheGivesUpWhenTheyPullOutTheirWeaponsAndPrepareToKillHer" Value="After dodging all of their nets, she gives up when they pull out their weapons and prepare to kill her." />
+    <Resource Code="Gang[GangName]IsCapturingTerritory" Value="Gang   [[:GangName:]]   is capturing territory." />
+    <Resource Code="TheyFailToGainAnyMoreNeutralTerritories" Value="They fail to gain any more neutral territories." />
+    <Resource Code="YouGainControlOfOneMoreNeutralTerritories" Value="You gain control of one more neutral territories." />
+    <Resource Code="YouGainControlOf[Number]MoreNeutralTerritory" Value="You gain control of [[:Number:]] more neutral territory." />
+    <Resource Code="ThereAreNoMoreUncontrolledBusinessesLeft" Value="There are no more uncontrolled businesses left." />
+    <Resource Code="ThereIsOneUncontrolledBusinessesLeft" Value="There is one uncontrolled businesses left." />
+    <Resource Code="ThereAreUncontrolledBusinessesLeft" Value="There are uncontrolled businesses left." />
+    <Resource Code="TheyStormIntoYourRival[RivalName]sTerritory" Value="They storm into your rival [[:RivalName:]]'s territory." />
+    <Resource Code="YourMenRunIntoOneOfTheirGangsAndABrawlBreaksOut" Value="Your men run into one of their gangs and a brawl breaks out." />
+    <Resource Code="TheyDestroyTheDefendersAnd" Value="They destroy the defenders and " />
+    <Resource Code="TheyDefeatTheDefendersAnd" Value="They defeat the defenders and " />
+    <Resource Code="TheyFacedNoOppositionAsThey" Value="They faced no opposition as they " />
+    <Resource Code="YourGangHasBeenDefeatedAndFailToTakeControlOfAnyNewTerritory" Value="Your gang has been defeated and fail to take control of any new territory." />
+    <Resource Code="TookOverOneOf[RivalName]sTerritory" Value="took over one of [[:RivalName:]]'s territory." />
+    <Resource Code="TookOver[Number]Of[RivalName]sTerritories" Value="took over [[:Number:]] of [[:RivalName:]]'s territories." />
+    <Resource Code="LeftErrorNoTerritoriesGainedButShouldHaveBeen" Value="left. (Error: no territories gained but should have been)" />
+    <Resource Code="YouFailToTakeControlOfAnyOfNewTerritories" Value="You fail to take control of any of new territories." />
+    <Resource Code="Gang[GangName]IsPerformingPettyTheft" Value="Gang   [[:GangName:]]   is performing petty theft." />
+    <Resource Code="YourMenRunIntoAGangFrom[RivalName]AndABrawlBreaksOut" Value="Your men run into a gang from [[:RivalName:]] and a brawl breaks out." />
+    <Resource Code="YourMenRunIntoGroupOfThugsFromTheStreetsAndABrawlBreaksOut" Value="Your men run into group of thugs from the streets and a brawl breaks out." />
+    <Resource Code="YourMenLoseTheFight" Value="Your men lose the fight." />
+    <Resource Code="YourMenAreConfrontedByAMaskedVigilante" Value="Your men are confronted by a masked vigilante." />
+    <Resource Code="SheFightsWellButYourMenStillManageToCaptureHer" Value="She fights well but your men still manage to capture her" />
+    <Resource Code="SheFightsYourMenButLosesQuickly" Value="She fights your men but loses quickly" />
+    <Resource Code="SheFightsYourMenButTheyTakeHerDownWithOnlyOneCasualty" Value="She fights your men but they take her down with only one casualty" />
+    <Resource Code="SheFightsYourMenButTheyTakeHerDownWithOnlyAFewCasualties" Value="She fights your men but they take her down with only a few casualties" />
+    <Resource Code="TheyUnmask[GirlName]TakeAllHerGold[Number]FromHerAndDragHerToTheDungeon" Value="They unmask [[:GirlName:]], take all her gold ([[:Number:]]) from her and drag her to the dungeon." />
+    <Resource Code="SheDefeatsYourMenAndDisappearsBackIntoTheShadows" Value="She defeats your men and disappears back into the shadows." />
+    <Resource Code="ThisGangWasSentToLookForRunawaysButThereAreNoneSoTheyWentLookingForAnyGirlToKidnapInstead" Value="This gang was sent to look for runaways but there are none so they went looking for any girl to kidnap instead." />
+    <Resource Code="YourGangRobs[NumberWho][Who]AndGet[NumberGold]GoldFromThem" Value="Your gang robs [[:NumberWho:]] [[:Who:]] and get [[:NumberGold:]] gold from them." />
+    <Resource Code="Gang[GangName]GoesOutToRobA[ThievePlace]" Value="Gang   [[:GangName:]]   goes out to rob a [[:ThievePlace:]]." />
+    <Resource Code="The[ThievePlace]IsGuardedByAGangFrom[RivalName]" Value="The [[:ThievePlace:]] is guarded by a gang from [[:RivalName:]]." />
+    <Resource Code="The[ThievePlace]HasItsOwnGuards" Value="The [[:ThievePlace:]] has its own guards." />
+    <Resource Code="The[ThievePlace]IsUnguarded" Value="The [[:ThievePlace:]] is unguarded" />
+    <Resource Code="TheyGetAwayWith[Number]GoldFromThe[ThievePlace]" Value="They get away with [[:Number:]] gold from the [[:ThievePlace:]]." />
+    <Resource Code="Gang[GangName]IsKidnappingGirls" Value="Gang   [[:GangName:]]   is kidnapping girls." />
+    <Resource Code="YourMenFindAGirl[GirlName]AndConvinceHerThatSheShouldWorkForYou" Value="Your men find a girl, [[:GirlName:]], and convince her that she should work for you." />
+    <Resource Code="YourMenFindAGirl[GirlName]AndTryToCatchHerInTheirNets" Value="Your men find a girl, [[:GirlName:]], and try to catch her in their nets." />
+    <Resource Code="YourMenFindAGirl[GirlName]AndAttemptToKidnapHer" Value="Your men find a girl, [[:GirlName:]], and attempt to kidnap her." />
+    <Resource Code="SheFightsBackButYourMenSucceedInKidnappingHer" Value="She fights back but your men succeed in kidnapping her." />
+    <Resource Code="[GangName]KidnapHerSuccessfullyWithoutAFussSheIsInYourDungeonNow" Value="[[:GangName:]] kidnap her successfully without a fuss. She is in your dungeon now." />
+    <Resource Code="TheyFailedToFindAnyGirlsToKidnap" Value="They failed to find any girls to kidnap." />
+    <Resource Code="Gang[GangName]IsExploringTheCatacombs" Value="Gang   [[:GangName:]]   is exploring the catacombs." />
+    <Resource Code="YouTellThemToGetWhateverTheyCanFind" Value="You tell them to get whatever they can find." />
+    <Resource Code="All[Number]OfThemReturn" Value="All [[:Number:]] of them return." />
+    <Resource Code="[Number]OfThe[GangNumber]WhoWentOutReturn" Value="[[:Number:]] of the [[:GangNumber:]] who went out return." />
+    <Resource Code="TheyBringBackWithThem[Number]Gold" Value="They bring back with them:   [[:Number:]] gold" />
+    <Resource Code="YourMenAlsoCapturedAGirlNamed[GirlName]" Value="Your men also captured a girl named [[:GirlName:]]" />
+    <Resource Code="YourMenAlsoCapturedAGirl" Value="Your men also captured a girl." />
+    <Resource Code="YourMenAlsoBringBack[Number]Beasts" Value="Your men also bring back [[:Number:]] beasts." />
+    <Resource Code="YourMenCapturedOneGirl" Value="Your men captured one girl:" />
+    <Resource Code="YourMenCaptured[Number]Girls" Value="Your men captured [[:Number:]] girls:" />
+    <Resource Code="YourMenBringBackOneItem" Value="Your men bring back one item:" />
+    <Resource Code="YourMenBringBack[Number]Items" Value="Your men bring back [[:Number:]] items:" />
+    <Resource Code="YourMenBringBack[Number]Beasts" Value="Your men bring back [[:Number:]] beasts." />
+    <Resource Code="Gang[GangName]SpendTheWeekHelpingOutTheCommunity" Value="Gang   [[:GangName:]]   spend the week helping out the community." />
+    <Resource Code="ALocalBoyDecidedToJoinYourGangToHelpOutTheirCommunity" Value="A local boy decided to join your gang to help out their community." />
+    <Resource Code="TwoLocalsDecidedToJoinYourGangToHelpOutTheirCommunity" Value="Two locals decided to join your gang to help out their community." />
+    <Resource Code="SomeLocalsDecidedToJoinYourGangToHelpOutTheirCommunity" Value="Some locals decided to join your gang to help out their community." />
+    <Resource Code="TheyCleanedUpAround[BrothelName]FixingLightsRemovingDebrisAndMakingSureTheAreaIsSecure" Value="They cleaned up around [[:BrothelName:]] fixing lights, removing debris and making sure the area is secure." />
+    <Resource Code="TheyRoundedUpAStrayBeastAndBroughtItToTheBrothel" Value="They rounded up a stray beast and brought it to the brothel." />
+    <Resource Code="TheyRoundedUpTwoStrayBeastsAndBroughtThemToTheBrothel" Value="They rounded up two stray beasts and brought them to the brothel." />
+    <Resource Code="TheyRoundedUpSomeStrayBeastsAndBroughtThemToTheBrothel" Value="They rounded up some stray beasts and brought them to the brothel." />
+    <Resource Code="TheyRecieved[Number]GoldInTipsFromGratefulPeople" Value="They recieved [[:Number:]] gold in tips from grateful people." />
+    <Resource Code="Gang[GangName]SpendTheWeekTrainingAndImprovingTheirSkills" Value="Gang   [[:GangName:]]   spend the week training and improving their skills." />
+    <Resource Code="Gang[GangName]IsRecruiting" Value="Gang   [[:GangName:]]   is recruiting." />
+    <Resource Code="TheyWereUnableToFindAnyoneToRecruit" Value="They were unable to find anyone to recruit." />
+    <Resource Code="TheyFoundOnePersonToTryToRecruit" Value="They found one person to try to recruit" />
+    <Resource Code="TheyFoundPeopleToTryToRecruit" Value="They found people to try to recruit" />
+    <Resource Code="AndTheyGotHimToJoin" Value=" and they got him to join." />
+    <Resource Code="ButHeDidntWantToJoin" Value=" but he didn't want to join." />
+    <Resource Code="ButWereUnableToGetAnyToJoin" Value=" but were unable to get any to join." />
+    <Resource Code="AndManagedToGetAllOfThemToJoin" Value=" and managed to get all of them to join." />
+    <Resource Code="ButWereOnlyAbleToConvinceOneOfThemToJoin" Value=" but were only able to convince one of them to join." />
+    <Resource Code="AndWereAbleToConvince[Number]OfThemToJoin" Value=" and were able to convince [[:Number:]] of them to join." />
+    <Resource Code="TheyGotAsManyAsTheyNeededToFillTheirRanks" Value="They got as many as they needed to fill their ranks." />
+    <Resource Code="TheyOnlyHadRoomForOneMoreInTheirGangSoThey" Value="They only had room for one more in their gang so they " />
+    <Resource Code="TheyOnlyHadRoomFor[Number]MoreInTheirGangSoThey" Value="They only had room for [[:Number:]] more in their gang so they " />
+    <Resource Code="SentTheRestToJoin[GangName]" Value="sent the rest to join [[:GangName:]]." />
+    <Resource Code="[GangName]SentOneRecruitThatTheyHadNoRoomForTo[ToGangName]" Value="[[:GangName:]] sent one recruit that they had no room for to [[:ToGangName:]]." />
+    <Resource Code="[GangName]Sent[Number]RecruitsThatTheyHadNoRoomForTo[ToGangName]" Value="[[:GangName:]] sent [[:Number:]] recruits that they had no room for to [[:ToGangName:]]." />
+    <Resource Code="TheyArrived" Value="They arrived " />
+    <Resource Code="TheyAllArrived" Value="They all arrived " />
+    <Resource Code="Only[Number]Arrived" Value="Only [[:Number:]] arrived " />
+    <Resource Code="AndGotAcceptedIntoTheGang" Value="and got accepted into the gang." />
+    <Resource Code="But[GangName]CouldOnlyTake[Number]OfThem" Value="but [[:GangName:]] could only take [[:Number:]] of them." />
+    <Resource Code="ButNoneShowedUp" Value=" but none showed up." />
+    <Resource Code="HadToTurnAwayTheRest" Value=" had to turn away the rest." />
+    <Resource Code="[GangName]WasLostWhile[GangMissionName]" Value="[[:GangName:]] was lost while [[:GangMissionName:]]" />
+    <Resource Code="MissionGuarding" Value="guarding" />
+    <Resource Code="MissionSabotage" Value="attacking your rivals" />
+    <Resource Code="MissionSpyGirls" Value="spying on your girls" />
+    <Resource Code="MissionRecaptureGirls" Value="trying to recapture a runaway" />
+    <Resource Code="MissionExtortion" Value="trying to extort new businesses" />
+    <Resource Code="MissionPettyTheft" Value="performing petty crimes" />
+    <Resource Code="MissionGrandTheft" Value="performing major crimes" />
+    <Resource Code="MissionKidnappGirls" Value="trying to kidnap girls" />
+    <Resource Code="MissionCatacombs" Value="exploring the catacombs" />
+    <Resource Code="MissionTraining" Value="training" />
+    <Resource Code="MissionRecruit" Value="recruiting" />
+    <Resource Code="MissionService" Value="helping the community" />
+    <Resource Code="MissionDungeon" Value="doing dungeon mission" />
+    <Resource Code="MissionNone" Value="doing nothing" />
+    <Resource Code="Gang[GangName]WereSetToRecruitDueToLowNumbers" Value="Gang   [[:GangName:]]   were set to recruit due to low numbers." />
+    <Resource Code="Gang[GangName]WerePlacedBackOnTheirPreviousMissionNowThatTheirNumbersAreBackToNormal" Value="Gang   [[:GangName:]]   were placed back on their previous mission now that their numbers are back to normal." />
+    <Resource Code="Gang[GangName]WerePlacedOnGuardDutyFromRecruitmentAsTheirNumbersAreFull" Value="Gang   [[:GangName:]]   were placed on guard duty from recruitment as their numbers are full." />
+    <Resource Code="AllOfTheMenInGang[GangName]HaveDied" Value="All of the men in gang [[:GangName:]] have died." />
+    <Resource Code="Gang[GangName]IsSpyingOnYourGirls" Value="Gang   [[:GangName:]]   is spying on your girls." />
+    <Resource Code="Gang[GangName]IsGuarding" Value="Gang   [[:GangName:]]   is guarding." />
+  </GangMission>
+</Resources>

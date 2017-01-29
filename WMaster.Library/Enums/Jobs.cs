@@ -540,7 +540,10 @@ namespace WMaster.Enums
         // - extra unassignable
         INDUNGEON,
         RUNAWAY,
-
+        /// <summary>
+        /// No jobs was defined.
+        /// </summary>
+        NotSet,
         /// <summary>
         /// Number of Jobs.
         /// </summary>

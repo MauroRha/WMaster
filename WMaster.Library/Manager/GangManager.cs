@@ -24,20 +24,20 @@ namespace WMaster.Manager
     using System.Linq;
     using System.Text;
     using WMaster.ClassOrStructurToImplement;
-    using WMaster.Enums;
     using WMaster.Concept;
+    using WMaster.Concept.Attributs;
     using WMaster.Entity.Item;
     using WMaster.Entity.Living;
+    using WMaster.Entity.Living.GangMission;
+    using WMaster.Enums;
     using WMaster.Tool;
-    using WMaster.Concept.Attributs;
-    using WMaster.Concept.GangMission;
 
     /// <summary>
     /// Manages all the player gangs
     /// </summary>
-    public class GangManager
+    public class GangManager : IManager
     {
-        #region Static members
+        #region Singleton
         /// <summary>
         /// Singleton of <see cref="GangManager"/>.
         /// </summary>
@@ -54,21 +54,34 @@ namespace WMaster.Manager
                 return GangManager.m_Instance;
             }
         }
+
+        /// <summary>
+        /// Initialise a new instance of <see cref="GangManager"/>. Private constructor for Singleton template.
+        /// </summary>
+        private GangManager()
+        {
+            m_BusinessesExtorted = 0;
+            m_NumHealingPotions = m_NumNets = m_SwordLevel = 0;
+            m_KeepHealStocked = m_KeepNetsStocked = 0;
+            m_ControlGangs = false;
+            m_GangGetsGirls = m_GangGetsItems = m_GangGetsBeast = 0;
+        }
         #endregion
 
+        #region Properties
         /// <summary>
         /// Number of businesses under player control.
         /// <remarks><para>TODO : May translate to player class</para></remarks>
         /// </summary>
-        private int m_BusinessesExtort;
+        private int m_BusinessesExtorted;
         /// <summary>
         /// Get or set the number of business extorted.
         /// </summary>
-        public static int NumBusinessExtort
+        public static int NumBusinessExtorted
         {
-            get { return GangManager.Instance.m_BusinessesExtort; }
+            get { return GangManager.Instance.m_BusinessesExtorted; }
             // TODO : GAME - Check m_BusinessesExtort < Max value?
-            set { GangManager.Instance.m_BusinessesExtort = value; }
+            set { GangManager.Instance.m_BusinessesExtorted = Math.Max(value, 0); }
         }
         /// <summary>
         /// Adjuste number of business extorted.
@@ -78,8 +91,8 @@ namespace WMaster.Manager
         public static int AdjustBusinessExtorted(int n)
         {
             // TODO : GAME - Check m_BusinessesExtort < Max value?
-            NumBusinessExtort += n;
-            return NumBusinessExtort;
+            NumBusinessExtorted += n;
+            return NumBusinessExtorted;
         }
         /// <summary>
         /// Maximum number of gang player can hire
@@ -87,10 +100,13 @@ namespace WMaster.Manager
         private int m_MaxNumGangs;
 
         /// <summary>
-        /// Use to switch between old/new code in catacombs mission.
+        /// Use to switch between old/new code in catacombs mission ?.
         /// </summary>
         [Obsolete("Do choice between new or old cade. Use compilation pragma ?")]
         private bool m_ControlGangs;
+        /// <summary>
+        /// Use to switch between old/new code in catacombs mission ?.
+        /// </summary>
         public static bool ControlGangs
         {
             get { return GangManager.Instance.m_ControlGangs; }
@@ -136,19 +152,10 @@ namespace WMaster.Manager
         }
         #endregion
 
-        //private int m_NumGangNames;
-        //private int m_NumGangs;
-        //private Gang m_GangStart; // the start and end of the list of gangs under the players employment
-        //private Gang m_GangEnd;
-
         /// <summary>
         /// List of gangs under the players employment.
         /// </summary>
         private List<Gang> m_PlayerGangList = new List<Gang>();
-
-        //private int m_NumHireableGangs;
-        //private Gang m_HireableGangStart; // the start and end of the list of gangs which are available for hire
-        //private Gang m_HireableGangEnd;
 
         /// <summary>
         /// List of gangs which are available for hire.
@@ -156,7 +163,7 @@ namespace WMaster.Manager
         private List<Gang> m_HireableGangList = new List<Gang>();
 
 
-        // TODO : Bound SwordLevet to upper limite (4?)
+        // TODO : Bound SwordLevet to upper limite (4?) to configuration file
         /// <summary>
         /// Weapond level the gangs has been upgraded.
         /// </summary>
@@ -167,7 +174,7 @@ namespace WMaster.Manager
         public static int SwordLevel
         {
             get { return GangManager.Instance.m_SwordLevel; }
-            set { GangManager.Instance.m_SwordLevel = Math.Min(value, 0); }
+            set { GangManager.Instance.m_SwordLevel = Math.Min(Math.Max(value, 0), Configuration.Gangs.SwordLevelMax); }
         }
         /// <summary>
         /// Return the weapon level of gang.
@@ -261,33 +268,7 @@ namespace WMaster.Manager
             return limit;
         }
         #endregion
-
-        /// <summary>
-        /// Initialise a new instance of <see cref="GangManager"/>
-        /// TODO : REFACTORING - Make singleton or static class?
-        /// </summary>
-        public GangManager()
-        {
-            m_BusinessesExtort = 0;
-            m_NumHealingPotions = m_NumNets = m_SwordLevel = 0;
-            m_KeepHealStocked = m_KeepNetsStocked = 0;
-            m_ControlGangs = false;
-            m_GangGetsGirls = m_GangGetsItems = m_GangGetsBeast = 0;
-        }
-
-        /// <summary>
-        /// Free/(re)initialize GangManager datas
-        /// </summary>
-        public void Free()
-        {
-            m_PlayerGangList.Clear();
-            m_HireableGangList.Clear();
-            m_BusinessesExtort = 0;
-            m_NumHealingPotions = m_SwordLevel = m_NumNets = 0;
-            m_KeepHealStocked = m_KeepNetsStocked = 0;
-            m_ControlGangs = false;
-            m_GangGetsGirls = m_GangGetsItems = m_GangGetsBeast = 0;
-        }
+        #endregion
 
         /// <summary>
         /// Adds a new randomly generated gang to the recruitable list
@@ -299,7 +280,7 @@ namespace WMaster.Manager
 
             int maxMembers = Configuration.Gangs.InitMemberMax;
             int minMembers = Configuration.Gangs.InitMemberMin;
-            newGang.MemberNum = minMembers + WMRand.Random() % (maxMembers + 1 - minMembers);
+            newGang.MemberNum = minMembers + WMRand.Random(maxMembers + 1 - minMembers);
             if (boosted)
             {
                 newGang.MemberNum = Math.Min(15, newGang.MemberNum + 5);
@@ -308,28 +289,28 @@ namespace WMaster.Manager
             int new_val;
             foreach (Skill skill in newGang.Skills)
             {
-                new_val = (WMRand.Random() % 30) + 21;
-                if (WMRand.Random() % 5 == 1)
+                new_val = WMRand.Random(30) + 21;
+                if (WMRand.Random(5) == 1)
                 {
-                    new_val += 1 + WMRand.Random() % 10;
+                    new_val += 1 + WMRand.Random(10);
                 }
                 if (boosted)
                 {
-                    new_val += 10 + WMRand.Random() % 11;
+                    new_val += 10 + WMRand.Random(11);
                 }
                 skill.Value = new_val;
             }
 
             foreach (Stat item in newGang.Stats)
             {
-                new_val = (WMRand.Random() % 30) + 21;
-                if (WMRand.Random() % 5 == 1)
+                new_val = WMRand.Random(30) + 21;
+                if (WMRand.Random(5) == 1)
                 {
-                    new_val += WMRand.Random() % 10;
+                    new_val += WMRand.Random(10);
                 }
                 if (boosted)
                 {
-                    new_val += 10 + WMRand.Random() % 11;
+                    new_val += 10 + WMRand.Random(11);
                 }
                 item.Value = new_val;
             }
@@ -541,14 +522,14 @@ namespace WMaster.Manager
         public static Gang GetTempGang()
         {
             Gang newGang = new Gang();
-            newGang.MemberNum = WMRand.Random() % 6 + 10;
+            newGang.MemberNum = WMRand.Random(6) + 10;
             foreach (Skill item in newGang.Skills)
             {
-                item.Value = (WMRand.Random() % 30) + 21;
+                item.Value = WMRand.Random(30) + 21;
             }
-            foreach ( Stat item in newGang.Stats)
+            foreach (Stat item in newGang.Stats)
             {
-                item.Value = (WMRand.Random() % 30) + 21;
+                item.Value = WMRand.Random(30) + 21;
             }
             newGang.Stats[EnumStats.HEALTH].Value = 100;
             newGang.Stats[EnumStats.HAPPINESS].Value = 100;
@@ -565,12 +546,12 @@ namespace WMaster.Manager
             newGang.MemberNum = Math.Min(15, WMRand.Bell(6, 18));
             foreach (Skill item in newGang.Skills)
             {
-                item.Value = (WMRand.Random() % 40) + 21 + (WMRand.Random() % mod);
+                item.Value = WMRand.Random(40) + 21 + WMRand.Random(mod);
                 item.Value = Math.Max(Math.Min(item.Value, 100), 1);
             }
             foreach (Stat item in newGang.Stats)
             {
-                item.Value = (WMRand.Random() % 40) + 21 + (WMRand.Random() % mod);
+                item.Value = WMRand.Random(40) + 21 + WMRand.Random(mod);
                 item.Value = Math.Max(Math.Min(item.Value, 100), 1);
             }
             newGang.Stats[EnumStats.HEALTH].Value = 100;
@@ -591,11 +572,11 @@ namespace WMaster.Manager
             newGang.MemberNum = 15;
             foreach (Skill item in newGang.Skills)
             {
-                item.Value = WMRand.Random() % 30 + 51;
+                item.Value = WMRand.Random(30) + 51;
             }
             foreach (Stat item in newGang.Stats)
             {
-                item.Value = WMRand.Random() % 30 + 51;
+                item.Value = WMRand.Random(30) + 51;
             }
             newGang.Stats[EnumStats.HEALTH].Value = 100;
             return newGang;
@@ -749,7 +730,7 @@ namespace WMaster.Manager
                 return true; // gang2 does not exist
             }
 
-            cTariff tariff = new cTariff();
+            Tariff tariff = new Tariff();
             // Player's gang or first gang if rivalVrival = true
             gang1.HasSeenCombat = true;
             EnumSkills g1attack = EnumSkills.COMBAT;
@@ -759,14 +740,14 @@ namespace WMaster.Manager
             {
                 gang1.HealLimit = 10;
             }
-            int g1SwordLevel = (rivalVrival ? Math.Min(5, (WMRand.Random() % (gang1.Skills[EnumSkills.COMBAT].Value / 20) + 1)) : SwordLevel);
+            int g1SwordLevel = (rivalVrival ? Math.Min(5, WMRand.Random(gang1.Skills[EnumSkills.COMBAT].Value / 20) + 1) : SwordLevel);
 
             gang2.HasSeenCombat = true;
             EnumSkills g2attack = EnumSkills.COMBAT;
             int initalNumber2 = gang2.MemberNum;
             int g2dodge = gang2.Stats[EnumStats.AGILITY].Value;
             gang2.HealLimit = 10;
-            int g2SwordLevel = Math.Min(5, (WMRand.Random() % (gang2.Skills[EnumSkills.COMBAT].Value / 20) + 1));
+            int g2SwordLevel = Math.Min(5, WMRand.Random(gang2.Skills[EnumSkills.COMBAT].Value / 20) + 1);
 
             int tmp = (gang1.MemberNum > gang2.MemberNum) ? gang1.MemberNum : gang2.MemberNum; // get the largest gang's number
 
@@ -907,7 +888,7 @@ namespace WMaster.Manager
                 if (girl.has_trait("Incorporeal"))
                 {
                     girl.m_Stats[(int)EnumStats.HEALTH] = 100;
-                    WMLog.Trace(string.Format("Girl vs. Goons: '{0}' is incorporeal, so she wins.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                    WMLog.Trace(string.Format("Girl vs. Goons: '{0}' is incorporeal, so she wins.", girl.Realname), WMLog.TraceLog.INFORMATION);
                     gang.MemberNum = (int)gang.MemberNum / 2;
                     while (gang.MemberNum > 0) // Do the casualty calculation
                     {
@@ -955,8 +936,8 @@ namespace WMaster.Manager
                 *	have fewer potions available.
                 */
 
-                WMLog.Trace(string.Format("Girl vs. Goons: {0} fights {1} opponents!", girl.m_Realname, numGoons), WMLog.TraceLog.INFORMATION);
-                WMLog.Trace(string.Format("{0}  : Health {1}, Dodge {2}, Mana {3}", girl.m_Realname, girl.health(), dodge, girl.mana()), WMLog.TraceLog.INFORMATION);
+                WMLog.Trace(string.Format("Girl vs. Goons: {0} fights {1} opponents!", girl.Realname, numGoons), WMLog.TraceLog.INFORMATION);
+                WMLog.Trace(string.Format("{0}  : Health {1}, Dodge {2}, Mana {3}", girl.Realname, girl.health(), dodge, girl.mana()), WMLog.TraceLog.INFORMATION);
 
                 for (int i = 0; i < numGoons; i++)
                 {
@@ -969,23 +950,23 @@ namespace WMaster.Manager
                     while (girl.health() >= 20 && gHealth > 0)
                     {
                         // Girl attacks
-                        WMLog.Trace(string.Format("    {0} attacks the goon.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                        WMLog.Trace(string.Format("    {0} attacks the goon.", girl.Realname), WMLog.TraceLog.INFORMATION);
 
                         if (attack == EnumSkills.MAGIC)
                         {
                             if (girl.mana() < 7)
                             {
-                                WMLog.Trace(string.Format("    {0} insufficient mana: using combat.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                                WMLog.Trace(string.Format("    {0} insufficient mana: using combat.", girl.Realname), WMLog.TraceLog.INFORMATION);
                             }
                             else
                             {
                                 girl.mana(-7);
-                                WMLog.Trace(string.Format("    {0} casts a spell; mana now {0}.", girl.m_Realname, girl.mana()), WMLog.TraceLog.INFORMATION);
+                                WMLog.Trace(string.Format("    {0} casts a spell; mana now {0}.", girl.Realname, girl.mana()), WMLog.TraceLog.INFORMATION);
                             }
                         }
                         else
                         {
-                            WMLog.Trace(string.Format("    {0} using physical attack.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                            WMLog.Trace(string.Format("    {0} using physical attack.", girl.Realname), WMLog.TraceLog.INFORMATION);
                         }
 
                         int girlAttackChance = Game.Girls.GetSkill(girl, (int)attack);
@@ -1007,10 +988,10 @@ namespace WMaster.Manager
                             *				she may improve a little
                             *				(checked every round of combat? seems excessive)
                             */
-                            int gain = WMRand.Random() % 2;
+                            int gain = WMRand.Random(2);
                             if (gain != 0)
                             {
-                                WMLog.Trace(string.Format("    {0} gains {1} to attack skill.", girl.m_Realname, gain), WMLog.TraceLog.INFORMATION);
+                                WMLog.Trace(string.Format("    {0} gains {1} to attack skill.", girl.Realname, gain), WMLog.TraceLog.INFORMATION);
                                 Game.Girls.UpdateSkill(girl, (int)attack, gain);
                             }
 
@@ -1118,7 +1099,7 @@ namespace WMaster.Manager
                     }
                 }
 
-                WMLog.Trace(string.Format("No more opponents: {0} WINS!", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                WMLog.Trace(string.Format("No more opponents: {0} WINS!", girl.Realname), WMLog.TraceLog.INFORMATION);
 
                 Game.Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, +1);
 
@@ -1153,7 +1134,7 @@ namespace WMaster.Manager
             {
                 girl.m_Stats[(int)EnumStats.HEALTH] = 100;
 
-                WMLog.Trace(string.Format("Girl vs. Goons: {0} is incorporeal, so she wins.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                WMLog.Trace(string.Format("Girl vs. Goons: {0} is incorporeal, so she wins.", girl.Realname), WMLog.TraceLog.INFORMATION);
 
                 enemyGang.MemberNum = (int)enemyGang.MemberNum / 2;
                 while (enemyGang.MemberNum > 0) // Do the casualty calculation
@@ -1206,9 +1187,9 @@ namespace WMaster.Manager
 
             enemyGang.HasSeenCombat = true;
 
-            WMLog.Trace(string.Format("Girl vs. Goons: {0} fights {1} opponents!", girl.m_Realname, initialNum), WMLog.TraceLog.INFORMATION);
+            WMLog.Trace(string.Format("Girl vs. Goons: {0} fights {1} opponents!", girl.Realname, initialNum), WMLog.TraceLog.INFORMATION);
             WMLog.Trace(string.Format("{0}: Health {1}, Dodge {2}, Mana {3}",
-                girl.m_Realname,
+                girl.Realname,
                 girl.health(),
                 Game.Girls.GetStat(girl, (int)EnumStats.AGILITY),
                 girl.mana()), WMLog.TraceLog.INFORMATION);
@@ -1230,7 +1211,7 @@ namespace WMaster.Manager
                 while (Game.Girls.GetStat(girl, (int)EnumStats.HEALTH) >= 20 && gHealth > 0)
                 {
                     // Girl attacks
-                    WMLog.Trace(string.Format("  {0} attacks the goon.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                    WMLog.Trace(string.Format("  {0} attacks the goon.", girl.Realname), WMLog.TraceLog.INFORMATION);
 
                     if (attack == EnumSkills.MAGIC)
                     {
@@ -1238,18 +1219,18 @@ namespace WMaster.Manager
                         if (mana < 5)
                         {
                             attack = EnumSkills.COMBAT;
-                            WMLog.Trace(string.Format("    {0} insufficient mana: using combat.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                            WMLog.Trace(string.Format("    {0} insufficient mana: using combat.", girl.Realname), WMLog.TraceLog.INFORMATION);
                         }
                         else
                         {
 
                             mana = mana - 5;
-                            WMLog.Trace(string.Format("    {0} casts a spell; mana now {0}.", girl.m_Realname, mana), WMLog.TraceLog.INFORMATION);
+                            WMLog.Trace(string.Format("    {0} casts a spell; mana now {0}.", girl.Realname, mana), WMLog.TraceLog.INFORMATION);
                         }
                     }
                     else
                     {
-                        WMLog.Trace(string.Format("    {0} using physical attack.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                        WMLog.Trace(string.Format("    {0} using physical attack.", girl.Realname), WMLog.TraceLog.INFORMATION);
                     }
 
                     int girlAttackChance = Game.Girls.GetSkill(girl, (int)attack);
@@ -1326,7 +1307,7 @@ namespace WMaster.Manager
                         // girl attempts Dodge
                         dieRoll = WMRand.Random();
 
-                        WMLog.Trace(string.Format("    {0} tries to dodge: needs {1}, gets {2}.", girl.m_Realname, dodge, dieRoll), WMLog.TraceLog.INFORMATION);
+                        WMLog.Trace(string.Format("    {0} tries to dodge: needs {1}, gets {2}.", girl.Realname, dodge, dieRoll), WMLog.TraceLog.INFORMATION);
 
                         // MYR: Girl dodge maxes out at 90 (Gang dodge at 95).  It's a bit of a hack
                         if (dieRoll <= dodge && dieRoll <= 90)
@@ -1337,7 +1318,7 @@ namespace WMaster.Manager
                         {
                             Game.Girls.TakeCombatDamage(girl, -damage); // MYR: Note change
 
-                            WMLog.Trace(string.Format("  {0} takes {1}. New health value: {2}.", girl.m_Realname, damage, dieRoll, girl.health()), WMLog.TraceLog.INFORMATION);
+                            WMLog.Trace(string.Format("  {0} takes {1}. New health value: {2}.", girl.Realname, damage, dieRoll, girl.health()), WMLog.TraceLog.INFORMATION);
                             if (girl.has_trait("Incorporeal"))
                             {
                                 WMLog.Trace("    (Girl is Incorporeal)", WMLog.TraceLog.INFORMATION);
@@ -1368,7 +1349,7 @@ namespace WMaster.Manager
 
                 if (Game.Girls.GetStat(girl, (int)EnumStats.HEALTH) <= 20)
                 {
-                    WMLog.Trace(string.Format("The gang overwhelmed and defeated {0}. She lost the battle.", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                    WMLog.Trace(string.Format("The gang overwhelmed and defeated {0}. She lost the battle.", girl.Realname), WMLog.TraceLog.INFORMATION);
                     Game.Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, -5);
                     return false;
                 }
@@ -1383,7 +1364,7 @@ namespace WMaster.Manager
                 {
                     if (WMRand.Percent(50)) // MYR: Adjusting this has a big effect
                     {
-                        WMLog.Trace(string.Format("The gang ran away after losing too many members. {0} WINS!", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                        WMLog.Trace(string.Format("The gang ran away after losing too many members. {0} WINS!", girl.Realname), WMLog.TraceLog.INFORMATION);
                         Game.Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, +5);
                         return true; // the men run away
                     }
@@ -1391,13 +1372,13 @@ namespace WMaster.Manager
                 // Gang fought to the death
                 if (enemyGang.MemberNum == 0)
                 {
-                    WMLog.Trace(string.Format("The gang fought to bitter end. They are all dead. {0} WINS!", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+                    WMLog.Trace(string.Format("The gang fought to bitter end. They are all dead. {0} WINS!", girl.Realname), WMLog.TraceLog.INFORMATION);
                     Game.Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, +5);
                     return true;
                 }
             }
 
-            WMLog.Trace(string.Format("No more opponents: {0} WINS!", girl.m_Realname), WMLog.TraceLog.INFORMATION);
+            WMLog.Trace(string.Format("No more opponents: {0} WINS!", girl.Realname), WMLog.TraceLog.INFORMATION);
 
             Game.Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, +5);
 
@@ -1459,7 +1440,7 @@ namespace WMaster.Manager
         /// </summary>
         public void UpdateGangs()
         {
-            cTariff tariff = new cTariff();
+            Tariff tariff = new Tariff();
 
             // maintain recruitable gangs list, potentially pruning some old ones
             double removeChance = Configuration.Gangs.ChanceRemoveUnwanted;
@@ -1505,7 +1486,7 @@ namespace WMaster.Manager
                 //        else
                 //        {
                 //            item.m_Events.AddMessage(
-                //                LocalString.GetStringLine(LocalString.ResourceStringCategory.Global, "ThisGangWasSentToLookForRunawaysButThereAreNoneSoTheyWentLookingForAnyGirlToKidnapInstead"),
+                //                LocalString.GetStringLine(LocalString.ResourceStringCategory.GangMission, "ThisGangWasSentToLookForRunawaysButThereAreNoneSoTheyWentLookingForAnyGirlToKidnapInstead"),
                 //                ImageTypes.PROFILE, EventType.GANG);
                 //            KidnappMission(item);
                 //            break;
@@ -1541,7 +1522,7 @@ namespace WMaster.Manager
                 //        // TODO : Replace m_MissionID to Mission name
                 //        item.m_Events.AddMessage(
                 //            LocalString.GetStringFormatLine(
-                //                LocalString.ResourceStringCategory.Global,
+                //                LocalString.ResourceStringCategory.GangMission,
                 //                "ErrorNoMissionSetOrMissionNotFound[MissionName]",
                 //                new List<FormatStringParameter>() { new FormatStringParameter("MissionName", item.MissionType.ToString()) }),
                 //            ImageTypes.PROFILE, EventType.GANG);
@@ -1559,7 +1540,7 @@ namespace WMaster.Manager
                 CheckGangRecruit(item);
             }
 
-            Game.Brothels.m_Rivals.Update(m_BusinessesExtort); // Update the rivals
+            Game.Brothels.m_Rivals.Update(m_BusinessesExtorted); // Update the rivals
 
             RestockNetsAndPots();
         }
@@ -1570,7 +1551,7 @@ namespace WMaster.Manager
         /// </summary>
         public void RestockNetsAndPots()
         {
-            cTariff tariff = new cTariff();
+            Tariff tariff = new Tariff();
 
             WMLog.Trace(string.Format("Time to restock heal potions and nets{0}Heal Flag    = {1}{0}Heal Target  = {2}{0}Heal Current = {3}{0}Nets Flag    = {4}{0}Nets Target  = {5}{0}Nets Current = {6}"
                 , Environment.NewLine, (bool)(m_KeepHealStocked > 0), m_KeepHealStocked, m_KeepHealStocked, (bool)(m_KeepNetsStocked > 0), m_KeepNetsStocked, m_KeepNetsStocked),
@@ -1580,13 +1561,13 @@ namespace WMaster.Manager
             {
                 int diff = m_KeepHealStocked - m_NumHealingPotions;
                 m_NumHealingPotions = m_KeepHealStocked;
-                Game.Gold.consumable_cost(tariff.healing_price(diff));
+                Game.Gold.ConsumableCost(tariff.HealingPrice(diff));
             }
             if (m_KeepNetsStocked > 0 && m_KeepNetsStocked > m_NumNets)
             {
                 int diff = m_KeepNetsStocked - m_NumNets;
                 m_NumNets = m_KeepNetsStocked;
-                Game.Gold.consumable_cost(tariff.nets_price(diff));
+                Game.Gold.ConsumableCost(tariff.NetsPrice(diff));
             }
         }
 
@@ -1782,7 +1763,10 @@ namespace WMaster.Manager
         public bool SabotageMission(Gang gang)
         {
             LocalString sabotageEvent = new LocalString();
-            sabotageEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global, "Gang[GangName]IsAttackingRivals", new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
+            sabotageEvent.AppendLineFormat(
+                LocalString.ResourceStringCategory.GangMission,
+                "Gang[GangName]IsAttackingRivals",
+                new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
             /*
             *	See if they can find any enemy assets to attack
             *
@@ -1795,8 +1779,8 @@ namespace WMaster.Manager
             {
 
                 gang.m_Events.AddMessage(
-                    LocalString.GetString(LocalString.ResourceStringCategory.Global, "TheyFailedToFindAnyEnemyAssetsToHit"),
-                    ImageTypes.PROFILE, EventType.GANG);
+                    LocalString.GetString(LocalString.ResourceStringCategory.GangMission, "TheyFailedToFindAnyEnemyAssetsToHit"),
+                    ImageType.PROFILE, EventType.Gang);
                 return false;
             }
             /*
@@ -1814,8 +1798,8 @@ namespace WMaster.Manager
             if (rival == null)
             {
                 gang.m_Events.AddMessage(
-                    LocalString.GetString(LocalString.ResourceStringCategory.Global, "ScoutedTheCityInVainSeekingWouldBeChallengersToYourDominance"),
-                    ImageTypes.PROFILE, EventType.GANG);
+                    LocalString.GetString(LocalString.ResourceStringCategory.GangMission, "ScoutedTheCityInVainSeekingWouldBeChallengersToYourDominance"),
+                    ImageType.PROFILE, EventType.Gang);
                 return false;
             }
 
@@ -1823,7 +1807,7 @@ namespace WMaster.Manager
             {
                 rivalGang = GetTempGang(rival.m_Power);
                 sabotageEvent.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.GangMission,
                     "YourMenRunIntoAGangFrom[GangName]AndABrawlBreaksOut",
                     new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
                 if (GangBrawl(gang, rivalGang, false) == false)
@@ -1833,31 +1817,29 @@ namespace WMaster.Manager
                     {
                         // TODO : Check if event is shown when gang was disband
                         sabotageEvent.AppendFormat(
-                            LocalString.ResourceStringCategory.Global,
+                            LocalString.ResourceStringCategory.GangMission,
                             "YourGang[GangName]FailsToReportBackFromTheirSabotageMissionLaterYouLearnThatTheyWereWipedOutToTheLastMan",
                             new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
                     }
                     else if (gang.MemberNum == 1)
                     {
                         sabotageEvent.Append(
-                            LocalString.ResourceStringCategory.Global,
+                            LocalString.ResourceStringCategory.GangMission,
                             "YourMenLostTheLoneSurvivorFightsHisWayBackToFriendlyTerritory");
                     }
                     else
                     {
                         sabotageEvent.AppendFormat(
-                            LocalString.ResourceStringCategory.Global,
+                            LocalString.ResourceStringCategory.GangMission,
                             "YourMenLostThe[GangMemberNum]SurvivorsFightTheirWayBackToFriendlyTerritory",
                             new List<FormatStringParameter>() { new FormatStringParameter("GangMemberNum", gang.MemberNum) });
                     }
-                    gang.m_Events.AddMessage(sabotageEvent.ToString(), ImageTypes.PROFILE, EventType.DANGER);
+                    gang.m_Events.AddMessage(sabotageEvent.ToString(), ImageType.PROFILE, EventType.Danger);
                     return false;
                 }
                 else
                 {
-                    sabotageEvent.Append(
-                        LocalString.ResourceStringCategory.Global,
-                        "YourMenWin");
+                    sabotageEvent.Append(LocalString.ResourceStringCategory.GangMission, "YourMenWin");
                 }
                 if (rivalGang.MemberNum <= 0) // clean up the rival gang
                 {
@@ -1866,21 +1848,21 @@ namespace WMaster.Manager
                     if (rival.m_NumGangs == 0)
                     {
                         sabotageEvent.AppendLineFormat(
-                            LocalString.ResourceStringCategory.Global,
+                            LocalString.ResourceStringCategory.GangMission,
                             "TheEnemyGangIsDestroyed[RivalName]HasNoMoreGangsLeft",
                                 new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                     }
                     else if (rival.m_NumGangs <= 3)
                     {
                         sabotageEvent.AppendLineFormat(
-                            LocalString.ResourceStringCategory.Global,
+                            LocalString.ResourceStringCategory.GangMission,
                             "TheEnemyGangIsDestroyed[RivalName]HasAFewGangsLeft",
                                 new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                     }
                     else
                     {
                         sabotageEvent.AppendLineFormat(
-                            LocalString.ResourceStringCategory.Global,
+                            LocalString.ResourceStringCategory.GangMission,
                             "TheEnemyGangIsDestroyed[RivalName]HasALotOfGangsLeft",
                                 new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                     }
@@ -1890,7 +1872,7 @@ namespace WMaster.Manager
             else
             {
                 sabotageEvent.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.GangMission,
                     "YourMenEncounterNoResistanceWhenyougoAfter[RivalGangName]",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalGangName", rival.m_Name) });
             }
@@ -1916,21 +1898,21 @@ namespace WMaster.Manager
                 if (rival.m_BusinessesExtort == 0)
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenDestroy[Number]OfTheirBusinesses[RivalName]HaveNoMoreBusinessesLeft",
                         new List<FormatStringParameter>() { new FormatStringParameter("Number", num), new FormatStringParameter("RivalName", rival.m_Name) });
                 }
                 else if (rival.m_BusinessesExtort <= 10)
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenDestroy[Number]OfTheirBusinesses[RivalName]HaveAFewBusinessesLeft",
                         new List<FormatStringParameter>() { new FormatStringParameter("Number", num), new FormatStringParameter("RivalName", rival.m_Name) });
                 }
                 else
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenDestroy[Number]OfTheirBusinesses[RivalName]HaveALotOfBusinessesLeft",
                         new List<FormatStringParameter>() { new FormatStringParameter("Number", num), new FormatStringParameter("RivalName", rival.m_Name) });
                 }
@@ -1938,7 +1920,7 @@ namespace WMaster.Manager
             else
             {
                 sabotageEvent.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.GangMission,
                     "[RivalName]HaveNoBusinessesToAttack",
                     new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
             }
@@ -1959,27 +1941,27 @@ namespace WMaster.Manager
                 // some of the money taken 'dissappears' before the gang reports it.
                 if (WMRand.Percent(20) && gold > 1000)
                 {
-                    gold -= WMRand.Random() % 1000;
+                    gold -= WMRand.Random(1000);
                 }
 
                 if (rival.m_Gold == 0)
                 {
                     sabotageEvent.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.GangMission,
                     "YourMenSteal[GoldAmount]GoldFromThemMuhahahaha[RivalName]IsPennilessNow",
                     new List<FormatStringParameter>() { new FormatStringParameter("GoldAmount", gold), new FormatStringParameter("RivalName", rival.m_Name) });
                 }
                 else if (rival.m_Gold <= 10000)
                 {
                     sabotageEvent.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.GangMission,
                     "YourMenSteal[GoldAmount]GoldFromThem[RivalName]IsLookingPrettyPoor",
                     new List<FormatStringParameter>() { new FormatStringParameter("GoldAmount", gold), new FormatStringParameter("RivalName", rival.m_Name) });
                 }
                 else
                 {
                     sabotageEvent.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.GangMission,
                     "YourMenSteal[GoldAmount]GoldFromThemItLooksLike[RivalName]StillHasALotOfGold",
                     new List<FormatStringParameter>() { new FormatStringParameter("GoldAmount", gold), new FormatStringParameter("RivalName", rival.m_Name) });
                 }
@@ -2010,21 +1992,21 @@ namespace WMaster.Manager
                     if (burnedbonds == 1)
                     {
                         sabotageEvent.AppendLineFormat(
-                      LocalString.ResourceStringCategory.Global,
+                      LocalString.ResourceStringCategory.GangMission,
                       "AsYourMenAreFleeingOneOfThemHasToJumpThroughAWallOfFireWhenHeDoesHeDropsAGoldBearerBondWorth10kGoldEach[BurnedBondsCost]GoldJustWentUpInSmoke",
                       new List<FormatStringParameter>() { new FormatStringParameter("BurnedBondsCost", bbcost) });
                     }
                     else if (burnedbonds > 4)
                     {
                         sabotageEvent.AppendLineFormat(
-                       LocalString.ResourceStringCategory.Global,
+                       LocalString.ResourceStringCategory.GangMission,
                        "AsYourMenAreFleeingOneOfThemHasToJumpThroughAWallOfFireWhenHeDoesHeDropsAStackOfGoldBearerBondsWorth10kGoldEach[BurnedBondsCost]GoldJustWentUpInSmoke",
                        new List<FormatStringParameter>() { new FormatStringParameter("BurnedBondsCost", bbcost) });
                     }
                     else
                     {
                         sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "AsYourMenAreFleeingOneOfThemHasToJumpThroughAWallOfFireWhenHeDoesHeDrops[BurnedBonds]GoldBearerBondsWorth10kGoldEach[BurnedBondsCost]GoldJustWentUpInSmoke",
                         new List<FormatStringParameter>() { new FormatStringParameter("BurnedBonds", burnedbonds), new FormatStringParameter("BurnedBondsCost", bbcost) });
                     }
@@ -2033,22 +2015,22 @@ namespace WMaster.Manager
                 if (gold > 5000 && WMRand.Percent(50))
                 {
                     limit = true;
-                    int spill = (WMRand.Random() % 4500) + 500;
+                    int spill = WMRand.Random(4500) + 500;
                     gold -= spill;
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
-                        "AsTheyAreBeingChasedThroughTheStreetsBy[RivalName]sPeopleOneOfYourGangMembersCutsOpenASackOfGoldSpillingItsContentsInTheStreetAsThThrongsOfCiviliansStreamInToCollectTheCoinsTheBlockThePursuersAndAllowYouMenToGetAwaySafely",
+                        LocalString.ResourceStringCategory.GangMission,
+                        "AsTheyAreBeingChasedThroughTheStreetsBy[RivalName]sPeopleOneOfYourGangMembersCutsOpenASackOfGoldSpillingItsContentsInTheStreetAsTheThrongsOfCiviliansStreamInToCollectTheCoinsTheyBlockThePursuersAndAllowYouMenToGetAwaySafely",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 }
 
                 if (gold > 5000)
                 {
                     limit = true;
-                    int bribeperc = ((WMRand.Random() % 15) * 5) + 10;
+                    int bribeperc = (WMRand.Random(15) * 5) + 10;
                     int bribe = (int)(gold * ((double)bribeperc / 100.0));
                     gold -= bribe;
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "AsYourGangLeaveYourRivalsTerritoryOnTheWayBackToYourBrothelTheyComeUponABandOfLocalPoliceThatAreHuntingThemTheirBossDemands[BribePercent]OfWhatYourGangIsCarryingInOrderToLetThemGoTheyPayThem[Bribe]GoldAndContinueOnHome",
                         new List<FormatStringParameter>() { new FormatStringParameter("BribePercent", bribeperc), new FormatStringParameter("Bribe", bribe) });
                 }
@@ -2056,17 +2038,15 @@ namespace WMaster.Manager
                 if (limit)
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "[GangName]ReturnsWith[GoldAmount]Gold",
                         new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name), new FormatStringParameter("GoldAmount", gold) });
                 }
-                Game.Gold.plunder(gold);
+                Game.Gold.Plunder(gold);
             }
             else
             {
-                sabotageEvent.AppendLine(
-                    LocalString.ResourceStringCategory.Global,
-                    "TheLosersHaveNoGoldToTake");
+                sabotageEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheLosersHaveNoGoldToTake");
             }
 
             if (rival.m_NumInventory > 0 && WMRand.Percent(Math.Min(75, gang.Intelligence)))
@@ -2077,7 +2057,7 @@ namespace WMaster.Manager
                 if (item != null)
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenStealAnItemFromThemOne[ItemName]",
                         new List<FormatStringParameter>() { new FormatStringParameter("ItemName", item.Name) });
 
@@ -2093,21 +2073,21 @@ namespace WMaster.Manager
                 if (rival.m_NumBrothels == 0)
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenBurnDownOneOf[RivalName]sBrothels[RivalName]HasNoBrothelsLeft",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 }
                 else if (rival.m_NumBrothels <= 3)
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenBurnDownOneOf[RivalName]sBrothels[RivalName]IsInControlOfVeryFewBrothels",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 }
                 else
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenBurnDownOneOf[RivalName]sBrothels[RivalName]HasManyBrothelsLeft",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 }
@@ -2119,21 +2099,21 @@ namespace WMaster.Manager
                 if (rival.m_NumGamblingHalls == 0)
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenBurnDownOneOf[RivalName]sGamblingHalls[RivalName]HasNoGamblingHallsLeft",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 }
                 else if (rival.m_NumGamblingHalls <= 3)
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenBurnDownOneOf[RivalName]sGamblingHalls[RivalName]IsInControlOfVeryFewGamblingHalls",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 }
                 else
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenBurnDownOneOf[RivalName]sGamblingHalls[RivalName]HasManyGamblingHallsLeft",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 }
@@ -2145,28 +2125,28 @@ namespace WMaster.Manager
                 if (rival.m_NumBars == 0)
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenBurnDownOneOf[RivalName]sBars[RivalName]HasNoBarsLeft",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 }
                 else if (rival.m_NumBars <= 3)
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenBurnDownOneOf[RivalName]sBars[RivalName]IsInControlOfVeryFewBars",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 }
                 else
                 {
                     sabotageEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenBurnDownOneOf[RivalName]sBars[RivalName]HasManyBarsLeft",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 }
             }
 
             BoostGangSkill(gang.Stats[EnumStats.INTELLIGENCE], 2);
-            gang.m_Events.AddMessage(sabotageEvent.ToString(), ImageTypes.PROFILE, EventType.GANG);
+            gang.m_Events.AddMessage(sabotageEvent.ToString(), ImageType.PROFILE, EventType.Gang);
 
             // See if the rival is eliminated:  If 4 or more are zero or less, the rival is eliminated
             int VictoryPoints = 0;
@@ -2199,11 +2179,11 @@ namespace WMaster.Manager
             {
                 LocalString ssVic = new LocalString();
                 ssVic.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.Player,
                     "YouHaveDealt[RivalName]AFatalBlowTheirCriminalOrganizationCrumblesToNothingBeforeYou",
                     new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 Game.Brothels.m_Rivals.RemoveRival(rival);
-                gang.m_Events.AddMessage(ssVic.ToString(), ImageTypes.PROFILE, EventType.GOODNEWS);
+                gang.m_Events.AddMessage(ssVic.ToString(), ImageType.PROFILE, EventType.GoodNews);
             }
             return true;
         }
@@ -2219,7 +2199,7 @@ namespace WMaster.Manager
         {
             LocalString recaptureEven = new LocalString();
             recaptureEven.AppendLineFormat(
-                LocalString.ResourceStringCategory.Global,
+                LocalString.ResourceStringCategory.GangMission,
                 "Gang[GangName]IsLookingForEscapedGirls",
                 new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
 
@@ -2228,27 +2208,27 @@ namespace WMaster.Manager
             if (runnaway == null) // `J` this should have been replaced by a check in the gang mission list
             {
                 recaptureEven.AppendLine(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.GangMission,
                     "ThereAreNoneOfYourGirlsWhoHaveRunAwaySoTheyHaveNooneToLookFor");
-                gang.m_Events.AddMessage(recaptureEven.ToString(), ImageTypes.PROFILE, EventType.GANG);
+                gang.m_Events.AddMessage(recaptureEven.ToString(), ImageType.PROFILE, EventType.Gang);
                 return false;
             }
 
             LocalString RGmsg = new LocalString();
-            string girlName = runnaway.m_Realname;
+            string girlName = runnaway.Realname;
             bool captured = false;
             int damagedNets = 0;
-            ImageTypes girlImageType = ImageTypes.PROFILE;
-            EventType gangEventType = EventType.GANG;
+            ImageType girlImageType = ImageType.PROFILE;
+            EventType gangEventType = EventType.Gang;
 
             if (!Game.Brothels.FightsBack(runnaway))
             {
                 recaptureEven.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.GangMission,
                     "YourGoonsFind[GirlName]AndSheComesQuietlyWithoutPuttingUpAFight",
                     new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName) });
                 RGmsg.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.Girl,
                     "[GirlName]WasRecapturedBy[GangName]SheGaveUpWithoutAFight",
                     new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", gang.Name) });
                 captured = true;
@@ -2256,7 +2236,7 @@ namespace WMaster.Manager
             if (!captured && gang.NetLimit > 0) // try to capture using net
             {
                 recaptureEven.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.GangMission,
                     "YourGoonsFind[GirlName]AndTheyTryToCatchHerInTheirNets",
                     new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName) });
                 int tries = 0;
@@ -2290,31 +2270,31 @@ namespace WMaster.Manager
                         if (gang.NetLimit == 0)
                         {
                             recaptureEven.AppendLineFormat(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.GangMission,
                                 "[GirlName]ManagedToDamage[Number]OfTheirNetsBeforeTheyFinallyCaughtHerInTheTatteredRemainsOfTheirLastNet",
                                 new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("Number", damagedNets) });
                         }
                         else if (gang.NetLimit == 1)
                         {
                             recaptureEven.AppendLineFormat(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.GangMission,
                                 "[GirlName]ManagedToDamage[Number]OfTheirNetsBeforeTheyFinallyCaughtHerInTheirLastNet",
                                 new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("Number", damagedNets) });
                         }
                         else
                         {
                             recaptureEven.AppendLineFormat(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.GangMission,
                                 "[GirlName]ManagedToDamage[Number]OfTheirNetsBeforeTheyFinallyCaughtHerInTheirNets",
                                 new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("Number", damagedNets) });
                         }
                     }
                     recaptureEven.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "SheStrugglesAgainstTheNetYourMenUseButItIsPointlessSheIsInYourDungeonNow");
-                    girlImageType = ImageTypes.DEATH;
+                    girlImageType = ImageType.DEATH;
                     RGmsg.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.Girl,
                         "[GirlName]WasCapturedInANetAndDraggedBackToTheDungeonBy[GangName]",
                         new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", gang.Name) });
                     BoostGangSkill(gang.Stats[EnumStats.INTELLIGENCE], 2);
@@ -2322,7 +2302,7 @@ namespace WMaster.Manager
                 else
                 {
                     recaptureEven.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "[GirlName]ManagedToDamageAllOfTheirNetsSoTheyHaveToDoThingsTheHardWay",
                         new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName) });
                 }
@@ -2334,18 +2314,18 @@ namespace WMaster.Manager
                     if (damagedNets == 0)
                     {
                         recaptureEven.AppendLineFormat(
-                            LocalString.ResourceStringCategory.Global,
+                            LocalString.ResourceStringCategory.GangMission,
                             "[GangName]AttemptToRecaptureHer",
                             new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
                     }
                     if (!GangCombat(runnaway, gang))
                     {
-                        girlImageType = ImageTypes.DEATH;
+                        girlImageType = ImageType.DEATH;
                         recaptureEven.AppendLine(
-                            LocalString.ResourceStringCategory.Global,
+                            LocalString.ResourceStringCategory.GangMission,
                             "SheFightsBackButYourMenSucceedInCapturingHer");
                         RGmsg.AppendLineFormat(
-                            LocalString.ResourceStringCategory.Global,
+                            LocalString.ResourceStringCategory.Girl,
                             "[GirlName]FoughtWith[GangName]ButLostSheWasDraggedBackToTheDungeon",
                             new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", gang.Name) });
                         BoostGangSkill(gang.Skills[EnumSkills.COMBAT], 1);
@@ -2354,19 +2334,19 @@ namespace WMaster.Manager
                     else
                     {
                         recaptureEven.AppendLine(
-                            LocalString.ResourceStringCategory.Global,
+                            LocalString.ResourceStringCategory.GangMission,
                             "TheGirlFightsBackAndDefeatsYourMenBeforeEscapingIntoTheStreets");
-                        gangEventType = EventType.DANGER;
+                        gangEventType = EventType.Danger;
                     }
                 }
                 else if (damagedNets == 0)
                 {
                     recaptureEven.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "[GangName]RecaptureHerSuccessfullyWithoutAFussSheIsInYourDungeonNow",
                         new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
                     RGmsg.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.Girl,
                         "[GirlName]WasSurroundedBy[GangName]AndGaveUpWithoutAFight",
                         new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", gang.Name) });
                     captured = true;
@@ -2374,20 +2354,20 @@ namespace WMaster.Manager
                 else
                 {
                     recaptureEven.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "AfterDodgingAllOfTheirNetsSheGivesUpWhenTheyPullOutTheirWeaponsAndPrepareToKillHer");
                     RGmsg.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.Girl,
                         "[GirlName]WasSurroundedBy[GangName]AndGaveUpWithoutAnymoreOfAFight",
                         new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", gang.Name) });
                     captured = true;
                 }
             }
 
-            gang.m_Events.AddMessage(recaptureEven.ToString(), ImageTypes.PROFILE, gangEventType);
+            gang.m_Events.AddMessage(recaptureEven.ToString(), ImageType.PROFILE, gangEventType);
             if (captured)
             {
-                runnaway.m_Events.AddMessage(RGmsg.ToString(), girlImageType, EventType.GANG);
+                runnaway.Events.AddMessage(RGmsg.ToString(), girlImageType, EventType.Gang);
                 runnaway.m_RunAway = 0;
                 Game.Brothels.RemoveGirlFromRunaways(runnaway);
                 Game.Dungeon.AddGirl(runnaway, DungeonReasons.GIRLRUNAWAY);
@@ -2410,18 +2390,18 @@ namespace WMaster.Manager
             Game.Player.customerfear(1);
             Game.Player.suspicion(1);
             extortionEven.AppendLineFormat(
-                LocalString.ResourceStringCategory.Global,
+                LocalString.ResourceStringCategory.GangMission,
                 "Gang[GangName]IsCapturingTerritory",
                 new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
 
             // Case 1:  Neutral businesses still around
             int numB = Game.Rivals.GetNumBusinesses();
-            int uncontrolled = Constants.TOWN_NUMBUSINESSES - m_BusinessesExtort - numB;
+            int uncontrolled = Constants.TOWN_NUMBUSINESSES - m_BusinessesExtorted - numB;
             int n = 0;
             int trycount = 1;
             if (uncontrolled > 0)
             {
-                trycount += WMRand.Random() % 5; // 1-5
+                trycount += WMRand.Random(5); // 1-5
                 while (uncontrolled > 0 && trycount > 0)
                 {
                     trycount--;
@@ -2448,43 +2428,33 @@ namespace WMaster.Manager
 
                 if (n == 0)
                 {
-                    extortionEven.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "TheyFailToGainAnyMoreNeutralTerritories");
+                    extortionEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheyFailToGainAnyMoreNeutralTerritories");
                 }
                 else if (n == 1)
                 {
-                    extortionEven.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "YouGainControlOfOneMoreNeutralTerritories");
+                    extortionEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "YouGainControlOfOneMoreNeutralTerritories");
                 }
                 else
                 {
                     extortionEven.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YouGainControlOf[Number]MoreNeutralTerritory",
                         new List<FormatStringParameter>() { new FormatStringParameter("Number", n) });
                 }
-                m_BusinessesExtort += n;
-                Game.Gold.extortion(n * 20);
+                m_BusinessesExtorted += n;
+                Game.Gold.Extortion(n * 20);
 
                 if (uncontrolled <= 0)
                 {
-                    extortionEven.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "ThereAreNoMoreUncontrolledBusinessesLeft");
+                    extortionEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "ThereAreNoMoreUncontrolledBusinessesLeft");
                 }
                 if (uncontrolled == 1)
                 {
-                    extortionEven.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "ThereIsOneUncontrolledBusinessesLeft");
+                    extortionEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "ThereIsOneUncontrolledBusinessesLeft");
                 }
                 else
                 {
-                    extortionEven.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "ThereAreUncontrolledBusinessesLeft");
+                    extortionEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "ThereAreUncontrolledBusinessesLeft");
                 }
             }
             else // Case 2: Steal bussinesses away from rival if no neutral businesses left
@@ -2493,59 +2463,49 @@ namespace WMaster.Manager
                 if (rival != null && rival.m_BusinessesExtort > 0)
                 {
                     extortionEven.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
-                        "TheyStormIntoYourRival[[:RivalName:]]sTerritory",
+                        LocalString.ResourceStringCategory.GangMission,
+                        "TheyStormIntoYourRival[RivalName]sTerritory",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                     bool defended = false;
                     if (rival.m_NumGangs > 0)
                     {
                         Gang rival_gang = GetTempGang(rival.m_Power);
                         defended = true;
-                        extortionEven.AppendLine(
-                            LocalString.ResourceStringCategory.Global,
-                            "YourMenRunIntoOneOfTheirGangsAndABrawlBreaksOut");
+                        extortionEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenRunIntoOneOfTheirGangsAndABrawlBreaksOut");
 
                         if (GangBrawl(gang, rival_gang, false))
                         {
-                            trycount += WMRand.Random() % 3;
+                            trycount += WMRand.Random(3);
 
                             if (rival_gang.MemberNum <= 0)
                             {
-                                extortionEven.Append(
-                                    LocalString.ResourceStringCategory.Global,
-                                    "TheyDestroyTheDefendersAnd");
+                                extortionEven.Append(LocalString.ResourceStringCategory.GangMission, "TheyDestroyTheDefendersAnd");
                                 rival.m_NumGangs--;
                             }
                             else
                             {
-                                extortionEven.Append(
-                                    LocalString.ResourceStringCategory.Global,
-                                    "TheyDefeatTheDefendersAnd");
+                                extortionEven.Append(LocalString.ResourceStringCategory.GangMission, "TheyDefeatTheDefendersAnd");
                             }
                         }
                         else
                         {
-                            extortionEven.AppendLine(
-                                LocalString.ResourceStringCategory.Global,
-                                "YourGangHasBeenDefeatedAndFailToTakeControlOfAnyNewTerritory");
-                            gang.m_Events.AddMessage(extortionEven.ToString(), ImageTypes.PROFILE, EventType.GANG);
+                            extortionEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourGangHasBeenDefeatedAndFailToTakeControlOfAnyNewTerritory");
+                            gang.m_Events.AddMessage(extortionEven.ToString(), ImageType.PROFILE, EventType.Gang);
                             return false;
                         }
                         rival_gang = null;
                     }
                     else // Rival has no gangs
                     {
-                        extortionEven.Append(
-                            LocalString.ResourceStringCategory.Global,
-                            "TheyFacedNoOppositionAsthey");
-                        trycount += WMRand.Random() % 5;
+                        extortionEven.Append(LocalString.ResourceStringCategory.GangMission, "TheyFacedNoOppositionAsthey");
+                        trycount += WMRand.Random(5);
                     }
 
                     while (trycount > 0 && rival.m_BusinessesExtort > 0)
                     {
                         trycount--;
                         rival.m_BusinessesExtort--;
-                        m_BusinessesExtort++;
+                        m_BusinessesExtorted++;
                         n++;
                     }
 
@@ -2554,34 +2514,30 @@ namespace WMaster.Manager
                         if (n == 1)
                         {
                             extortionEven.AppendLineFormat(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.GangMission,
                                 "TookOverOneOf[RivalName]sTerritory",
                                 new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                         }
                         else
                         {
                             extortionEven.AppendLineFormat(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.GangMission,
                                 "TookOver[Number]Of[RivalName]sTerritories",
                                 new List<FormatStringParameter>() { new FormatStringParameter("Number", n), new FormatStringParameter("RivalName", rival.m_Name) });
                         }
                     }
                     else
                     {
-                        extortionEven.AppendLine(
-                            LocalString.ResourceStringCategory.Global,
-                            "LeftErrorNoTerritoriesGainedButShouldHaveBeen");
+                        extortionEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "LeftErrorNoTerritoriesGainedButShouldHaveBeen");
                     }
                 }
                 else
                 {
-                    extortionEven.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "YouFailToTakeControlOfAnyOfNewTerritories");
+                    extortionEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "YouFailToTakeControlOfAnyOfNewTerritories");
                 }
             }
 
-            gang.m_Events.AddMessage(extortionEven.ToString(), ImageTypes.PROFILE, EventType.GANG);
+            gang.m_Events.AddMessage(extortionEven.ToString(), ImageType.PROFILE, EventType.Gang);
 
             if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.EXTORTXNEWBUSINESS))
             {
@@ -2602,7 +2558,7 @@ namespace WMaster.Manager
         {
             LocalString pettyTheftEven = new LocalString();
             pettyTheftEven.AppendLineFormat(
-                LocalString.ResourceStringCategory.Global,
+                LocalString.ResourceStringCategory.GangMission,
                 "Gang[GangName]IsPerformingPettyTheft",
                 new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
 
@@ -2623,30 +2579,24 @@ namespace WMaster.Manager
                 if (rival != null && rival.m_NumGangs > 0)
                 {
                     pettyTheftEven.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "YourMenRunIntoAGangFrom[RivalName]AndABrawlBreaksOut",
                         new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 }
                 else
                 {
-                    pettyTheftEven.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "YourMenRunIntoGroupOfThugsFromTheStreetsAndABrawlBreaksOut");
+                    pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenRunIntoGroupOfThugsFromTheStreetsAndABrawlBreaksOut");
                 }
 
                 Gang rivalGang = GetTempGang();
                 if (GangBrawl(gang, rivalGang, false))
                 {
-                    pettyTheftEven.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "YourMenWin");
+                    pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenWin");
                 }
                 else
                 {
-                    pettyTheftEven.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "YourMenLoseTheFight");
-                    gang.m_Events.AddMessage(pettyTheftEven.ToString(), ImageTypes.PROFILE, EventType.GANG);
+                    pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenLoseTheFight");
+                    gang.m_Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
                     return false;
                 }
                 if (rival != null && rival.m_NumGangs > 0 && rivalGang.MemberNum <= 0)
@@ -2666,86 +2616,76 @@ namespace WMaster.Manager
                 }
                 if (girl != null)
                 {
-                    string girlName = girl.m_Realname;
+                    string girlName = girl.Realname;
                     LocalString NGmsg = new LocalString();
-                    ImageTypes girlImageType = ImageTypes.PROFILE;
-                    EventType eventType = EventType.GANG;
-                    EventType gangEventType = EventType.GANG;
+                    ImageType girlImageType = ImageType.PROFILE;
+                    EventType eventType = EventType.Gang;
+                    EventType gangEventType = EventType.Gang;
                     DungeonReasons dungeonReason = DungeonReasons.GIRLKIDNAPPED;
                     int damagedNets = 0;
 
                     // `J` make sure she is ready for a fight
                     if (girl.combat() < 50)
                     {
-                        girl.combat(10 + WMRand.Random() % 30);
+                        girl.combat(10 + WMRand.Random(30));
                     }
                     if (girl.magic() < 50)
                     {
-                        girl.magic(10 + WMRand.Random() % 20);
+                        girl.magic(10 + WMRand.Random(20));
                     }
                     if (girl.constitution() < 50)
                     {
-                        girl.constitution(10 + WMRand.Random() % 20);
+                        girl.constitution(10 + WMRand.Random(20));
                     }
                     if (girl.agility() < 50)
                     {
-                        girl.agility(10 + WMRand.Random() % 20);
+                        girl.agility(10 + WMRand.Random(20));
                     }
                     if (girl.confidence() < 50)
                     {
-                        girl.agility(10 + WMRand.Random() % 40);
+                        girl.agility(10 + WMRand.Random(40));
                     }
                     girl.health(100);
                     girl.tiredness(-100);
 
-                    pettyTheftEven.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "YourMenAreConfrontedByAMaskedVigilante");
+                    pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenAreConfrontedByAMaskedVigilante");
                     if (!GangCombat(girl, gang))
                     {
                         gangMemberNumLost += gangMemberNumStart - gang.MemberNum;
-                        int goldWin = girl.m_Money > 0 ? girl.m_Money : WMRand.Random() % 100 + 1; // take all her money or 1-100 if she has none
+                        int goldWin = girl.m_Money > 0 ? girl.m_Money : WMRand.Random(100) + 1; // take all her money or 1-100 if she has none
                         girl.m_Money = 0;
-                        Game.Gold.petty_theft(goldWin);
+                        Game.Gold.PettyTheft(goldWin);
 
                         if (gangMemberNumLost > gangMemberNumStart / 2)
                         {
-                            pettyTheftEven.AppendLine(
-                                LocalString.ResourceStringCategory.Global,
-                                "SheFightsWellButYourMenStillManageToCaptureHer");
+                            pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "SheFightsWellButYourMenStillManageToCaptureHer");
                         }
                         else if (gangMemberNumLost == 0)
                         {
-                            pettyTheftEven.AppendLine(
-                                LocalString.ResourceStringCategory.Global,
-                                "SheFightsYourMenButLosesQuickly");
+                            pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "SheFightsYourMenButLosesQuickly");
                         }
                         else if (gangMemberNumLost == 1)
                         {
-                            pettyTheftEven.AppendLine(
-                                LocalString.ResourceStringCategory.Global,
-                                "SheFightsYourMenButTheyTakeHerDownWithOnlyOneCasualty");
+                            pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "SheFightsYourMenButTheyTakeHerDownWithOnlyOneCasualty");
                         }
                         else
                         {
-                            pettyTheftEven.AppendLine(
-                                LocalString.ResourceStringCategory.Global,
-                                "SheFightsYourMenButTheyTakeHerDownWithOnlyAFewCasualties");
+                            pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "SheFightsYourMenButTheyTakeHerDownWithOnlyAFewCasualties");
                         }
                         pettyTheftEven.AppendLineFormat(
-                            LocalString.ResourceStringCategory.Global,
+                            LocalString.ResourceStringCategory.GangMission,
                             "TheyUnmask[GirlName]TakeAllHerGold[Number]FromHerAndDragHerToTheDungeon",
                             new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("Number", goldWin) });
-                        girlImageType = ImageTypes.DEATH;
+                        girlImageType = ImageType.DEATH;
                         dungeonReason = DungeonReasons.GIRLKIDNAPPED;
                         girl.m_Stats[(int)EnumStats.OBEDIENCE] = 0;
-                        girl.add_trait("Kidnapped", 5 + WMRand.Random() % 11);
+                        girl.add_trait("Kidnapped", 5 + WMRand.Random(11));
 
                         // TODO : What to do with NGmsg ?!?
                         NGmsg.AppendLineFormat(
-                            LocalString.ResourceStringCategory.Global,
+                            LocalString.ResourceStringCategory.Girl,
                             "[GirlName]TriedToStop[GangName]FromComittingPettyTheftButLostSheWasDraggedBackToTheDungeon",
-                            new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.m_Realname), new FormatStringParameter("GangName", gang.Name) });
+                            new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.Realname), new FormatStringParameter("GangName", gang.Name) });
                         BoostGangSkill(gang.Skills[EnumSkills.COMBAT], 1);
 
                         if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.STEALXAMOUNTOFGOLD))
@@ -2760,10 +2700,8 @@ namespace WMaster.Manager
                     }
                     else
                     {
-                        pettyTheftEven.AppendLine(
-                            LocalString.ResourceStringCategory.Global,
-                            "SheDefeatsYourMenAndDisappearsBackIntoTheShadows");
-                        gang.m_Events.AddMessage(pettyTheftEven.ToString(), ImageTypes.PROFILE, EventType.GANG);
+                        pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "SheDefeatsYourMenAndDisappearsBackIntoTheShadows");
+                        gang.m_Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
                         return false;
                     }
                 }
@@ -2772,7 +2710,7 @@ namespace WMaster.Manager
             int difficulty = Math.Max(0, WMRand.Bell(1, 6) - 2); // 0-4
             string who = LocalString.GetString(LocalString.ResourceStringCategory.Global, "WhoPeople");
             int fightBackChance = 0;
-            int numberOfTargets = 2 + WMRand.Random() % 9;
+            int numberOfTargets = 2 + WMRand.Random(9);
             int targetFight = numberOfTargets;
             int gold = 0;
             int goldBase = 1;
@@ -2812,7 +2750,7 @@ namespace WMaster.Manager
 
             for (int i = 0; i < numberOfTargets; i++)
             {
-                gold += WMRand.Random() % goldBase;
+                gold += WMRand.Random(goldBase);
             }
 
             if (WMRand.Percent(fightBackChance)) // determine losses if they fight back
@@ -2823,7 +2761,7 @@ namespace WMaster.Manager
                     {
                         targetFight--; // you win so lower their numbers
                     }
-                    else if (WMRand.Percent(WMRand.Random() % 11 + (difficulty * 10))) // or they win
+                    else if (WMRand.Percent(WMRand.Random(11) + (difficulty * 10))) // or they win
                     {
                         if (gang.HealLimit > 0)
                         {
@@ -2845,7 +2783,7 @@ namespace WMaster.Manager
             }
 
             pettyTheftEven.AppendLineFormat(
-                LocalString.ResourceStringCategory.Global,
+                LocalString.ResourceStringCategory.GangMission,
                 "YourGangRobs[NumberWho][Who]AndGet[NumberGold]GoldFromThem",
                 new List<FormatStringParameter>() {
                     new FormatStringParameter("NumberWho", numberOfTargets),
@@ -2857,7 +2795,7 @@ namespace WMaster.Manager
                 if (gangMemberNumLost == 1)
                 {
                     pettyTheftEven.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.Gang,
                         "[GangName]LostOneMan",
                         new List<FormatStringParameter>() {
                             new FormatStringParameter("GangName", gang.Name)
@@ -2866,7 +2804,7 @@ namespace WMaster.Manager
                 else
                 {
                     pettyTheftEven.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.Gang,
                         "[GangName]Lost[Number]Men",
                         new List<FormatStringParameter>() {
                             new FormatStringParameter("GangName", gang.Name),
@@ -2875,9 +2813,9 @@ namespace WMaster.Manager
                 }
             }
 
-            gang.m_Events.AddMessage(pettyTheftEven.ToString(), ImageTypes.PROFILE, EventType.GANG);
+            gang.m_Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
 
-            Game.Gold.petty_theft(gold);
+            Game.Gold.PettyTheft(gold);
 
             if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.STEALXAMOUNTOFGOLD))
             {
@@ -2902,46 +2840,46 @@ namespace WMaster.Manager
             bool fightRival = false;
             cRival rival = null;
             Gang defenders = null;
-            string place = LocalString.GetString(LocalString.ResourceStringCategory.Global, "ThievePlace");
+            string place = LocalString.GetString(LocalString.ResourceStringCategory.Global, "PlacePlace");
             int defenceChance = 0;
             int gold = 1;
             int difficulty = Math.Max(0, WMRand.Bell(0, 6) - 2); // 0-4
 
             if (difficulty <= 0)
             {
-                place = LocalString.GetString(LocalString.ResourceStringCategory.Global, "ThieveSmallShop");
+                place = LocalString.GetString(LocalString.ResourceStringCategory.Global, "PlaceSmallShop");
                 defenceChance = 10;
-                gold += 10 + WMRand.Random() % 290;
+                gold += 10 + WMRand.Random(290);
                 difficulty = 0;
             }
             if (difficulty == 1)
             {
-                place = LocalString.GetString(LocalString.ResourceStringCategory.Global, "ThieveSmithy");
+                place = LocalString.GetString(LocalString.ResourceStringCategory.Global, "PlaceSmithy");
                 defenceChance = 30;
-                gold += 50 + WMRand.Random() % 550;
+                gold += 50 + WMRand.Random(550);
             }
             if (difficulty == 2)
             {
-                place = LocalString.GetString(LocalString.ResourceStringCategory.Global, "ThieveJeweler");
+                place = LocalString.GetString(LocalString.ResourceStringCategory.Global, "PlaceJeweler");
                 defenceChance = 50;
-                gold += 200 + WMRand.Random() % 800;
+                gold += 200 + WMRand.Random(800);
             }
             if (difficulty == 3)
             {
-                place = LocalString.GetString(LocalString.ResourceStringCategory.Global, "ThieveTradeCaravan");
+                place = LocalString.GetString(LocalString.ResourceStringCategory.Global, "PlaceTradeCaravan");
                 defenceChance = 70;
-                gold += 500 + WMRand.Random() % 1500;
+                gold += 500 + WMRand.Random(1500);
             }
             if (difficulty >= 4)
             {
-                place = LocalString.GetString(LocalString.ResourceStringCategory.Global, "ThieveBank");
+                place = LocalString.GetString(LocalString.ResourceStringCategory.Global, "PlaceBank");
                 defenceChance = 90;
-                gold += 1000 + WMRand.Random() % 4000;
+                gold += 1000 + WMRand.Random(4000);
                 difficulty = 4;
             }
 
             grandTheftEvent.AppendLineFormat(
-                LocalString.ResourceStringCategory.Global,
+                LocalString.ResourceStringCategory.GangMission,
                 "Gang[GangName]GoesOutToRobA[ThievePlace]",
                 new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name), new FormatStringParameter("ThievePlace", place) });
 
@@ -2958,8 +2896,8 @@ namespace WMaster.Manager
                     defenders = GetTempGang(rival.m_Power);
 
                     grandTheftEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
-                        "The[ThievePlace]IsGuardedBAGangFrom[RivalName]",
+                        LocalString.ResourceStringCategory.GangMission,
+                        "The[ThievePlace]IsGuardedByAGangFrom[RivalName]",
                         new List<FormatStringParameter>() { new FormatStringParameter("ThievePlace", place), new FormatStringParameter("RivalName", rival.m_Name) });
                 }
             }
@@ -2967,14 +2905,14 @@ namespace WMaster.Manager
             {
                 defenders = GetTempGang(difficulty * 3);
                 grandTheftEvent.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.GangMission,
                     "The[ThievePlace]HasItsOwnGuards",
                     new List<FormatStringParameter>() { new FormatStringParameter("ThievePlace", place) });
             }
             if (defenders == null)
             {
                 grandTheftEvent.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.GangMission,
                     "The[ThievePlace]IsUnguarded",
                     new List<FormatStringParameter>() { new FormatStringParameter("ThievePlace", place) });
             }
@@ -2983,15 +2921,11 @@ namespace WMaster.Manager
             {
                 if (!GangBrawl(gang, defenders, false))
                 {
-                    grandTheftEvent.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "YourMenLoseTheFight");
-                    gang.m_Events.AddMessage(grandTheftEvent.ToString(), ImageTypes.PROFILE, EventType.DANGER);
+                    grandTheftEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenLoseTheFight");
+                    gang.m_Events.AddMessage(grandTheftEvent.ToString(), ImageType.PROFILE, EventType.Danger);
                     return false;
                 }
-                    grandTheftEvent.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "YourMenWin");
+                grandTheftEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenWin");
             }
 
             if (fightRival && defenders.MemberNum <= 0)
@@ -3002,7 +2936,7 @@ namespace WMaster.Manager
 
             // rewards
             grandTheftEvent.AppendLineFormat(
-                LocalString.ResourceStringCategory.Global,
+                LocalString.ResourceStringCategory.GangMission,
                 "TheyGetAwayWith[Number]GoldFromThe[ThievePlace]",
                 new List<FormatStringParameter>() { new FormatStringParameter("Number", gold), new FormatStringParameter("ThievePlace", place) });
 
@@ -3011,8 +2945,8 @@ namespace WMaster.Manager
 
             Game.Player.suspicion(gold / 1000);
 
-            Game.Gold.grand_theft(gold);
-            gang.m_Events.AddMessage(grandTheftEvent.ToString(), ImageTypes.PROFILE, EventType.GANG);
+            Game.Gold.GrandTheft(gold);
+            gang.m_Events.AddMessage(grandTheftEvent.ToString(), ImageType.PROFILE, EventType.Gang);
 
             if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.STEALXAMOUNTOFGOLD))
             {
@@ -3032,7 +2966,7 @@ namespace WMaster.Manager
         {
             LocalString kidnappMissionEvent = new LocalString();
             kidnappMissionEvent.AppendLineFormat(
-                LocalString.ResourceStringCategory.Global,
+                LocalString.ResourceStringCategory.GangMission,
                 "Gang[GangName]IsKidnappingGirls",
                 new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
             bool captured = false;
@@ -3048,11 +2982,11 @@ namespace WMaster.Manager
                         return true; // not sure if they got the girl from the script but assume they do.
                     }
 
-                    string girlName = girl.m_Realname;
+                    string girlName = girl.Realname;
                     LocalString NGmsg = new LocalString();
-                    ImageTypes girlImageType = ImageTypes.PROFILE;
-                    EventType eventType = EventType.GANG;
-                    EventType gangEventType = EventType.GANG;
+                    ImageType girlImageType = ImageType.PROFILE;
+                    EventType eventType = EventType.Gang;
+                    EventType gangEventType = EventType.Gang;
                     DungeonReasons dungeonReason = DungeonReasons.GIRLKIDNAPPED;
                     int damagedNets = 0;
 
@@ -3066,11 +3000,11 @@ namespace WMaster.Manager
                     if (WMRand.Percent(Math.Min(75, gang.Charisma))) // convince her
                     {
                         kidnappMissionEvent.AppendLineFormat(
-                           LocalString.ResourceStringCategory.Global,
+                           LocalString.ResourceStringCategory.GangMission,
                            "YourMenFindAGirl[GirlName]AndConvinceHerThatSheShouldWorkForYou",
                            new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName) });
                         NGmsg.AppendLineFormat(
-                           LocalString.ResourceStringCategory.Global,
+                           LocalString.ResourceStringCategory.Girl,
                            "[GirlName]WasTalkedIntoWorkingForYouBy[GangName]",
                            new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", gang.Name) });
                         dungeonReason = DungeonReasons.NEWGIRL;
@@ -3088,7 +3022,7 @@ namespace WMaster.Manager
                     if (!captured && gang.NetLimit > 0) // try to capture using net
                     {
                         kidnappMissionEvent.AppendLineFormat(
-                           LocalString.ResourceStringCategory.Global,
+                           LocalString.ResourceStringCategory.GangMission,
                            "YourMenFindAGirl[GirlName]AndTryToCatchHerInTheirNets",
                            new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName) });
                         int tries = 0;
@@ -3123,38 +3057,38 @@ namespace WMaster.Manager
                                 if (gang.NetLimit == 0)
                                 {
                                     kidnappMissionEvent.AppendLineFormat(
-                                       LocalString.ResourceStringCategory.Global,
+                                       LocalString.ResourceStringCategory.GangMission,
                                        "[GirlName]ManagedToDamage[Number]OfTheirNetsBeforeTheyFinallyCaughtHerInTheTatteredRemainsOfTheirLastNet",
                                        new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("Number", damagedNets) });
                                 }
                                 else if (gang.NetLimit == 1)
                                 {
                                     kidnappMissionEvent.AppendLineFormat(
-                                       LocalString.ResourceStringCategory.Global,
+                                       LocalString.ResourceStringCategory.GangMission,
                                        "[GirlName]ManagedToDamage[Number]OfTheirNetsBeforeTheyFinallyCaughtHerInTheirLastNet",
                                        new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("Number", damagedNets) });
                                 }
                                 else
                                 {
                                     kidnappMissionEvent.AppendLineFormat(
-                                       LocalString.ResourceStringCategory.Global,
+                                       LocalString.ResourceStringCategory.GangMission,
                                        "[GirlName]ManagedToDamage[Number]OfTheirNetsBeforeTheyFinallyCaughtHerInTheirNets",
                                        new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("Number", damagedNets) });
                                 }
                             }
                             kidnappMissionEvent.AppendLine(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.GangMission,
                                 "SheStrugglesAgainstTheNetYourMenUseButItIsPointlessSheIsInYourDungeonNow");
-                            girlImageType = ImageTypes.DEATH;
+                            girlImageType = ImageType.DEATH;
                             dungeonReason = DungeonReasons.GIRLKIDNAPPED;
                             girl.m_Stats[(int)EnumStats.OBEDIENCE] = 0;
-                            girl.add_trait("Kidnapped", 5 + WMRand.Random() % 11);
+                            girl.add_trait("Kidnapped", 5 + WMRand.Random(11));
                             kidnappMissionEvent.AppendLineFormat(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.GangMission,
                                 "[GirlName]ManagedToDamage[Number]OfTheirNetsBeforeTheyFinallyCaughtHerInTheirLastNet",
                                 new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("Number", damagedNets) });
                             NGmsg.AppendLineFormat(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.Girl,
                                 "[GirlName]WasCapturedInANetAndDraggedBackToTheDungeonBy[GangName]",
                                 new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", gang.Name) });
                             BoostGangSkill(gang.Stats[EnumStats.INTELLIGENCE], 2);
@@ -3162,7 +3096,7 @@ namespace WMaster.Manager
                         else
                         {
                             kidnappMissionEvent.AppendLineFormat(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.GangMission,
                                 "[GirlName]ManagedToDamageAllOfTheirNetsSoTheyHaveToDoThingsTheHardWay",
                                 new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName) });
                         }
@@ -3174,85 +3108,79 @@ namespace WMaster.Manager
                             if (damagedNets == 0)
                             {
                                 kidnappMissionEvent.AppendLineFormat(
-                                    LocalString.ResourceStringCategory.Global,
+                                    LocalString.ResourceStringCategory.GangMission,
                                     "YourMenFindAGirl[GirlName]AndAttemptToKidnapHer",
                                     new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName) });
                             }
                             if (!GangCombat(girl, gang))
                             {
-                                girlImageType = ImageTypes.DEATH;
+                                girlImageType = ImageType.DEATH;
                                 dungeonReason = DungeonReasons.GIRLKIDNAPPED;
                                 girl.m_Stats[(int)EnumStats.OBEDIENCE] = 0;
-                                girl.add_trait("Kidnapped", 10 + WMRand.Random() % 11);
-                                kidnappMissionEvent.AppendLine(
-                                    LocalString.ResourceStringCategory.Global,
-                                    "SheFightsBackButYourMenSucceedInKidnappingHer");
+                                girl.add_trait("Kidnapped", 10 + WMRand.Random(11));
+                                kidnappMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "SheFightsBackButYourMenSucceedInKidnappingHer");
                                 NGmsg.AppendLineFormat(
-                                    LocalString.ResourceStringCategory.Global,
+                                    LocalString.ResourceStringCategory.Girl,
                                     "[GirlName]FoughtWith[GangName]ButLostSheWasDraggedBackToTheDungeon",
-                                    new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.m_Realname), new FormatStringParameter("GangName", gang.Name) });
+                                    new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.Realname), new FormatStringParameter("GangName", gang.Name) });
                                 BoostGangSkill(gang.Skills[EnumSkills.COMBAT], 1);
                                 captured = true;
                             }
                             else
                             {
                                 kidnappMissionEvent.AppendLine(
-                                    LocalString.ResourceStringCategory.Global,
+                                    LocalString.ResourceStringCategory.GangMission,
                                     "TheGirlFightsBackAndDefeatsYourMenBeforeEscapingIntoTheStreets");
-                                gangEventType = EventType.DANGER;
+                                gangEventType = EventType.Danger;
                             }
                         }
                         else if (damagedNets == 0)
                         {
                             dungeonReason = DungeonReasons.GIRLKIDNAPPED;
-                            girl.add_trait("Kidnapped", 3 + WMRand.Random() % 8);
+                            girl.add_trait("Kidnapped", 3 + WMRand.Random(8));
                             kidnappMissionEvent.AppendLineFormat(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.GangMission,
                                 "[GangName]KidnapHerSuccessfullyWithoutAFussSheIsInYourDungeonNow",
                                 new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
                             NGmsg.AppendLineFormat(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.Girl,
                                 "[GirlName]WasSurroundedBy[GangName]AndGaveUpWithoutAFight",
-                                new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.m_Realname), new FormatStringParameter("GangName", gang.Name) });
+                                new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.Realname), new FormatStringParameter("GangName", gang.Name) });
                             captured = true;
                         }
                         else
                         {
                             dungeonReason = DungeonReasons.GIRLKIDNAPPED;
-                            girl.add_trait("Kidnapped", 5 + WMRand.Random() % 8);
+                            girl.add_trait("Kidnapped", 5 + WMRand.Random(8));
                             kidnappMissionEvent.AppendLine(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.GangMission,
                                 "AfterDodgingAllOfTheirNetsSheGivesUpWhenTheyPullOutTheirWeaponsAndPrepareToKillHer");
                             NGmsg.AppendLineFormat(
-                                LocalString.ResourceStringCategory.Global,
+                                LocalString.ResourceStringCategory.Girl,
                                 "[GirlName]WasSurroundedBy[GangName]AndGaveUpWithoutAnymoreOfAFight",
-                                new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.m_Realname), new FormatStringParameter("GangName", gang.Name) });
+                                new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.Realname), new FormatStringParameter("GangName", gang.Name) });
                             captured = true;
                         }
                     }
 
                     if (captured)
                     {
-                        girl.m_Events.AddMessage(NGmsg.ToString(), girlImageType, eventType);
+                        girl.Events.AddMessage(NGmsg.ToString(), girlImageType, eventType);
                         Game.Dungeon.AddGirl(girl, dungeonReason);
                         BoostGangSkill(gang.Stats[EnumStats.INTELLIGENCE], 1);
                     }
-                    gang.m_Events.AddMessage(kidnappMissionEvent.ToString(), ImageTypes.PROFILE, gangEventType);
+                    gang.m_Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, gangEventType);
                 }
                 else
                 {
-                    kidnappMissionEvent.AppendLine(
-                        LocalString.ResourceStringCategory.Global,
-                        "TheyFailedToFindAnyGirlsToKidnap");
-                    gang.m_Events.AddMessage(kidnappMissionEvent.ToString(), ImageTypes.PROFILE, EventType.GANG);
+                    kidnappMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheyFailedToFindAnyGirlsToKidnap");
+                    gang.m_Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
                 }
             }
             else
             {
-                kidnappMissionEvent.AppendLine(
-                    LocalString.ResourceStringCategory.Global,
-                    "TheyFailedToFindAnyGirlsToKidnap");
-                gang.m_Events.AddMessage(kidnappMissionEvent.ToString(), ImageTypes.PROFILE, EventType.GANG);
+                kidnappMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheyFailedToFindAnyGirlsToKidnap");
+                gang.m_Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             }
             return captured;
         }
@@ -3269,13 +3197,13 @@ namespace WMaster.Manager
             LocalString catacombsMissionEvent = new LocalString();
             gang.HasSeenCombat = true;
             int num = gang.MemberNum;
-            catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+            catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                 "Gang[GangName]IsExploringTheCatacombs",
                 new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
 
             if (!m_ControlGangs) // use old code
             {
-                catacombsMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global, "YouTellThemToGetWhateverTheyCanFind");
+                catacombsMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "YouTellThemToGetWhateverTheyCanFind");
 
                 // determine losses
                 gang.HasSeenCombat = true;
@@ -3306,24 +3234,24 @@ namespace WMaster.Manager
                 {
                     if (num == gang.MemberNum)
                     {
-                        catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                        catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                             "All[Number]OfThemReturn",
                             new List<FormatStringParameter>() { new FormatStringParameter("Number", gang.MemberNum) });
                     }
                     else
                     {
-                        catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                        catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                             "[Number]OfThe[GangNumber]WhoWentOutReturn",
                             new List<FormatStringParameter>() { new FormatStringParameter("Number", gang.MemberNum), new FormatStringParameter("GangNumber", num) });
                     }
 
                     // determine loot
                     int gold = gang.MemberNum;
-                    gold += WMRand.Random() % (gang.MemberNum * 100);
-                    catacombsMissionEvent.AppendFormat(LocalString.ResourceStringCategory.Global,
+                    gold += WMRand.Random(gang.MemberNum * 100);
+                    catacombsMissionEvent.AppendFormat(LocalString.ResourceStringCategory.GangMission,
                         "TheyBringBackWithThem[Number]Gold",
                         new List<FormatStringParameter>() { new FormatStringParameter("Number", gold) });
-                    Game.Gold.catacomb_loot(gold);
+                    Game.Gold.CatacombLoot(gold);
 
                     int items = 0;
                     while (WMRand.Percent((gang.Intelligence / 2) + 30) && items <= (gang.MemberNum / 3)) // item chance
@@ -3388,8 +3316,7 @@ namespace WMaster.Manager
                             else
                             {
                                 quit = true;
-                                catacombsMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global,
-                                    "YourInventoryIsFull");
+                                catacombsMissionEvent.AppendLine(LocalString.ResourceStringCategory.Player, "YourInventoryIsFull");
                             }
                         }
 
@@ -3431,17 +3358,17 @@ namespace WMaster.Manager
                         if (unique)
                         {
                             girl++;
-                            catacombsMissionEvent.AppendFormat(LocalString.ResourceStringCategory.Global,
+                            catacombsMissionEvent.AppendFormat(LocalString.ResourceStringCategory.GangMission,
                                 "YourMenAlsoCapturedAGirlNamed[GirlName]",
-                                new List<FormatStringParameter>() { new FormatStringParameter("GirlName", ugirl.m_Realname) });
+                                new List<FormatStringParameter>() { new FormatStringParameter("GirlName", ugirl.Realname) });
 
                             // TODO : Need comprehention
                             ugirl.m_States &= ~(1 << (int)Status.CATACOMBS);
-                            ugirl.add_trait("Kidnapped", 2 + WMRand.Random() % 10);
-                            NGmsg.AppendFormat(LocalString.ResourceStringCategory.Global,
+                            ugirl.add_trait("Kidnapped", 2 + WMRand.Random(10));
+                            NGmsg.AppendFormat(LocalString.ResourceStringCategory.Girl,
                                 "[GirlName]WasCapturedInTheCatacombsBy[GangName]",
-                                new List<FormatStringParameter>() { new FormatStringParameter("GirlName", ugirl.m_Realname), new FormatStringParameter("GangName", gang.Name) });
-                            ugirl.m_Events.AddMessage(NGmsg.ToString(), ImageTypes.PROFILE, EventType.GANG);
+                                new List<FormatStringParameter>() { new FormatStringParameter("GirlName", ugirl.Realname), new FormatStringParameter("GangName", gang.Name) });
+                            ugirl.Events.AddMessage(NGmsg.ToString(), ImageType.PROFILE, EventType.Gang);
                             Game.Dungeon.AddGirl(ugirl, DungeonReasons.GIRLCAPTURED);
                         }
                         else
@@ -3450,19 +3377,18 @@ namespace WMaster.Manager
                             if (ugirl != null) // make sure a girl was returned
                             {
                                 girl++;
-                                catacombsMissionEvent.Append(LocalString.ResourceStringCategory.Global,
-                                    "YourMenAlsoCapturedAGirl");
-                                ugirl.add_trait("Kidnapped", 2 + WMRand.Random() % 10);
-                                NGmsg.AppendFormat(LocalString.ResourceStringCategory.Global,
+                                catacombsMissionEvent.Append(LocalString.ResourceStringCategory.GangMission, "YourMenAlsoCapturedAGirl");
+                                ugirl.add_trait("Kidnapped", 2 + WMRand.Random(10));
+                                NGmsg.AppendFormat(LocalString.ResourceStringCategory.Girl,
                                     "[GirlName]WasCapturedInTheCatacombsBy[GangName]",
-                                    new List<FormatStringParameter>() { new FormatStringParameter("GirlName", ugirl.m_Realname), new FormatStringParameter("GangName", gang.Name) });
-                                ugirl.m_Events.AddMessage(NGmsg.ToString(), ImageTypes.PROFILE, EventType.GANG);
+                                    new List<FormatStringParameter>() { new FormatStringParameter("GirlName", ugirl.Realname), new FormatStringParameter("GangName", gang.Name) });
+                                ugirl.Events.AddMessage(NGmsg.ToString(), ImageType.PROFILE, EventType.Gang);
                                 Game.Dungeon.AddGirl(ugirl, DungeonReasons.GIRLCAPTURED);
                             }
                         }
                     }
                     // `J` determine if they bring back any beasts
-                    int beasts = Math.Max(0, (WMRand.Random() % 5) - 2);
+                    int beasts = Math.Max(0, (WMRand.Random(5)) - 2);
                     if (girl == 0 && gang.MemberNum > 13)
                     {
                         beasts++;
@@ -3470,7 +3396,7 @@ namespace WMaster.Manager
                     if (beasts > 0 && WMRand.Percent(gang.MemberNum * 5))
                     {
                         catacombsMissionEvent.NewLine();
-                        catacombsMissionEvent.AppendFormat(LocalString.ResourceStringCategory.Global,
+                        catacombsMissionEvent.AppendFormat(LocalString.ResourceStringCategory.GangMission,
                             "YourMenAlsoBringBack[Number]Beasts",
                             new List<FormatStringParameter>() { new FormatStringParameter("Number", beasts) });
                         Game.Brothels.add_to_beasts(beasts);
@@ -3493,8 +3419,8 @@ namespace WMaster.Manager
                 // do the bring back loop
                 while (gang.MemberNum >= 1 && bringBackNum < gang.MemberNum * Math.Max(1, gang.Strength / 20))
                 {
-                    double choice = (WMRand.Random() % 10001) / 100.0;
-                    gold += WMRand.Random() % (gang.MemberNum * 20);
+                    double choice = WMRand.Random(10001) / 100.0;
+                    gold += WMRand.Random(gang.MemberNum * 20);
 
                     if (choice < m_GangGetsGirls) // get girl = 10 point
                     {
@@ -3561,7 +3487,7 @@ namespace WMaster.Manager
                             }
                             else if (WMRand.Percent(50))
                             {
-                                gold += 1 + WMRand.Random() % 200;
+                                gold += 1 + WMRand.Random(200);
                             }
                         }
                         else
@@ -3607,7 +3533,7 @@ namespace WMaster.Manager
                         if (!gotBeast) // fight it
                         {
                             // the last few members will runaway or allow the beast to run away so that the can still bring back what they have
-                            while (gang.MemberNum > 1 + WMRand.Random() % 3 && !gotBeast)
+                            while (gang.MemberNum > 1 + WMRand.Random(3) && !gotBeast)
                             {
                                 if (WMRand.Percent(Math.Min(90, gang.Combat)))
                                 {
@@ -3631,7 +3557,7 @@ namespace WMaster.Manager
                         }
                         if (gotBeast)
                         {
-                            int numbeasts = 1 + WMRand.Random() % 3;
+                            int numbeasts = 1 + WMRand.Random(3);
                             bringBackNum += numbeasts * 2;
                             totalBeast += numbeasts;
                         }
@@ -3651,23 +3577,23 @@ namespace WMaster.Manager
                 {
                     if (num == gang.MemberNum)
                     {
-                        catacombsMissionEvent.AppendFormat(LocalString.ResourceStringCategory.Global,
+                        catacombsMissionEvent.AppendFormat(LocalString.ResourceStringCategory.GangMission,
                             "All[Number]OfThemReturn",
                             new List<FormatStringParameter>() { new FormatStringParameter("Number", gang.MemberNum) });
                     }
                     else
                     {
-                        catacombsMissionEvent.AppendFormat(LocalString.ResourceStringCategory.Global,
+                        catacombsMissionEvent.AppendFormat(LocalString.ResourceStringCategory.GangMission,
                             "[Number]OfThe[GangNumber]WhoWentOutReturn",
                             new List<FormatStringParameter>() { new FormatStringParameter("Number", gang.MemberNum), new FormatStringParameter("GangNumber", num) });
                     }
 
                     if (gold > 0)
                     {
-                        catacombsMissionEvent.AppendFormat(LocalString.ResourceStringCategory.Global,
+                        catacombsMissionEvent.AppendFormat(LocalString.ResourceStringCategory.GangMission,
                             "TheyBringBackWithThem[Number]Gold",
                             new List<FormatStringParameter>() { new FormatStringParameter("Number", gold) });
-                        Game.Gold.catacomb_loot(gold);
+                        Game.Gold.CatacombLoot(gold);
                     }
 
                     // get catacomb girls (is "monster" if trait not human)
@@ -3675,12 +3601,11 @@ namespace WMaster.Manager
                     {
                         if (totalGirls == 1)
                         {
-                            catacombsMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global,
-                                "YourMenCapturedOneGirl");
+                            catacombsMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenCapturedOneGirl");
                         }
                         else
                         {
-                            catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                            catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                                 "YourMenCaptured[Number]Girls",
                                 new List<FormatStringParameter>() { new FormatStringParameter("Number", totalGirls) });
                         }
@@ -3699,19 +3624,18 @@ namespace WMaster.Manager
                             }
                             if (unique)
                             {
-                                catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                                    "[UniqueGirlName]Unique",
-                                    new List<FormatStringParameter>() { new FormatStringParameter("UniqueGirlName", ugirl.m_Realname) });
+                                catacombsMissionEvent.AppendLitteral("   " + ugirl.Realname);
+                                catacombsMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global, "Unique");
                        
                                 // TODO : Need comprehention
                                 ugirl.m_States &= ~(1 << (int)Status.CATACOMBS);
 
                                 LocalString NGmsg = new LocalString();
-                                ugirl.add_trait("Kidnapped", 2 + WMRand.Random() % 10);
-                                NGmsg.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                                    "[GirlName] was captured in the catacombs by [GangName]",
-                                    new List<FormatStringParameter>() { new FormatStringParameter("GirlName", ugirl.m_Realname), new FormatStringParameter("GangName", gang.Name) });
-                                ugirl.m_Events.AddMessage(NGmsg.ToString(), ImageTypes.PROFILE, EventType.GANG);
+                                ugirl.add_trait("Kidnapped", 2 + WMRand.Random(10));
+                                NGmsg.AppendLineFormat(LocalString.ResourceStringCategory.Girl,
+                                    "[GirlName]WasCapturedInTheCatacombsBy[GangName]",
+                                    new List<FormatStringParameter>() { new FormatStringParameter("GirlName", ugirl.Realname), new FormatStringParameter("GangName", gang.Name) });
+                                ugirl.Events.AddMessage(NGmsg.ToString(), ImageType.PROFILE, EventType.Gang);
                                 Game.Dungeon.AddGirl(ugirl, DungeonReasons.GIRLCAPTURED);
                             }
                             else
@@ -3719,15 +3643,13 @@ namespace WMaster.Manager
                                 ugirl = Game.Girls.CreateRandomGirl(0, false, false, false, true);
                                 if (ugirl != null) // make sure a girl was returned
                                 {
-                                    catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                                        "[GirlName]",
-                                        new List<FormatStringParameter>() { new FormatStringParameter("GirlName", ugirl.m_Realname) });
+                                    catacombsMissionEvent.AppendLineLitteral("   " + ugirl.Realname);
                                     LocalString NGmsg = new LocalString();
-                                    ugirl.add_trait("Kidnapped", 2 + WMRand.Random() % 10);
-                                    NGmsg.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                                        "[GirlName] was captured in the catacombs by [GangName]",
-                                        new List<FormatStringParameter>() { new FormatStringParameter("GirlName", ugirl.m_Realname), new FormatStringParameter("GangName", gang.Name) });
-                                    ugirl.m_Events.AddMessage(NGmsg.ToString(), ImageTypes.PROFILE, EventType.GANG);
+                                    ugirl.add_trait("Kidnapped", 2 + WMRand.Random(10));
+                                    NGmsg.AppendLineFormat(LocalString.ResourceStringCategory.Girl,
+                                        "[GirlName]WasCapturedInTheCatacombsBy[GangName]",
+                                        new List<FormatStringParameter>() { new FormatStringParameter("GirlName", ugirl.Realname), new FormatStringParameter("GangName", gang.Name) });
+                                    ugirl.Events.AddMessage(NGmsg.ToString(), ImageType.PROFILE, EventType.Gang);
                                     Game.Brothels.GetDungeon().AddGirl(ugirl, DungeonReasons.GIRLCAPTURED);
                                 }
                             }
@@ -3745,12 +3667,11 @@ namespace WMaster.Manager
                     {
                         if (totalItems == 1)
                         {
-                            catacombsMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global,
-                                "YourMenBringBackOneItem");
+                            catacombsMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenBringBackOneItem");
                         }
                         else
                         {
-                            catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                            catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                                 "YourMenBringBack[Number]Items",
                                 new List<FormatStringParameter>() { new FormatStringParameter("Number", totalItems) });
                         }
@@ -3762,9 +3683,7 @@ namespace WMaster.Manager
                             sInventoryItem temp = Game.Inventory.GetRandomCatacombItem();
                             if (temp != null)
                             {
-                                catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                                    "[ItemName]",
-                                    new List<FormatStringParameter>() { new FormatStringParameter("ItemName", temp.Name) });
+                                catacombsMissionEvent.AppendLineLitteral("   " + temp.Name);
                                 int curI = Game.Brothels.HasItem(temp.Name, -1);
                                 bool loop = true;
                                 while (loop)
@@ -3810,8 +3729,7 @@ namespace WMaster.Manager
                                 else
                                 {
                                     quit = true;
-                                    catacombsMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global,
-                                        "YourInventoryIsFull");
+                                    catacombsMissionEvent.AppendLine(LocalString.ResourceStringCategory.Player, "YourInventoryIsFull");
                                 }
                             }
                             if (quit)
@@ -3826,13 +3744,13 @@ namespace WMaster.Manager
                     {
                         if (totalGirls + totalItems > 0)
                         {
-                            catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                            catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                                 "YourMenAlsoBringBack[Number]Beasts",
                                 new List<FormatStringParameter>() { new FormatStringParameter("Number", totalBeast) });
                         }
                         else
                         {
-                            catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                            catacombsMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                                 "YourMenBringBack[Number]Beasts",
                                 new List<FormatStringParameter>() { new FormatStringParameter("Number", totalBeast) });
                         }
@@ -3840,7 +3758,7 @@ namespace WMaster.Manager
                     }
                 }
             }
-            gang.m_Events.AddMessage(catacombsMissionEvent.ToString(), ImageTypes.PROFILE, EventType.GANG);
+            gang.m_Events.AddMessage(catacombsMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             return true;
  
         }
@@ -3855,7 +3773,7 @@ namespace WMaster.Manager
         public bool ServiceMission(Gang gang)
         {
             LocalString serviceMissionEvent = new LocalString();
-            serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+            serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                 "Gang[GangName]SpendTheWeekHelpingOutTheCommunity",
                 new List<FormatStringParameter>() {new FormatStringParameter("GangName", gang.Name)});
 
@@ -3876,7 +3794,7 @@ namespace WMaster.Manager
             {
                 if (WMRand.Percent(percent))
                 {
-                    switch (WMRand.Random() % 9)
+                    switch (WMRand.Random(9))
                     {
                         case 0:
                             suspicion++;
@@ -3900,7 +3818,7 @@ namespace WMaster.Manager
                             magic++;
                             break;
                         case 7:
-                            gold += WMRand.Random() % 10 + 1;
+                            gold += WMRand.Random(10) + 1;
                             break;
                         default:
                             service++;
@@ -3921,18 +3839,15 @@ namespace WMaster.Manager
                 if (addNum <= 1)
                 {
                     addNum = 1;
-                    serviceMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global,
-                        "ALocalBoyDecidedToJoinYourGangToHelpOutTheirCommunity");
+                    serviceMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "ALocalBoyDecidedToJoinYourGangToHelpOutTheirCommunity");
                 }
                 else if (addNum == 2)
                 {
-                    serviceMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global,
-                        "TwoLocalsDecidedToJoinYourGangToHelpOutTheirCommunity");
+                    serviceMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TwoLocalsDecidedToJoinYourGangToHelpOutTheirCommunity");
                 }
                 else
                 {
-                    serviceMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global,
-                        "SomeLocalsDecidedToJoinYourGangToHelpOutTheirCommunity");
+                    serviceMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "SomeLocalsDecidedToJoinYourGangToHelpOutTheirCommunity");
                 }
                 gang.MemberNum += addNum;
             }
@@ -3940,11 +3855,11 @@ namespace WMaster.Manager
             if (WMRand.Percent(Math.Max(10, Math.Min(gang.MemberNum * 6, gang.Intelligence))))
             {
                 sBrothel brothel = Game.Brothels.GetRandomBrothel();
-                security = Math.Max(5 + WMRand.Random() % 26, gang.Intelligence / 4);
-                brothel.m_SecurityLevel += security;
-                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                security = Math.Max(5 + WMRand.Random(26), gang.Intelligence / 4);
+                brothel.SecurityLevel += security;
+                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                     "TheyCleanedUpAround[BrothelName]FixingLightsRemovingDebrisAndMakingSureTheAreaIsSecure",
-                    new List<FormatStringParameter>() { new FormatStringParameter("BrothelName", brothel.m_Name) });
+                    new List<FormatStringParameter>() { new FormatStringParameter("BrothelName", brothel.Name) });
             }
             if (WMRand.Percent(Math.Max(10, Math.Min(gang.MemberNum * 6, gang.Intelligence))))
             {
@@ -3952,98 +3867,85 @@ namespace WMaster.Manager
                 if (beasts <= 1)
                 {
                     beasts = 1;
-                    serviceMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global,
-                        "TheyRoundedUpAStrayBeastAndBroughtItToTheBrothel");
+                    serviceMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheyRoundedUpAStrayBeastAndBroughtItToTheBrothel");
                 }
                 else if (beasts == 2)
                 {
-                    serviceMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global,
-                        "TheyRoundedUpTwoStrayBeastsAndBroughtThemToTheBrothel");
+                    serviceMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheyRoundedUpTwoStrayBeastsAndBroughtThemToTheBrothel");
                 }
                 else
                 {
-                    serviceMissionEvent.AppendLine(LocalString.ResourceStringCategory.Global,
-                        "TheyRoundedUpSomeStrayBeastsAndBroughtThemToTheBrothel");
+                    serviceMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheyRoundedUpSomeStrayBeastsAndBroughtThemToTheBrothel");
                 }
             }
 
             if (security > 0)
             {
-                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "Security[Number]",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", security) });
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Brothel, "BrothelSecurity");
+                serviceMissionEvent.AppendLitteral(string.Format(" + {0}", security));
             }
             if (beasts > 0)
             {
-                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "Beasts[Number]",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", beasts) });
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "GlobalBeasts");
+                serviceMissionEvent.AppendLitteral(string.Format(" + {0}", beasts));
             }
             if (suspicion > 0)
             {
                 Game.Player.suspicion(-suspicion);
-                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "Suspicion[Number]",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", suspicion) });
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Player, "PlayerSuspicion");
+                serviceMissionEvent.AppendLitteral(string.Format(" + {0}", suspicion));
             }
             if (customerFear > 0)
             {
                 Game.Player.customerfear(-customerFear);
-                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "CustomerFear[Number]",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", customerFear) });
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Player, "PlayerCustomerFear");
+                serviceMissionEvent.AppendLitteral(string.Format(" + {0}", customerFear));
             }
             if (disposition > 0)
             {
                 Game.Player.disposition(disposition);
-                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "Disposition[Number]",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", disposition) });
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Player, "PlayerDisposition");
+                serviceMissionEvent.AppendLitteral(string.Format(" + {0}", disposition));
             }
             if (service > 0)
             {
                 gang.AdjustSkill(EnumSkills.SERVICE, service);
-                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "Service[Number]",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", service) });
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributService");
+                serviceMissionEvent.AppendLitteral(string.Format(" + {0}", service));
             }
             if (charisma > 0)
             {
                 gang.AdjustStat(EnumStats.CHARISMA, charisma);
-                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "Charisma[Number]",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", charisma) });
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributCharisma");
+                serviceMissionEvent.AppendLitteral(string.Format(" + {0}", charisma));
             }
             if (intelligence > 0)
             {
                 gang.AdjustStat(EnumStats.INTELLIGENCE, intelligence);
-                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "Intelligence[Number]",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", intelligence) });
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributIntelligence");
+                serviceMissionEvent.AppendLitteral(string.Format(" + {0}", intelligence));
             }
             if (agility > 0)
             {
                 gang.AdjustStat(EnumStats.AGILITY, agility);
-                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "Agility[Number]",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", agility) });
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributAgility");
+                serviceMissionEvent.AppendLitteral(string.Format(" + {0}", agility));
             }
             if (magic > 0)
             {
                 gang.AdjustSkill(EnumSkills.MAGIC, magic);
-                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "Magic[Number]",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", magic) });
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributMagic");
+                serviceMissionEvent.AppendLitteral(string.Format(" + {0}", magic));
             }
             if (gold > 0)
             {
-                Game.Gold.misc_credit(gold);
-                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                Game.Gold.MiscCredit(gold);
+                serviceMissionEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                     "TheyRecieved[Number]GoldInTipsFromGratefulPeople",
                     new List<FormatStringParameter>() { new FormatStringParameter("Number", gold) });
             }
 
-            gang.m_Events.AddMessage(serviceMissionEvent.ToString(), ImageTypes.PROFILE, EventType.GANG);
+            gang.m_Events.AddMessage(serviceMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             return true;
         }
 
@@ -4056,89 +3958,81 @@ namespace WMaster.Manager
         [Obsolete("Use gang.CurrentMission.DoTheJob() when GangMissionTraining is affected to gang", true)]
         public bool GangTraining(Gang gang)
         {
-            LocalString gangTrainingEvent = new LocalString();
-            gangTrainingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                "Gang[GangName]SpendTheWeekTrainingAndImprovingTheirSkills",
-                new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
+            //LocalString gangTrainingEvent = new LocalString();
+            //gangTrainingEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
+            //    "Gang[GangName]SpendTheWeekTrainingAndImprovingTheirSkills",
+            //    new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
 
-            int oldCombat = gang.Combat;
-            int oldMagic = gang.Magic;
-            int oldIntelligence = gang.Intelligence;
-            int oldAgility = gang.Agility;
-            int oldConstitution = gang.Constitution;
-            int oldCharisma = gang.Charisma;
-            int oldStrength = gang.Strength;
-            int oldService = gang.Service;
+            //int oldCombat = gang.Combat;
+            //int oldMagic = gang.Magic;
+            //int oldIntelligence = gang.Intelligence;
+            //int oldAgility = gang.Agility;
+            //int oldConstitution = gang.Constitution;
+            //int oldCharisma = gang.Charisma;
+            //int oldStrength = gang.Strength;
+            //int oldService = gang.Service;
 
-            List<IValuableAttribut> possibleSkills = new List<IValuableAttribut>();
-            possibleSkills.Add(gang.Skills[EnumSkills.COMBAT]);
-            possibleSkills.Add(gang.Skills[EnumSkills.MAGIC]);
-            possibleSkills.Add(gang.Stats[EnumStats.INTELLIGENCE]);
-            possibleSkills.Add(gang.Stats[EnumStats.AGILITY]);
-            possibleSkills.Add(gang.Stats[EnumStats.CONSTITUTION]);
-            possibleSkills.Add(gang.Stats[EnumStats.CHARISMA]);
-            possibleSkills.Add(gang.Stats[EnumStats.STRENGTH]);
-            possibleSkills.Add(gang.Skills[EnumSkills.SERVICE]);
+            //List<IValuableAttribut> possibleSkills = new List<IValuableAttribut>();
+            //possibleSkills.Add(gang.Skills[EnumSkills.COMBAT]);
+            //possibleSkills.Add(gang.Skills[EnumSkills.MAGIC]);
+            //possibleSkills.Add(gang.Stats[EnumStats.INTELLIGENCE]);
+            //possibleSkills.Add(gang.Stats[EnumStats.AGILITY]);
+            //possibleSkills.Add(gang.Stats[EnumStats.CONSTITUTION]);
+            //possibleSkills.Add(gang.Stats[EnumStats.CHARISMA]);
+            //possibleSkills.Add(gang.Stats[EnumStats.STRENGTH]);
+            //possibleSkills.Add(gang.Skills[EnumSkills.SERVICE]);
 
-            int count = (WMRand.Random() % 3) + 2; // get 2-4 potential skill/stats to boost
-            for (int i = 0; i < count; i++)
-            {
-                int boostCount = (WMRand.Random() % 3) + 1; // boost each 1-3 times
-                BoostGangRandomSkill(possibleSkills, 1, boostCount);
-            }
-            possibleSkills.Clear();
+            //int count = WMRand.Random(3) + 2; // get 2-4 potential skill/stats to boost
+            //for (int i = 0; i < count; i++)
+            //{
+            //    int boostCount = WMRand.Random(3) + 1; // boost each 1-3 times
+            //    BoostGangRandomSkill(possibleSkills, 1, boostCount);
+            //}
+            //possibleSkills.Clear();
 
-            if (gang.Skills[EnumSkills.COMBAT].Value > oldCombat)
-            {
-                gangTrainingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "[Number]Combat",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", gang.Skills[EnumSkills.COMBAT].Value - oldCombat) });
-            }
-            if (gang.Skills[EnumSkills.MAGIC].Value > oldMagic)
-            {
-                gangTrainingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "[Number]Magic",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", gang.Skills[EnumSkills.MAGIC].Value - oldMagic) });
-            }
-            if (gang.Stats[EnumStats.INTELLIGENCE].Value > oldIntelligence)
-            {
-                gangTrainingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "[Number]Intelligence",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", gang.Stats[EnumStats.INTELLIGENCE].Value - oldIntelligence) });
-            }
-            if (gang.Stats[EnumStats.AGILITY].Value > oldAgility)
-            {
-                gangTrainingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "[Number]Agility",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", gang.Stats[EnumStats.AGILITY].Value - oldAgility) });
-            }
-            if (gang.Stats[EnumStats.CONSTITUTION].Value > oldConstitution)
-            {
-                gangTrainingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "[Number]Toughness",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", gang.Stats[EnumStats.CONSTITUTION].Value - oldConstitution) });
-            }
-            if (gang.Stats[EnumStats.CHARISMA].Value > oldCharisma)
-            {
-                gangTrainingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "[Number]Charisma",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", gang.Stats[EnumStats.CHARISMA].Value - oldCharisma) });
-            }
-            if (gang.Stats[EnumStats.STRENGTH].Value > oldStrength)
-            {
-                gangTrainingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "[Number]Strength",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", gang.Stats[EnumStats.STRENGTH].Value - oldStrength) });
-            }
-            if (gang.Skills[EnumSkills.SERVICE].Value > oldService)
-            {
-                gangTrainingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
-                    "[Number]Service",
-                    new List<FormatStringParameter>() { new FormatStringParameter("Number", gang.Skills[EnumSkills.SERVICE].Value - oldService) });
-            }
+            //if (gang.Skills[EnumSkills.COMBAT].Value > oldCombat)
+            //{
+            //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Skills[EnumSkills.COMBAT].Value - oldCombat));
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributCombat");
+            //}
+            //if (gang.Skills[EnumSkills.MAGIC].Value > oldMagic)
+            //{
+            //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Skills[EnumSkills.MAGIC].Value - oldMagic));
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributMagic");
+            //}
+            //if (gang.Stats[EnumStats.INTELLIGENCE].Value > oldIntelligence)
+            //{
+            //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.INTELLIGENCE].Value - oldIntelligence));
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributIntelligence");
+            //}
+            //if (gang.Stats[EnumStats.AGILITY].Value > oldAgility)
+            //{
+            //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.AGILITY].Value - oldAgility));
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributAgility");
+            //}
+            //if (gang.Stats[EnumStats.CONSTITUTION].Value > oldConstitution)
+            //{
+            //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.CONSTITUTION].Value - oldConstitution));
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributToughness");
+            //}
+            //if (gang.Stats[EnumStats.CHARISMA].Value > oldCharisma)
+            //{
+            //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.CHARISMA].Value - oldCharisma));
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributCharisma");
+            //}
+            //if (gang.Stats[EnumStats.STRENGTH].Value > oldStrength)
+            //{
+            //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.STRENGTH].Value - oldStrength));
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributStrength");
+            //}
+            //if (gang.Skills[EnumSkills.SERVICE].Value > oldService)
+            //{
+            //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Skills[EnumSkills.SERVICE].Value - oldService));
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributService");
+            //}
 
-            gang.m_Events.AddMessage(gangTrainingEvent.ToString(), ImageTypes.PROFILE, EventType.GANG);
-            gang.HasSeenCombat = false;
+            //gang.m_Events.AddMessage(gangTrainingEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+            //gang.HasSeenCombat = false;
             return false;
         }
 
@@ -4152,7 +4046,7 @@ namespace WMaster.Manager
         public bool GangRecruiting(Gang gang)
         {
             LocalString gangRecruitingEvent = new LocalString();
-            gangRecruitingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+            gangRecruitingEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                 "Gang[GangName]IsRecruiting",
                 new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
             int recruit = 0;
@@ -4233,63 +4127,63 @@ namespace WMaster.Manager
             }
             if (start < 1)
             {
-                gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "TheyWereUnableToFindAnyoneToRecruit");
+                gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheyWereUnableToFindAnyoneToRecruit");
             }
             else
             {
                 if (start == 1)
                 {
-                    gangRecruitingEvent.Append(LocalString.ResourceStringCategory.Global, "TheyFoundOnePersonToTryToRecruit");
+                    gangRecruitingEvent.Append(LocalString.ResourceStringCategory.GangMission, "TheyFoundOnePersonToTryToRecruit");
                 }
                 else
                 {
-                    gangRecruitingEvent.Append(LocalString.ResourceStringCategory.Global, "TheyFoundPeopleToTryToRecruit");
+                    gangRecruitingEvent.Append(LocalString.ResourceStringCategory.GangMission, "TheyFoundPeopleToTryToRecruit");
                 }
 
                 if (start == 1)
                 {
                     if (add == start)
                     {
-                        gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AndTheyGotHimToJoin");
+                        gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "AndTheyGotHimToJoin");
                     }
                     else
                     {
-                        gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "ButHeDidntWantToJoin");
+                        gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "ButHeDidntWantToJoin");
                     }
                 }
                 else if (add <= 0)
                 {
-                    gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "ButWereUnableToGetAnyToJoin");
+                    gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "ButWereUnableToGetAnyToJoin");
                 }
                 else if (add == start)
                 {
-                    gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AndManagedToGetAllOfThemToJoin");
+                    gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "AndManagedToGetAllOfThemToJoin");
                 }
                 else if (add == 1)
                 {
-                    gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "ButWereOnlyAbleToConvinceOneOfThemToJoin");
+                    gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "ButWereOnlyAbleToConvinceOneOfThemToJoin");
                 }
                 else
                 {
-                    gangRecruitingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                    gangRecruitingEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                         "AndWereAbleToConvince[Number]OfThemToJoin",
                         new List<FormatStringParameter>() { new FormatStringParameter("Number", add) });
                 }
 
                 if (gang.MemberNum >= 15 && add == recruit)
                 {
-                    gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "TheyGotAsManyAsTheyNeededToFillTheirRanks");
+                    gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheyGotAsManyAsTheyNeededToFillTheirRanks");
                 }
                 else if (gang.MemberNum >= 15 && add > recruit)
                 {
                     gang.MemberNum = 15;
                     if (recruit == 1)
                     {
-                        gangRecruitingEvent.Append(LocalString.ResourceStringCategory.Global, "TheyOnlyHadRoomForOneMoreInTheirGangSoThey");
+                        gangRecruitingEvent.Append(LocalString.ResourceStringCategory.GangMission, "TheyOnlyHadRoomForOneMoreInTheirGangSoThey");
                     }
                     else
                     {
-                        gangRecruitingEvent.AppendFormat(LocalString.ResourceStringCategory.Global,
+                        gangRecruitingEvent.AppendFormat(LocalString.ResourceStringCategory.GangMission,
                             "TheyOnlyHadRoomFor[Number]MoreInTheirGangSoThey",
                             new List<FormatStringParameter>() { new FormatStringParameter("Number", recruit) });
                     }
@@ -4297,19 +4191,19 @@ namespace WMaster.Manager
                     Gang passTo = GetGangRecruitingNotFull(passNum);
                     if (passTo != null)
                     {
-                        gangRecruitingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                        gangRecruitingEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                             "SentTheRestToJoin[GangName]",
                             new List<FormatStringParameter>() { new FormatStringParameter("GangName", passTo.Name) });
                         LocalString pss = new LocalString();
                         if (passNum > 1)
                         {
-                            gangRecruitingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                            gangRecruitingEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                                 "[GangName]Sent[Number]RecruitsThatTheyHadNoRoomForTo[ToGangName]",
                                 new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name), new FormatStringParameter("Number", passNum), new FormatStringParameter("ToGangName", passTo.Name) });
                         }
                         else
                         {
-                            gangRecruitingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                            gangRecruitingEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                                 "[GangName]SentOneRecruitThatTheyHadNoRoomForTo[ToGangName]",
                                 new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name), new FormatStringParameter("ToGangName", passTo.Name) });
                         }
@@ -4358,27 +4252,27 @@ namespace WMaster.Manager
                             {
                                 if (passNum > 1)
                                 {
-                                    gangRecruitingEvent.Append(LocalString.ResourceStringCategory.Global, "TheyAllArrived");
+                                    gangRecruitingEvent.Append(LocalString.ResourceStringCategory.GangMission, "TheyAllArrived");
                                 }
                                 else
                                 {
-                                    gangRecruitingEvent.Append(LocalString.ResourceStringCategory.Global, "TheyArrived");
+                                    gangRecruitingEvent.Append(LocalString.ResourceStringCategory.GangMission, "TheyArrived");
                                 }
                             }
                             else
                             {
-                                gangRecruitingEvent.AppendFormat(LocalString.ResourceStringCategory.Global,
+                                gangRecruitingEvent.AppendFormat(LocalString.ResourceStringCategory.GangMission,
                                     "Only[Number]Arrived",
                                     new List<FormatStringParameter>() { new FormatStringParameter("Number", passNumGotThere) });
                             }
                             if (passTo.MemberNum + passNumGotThere <= 15)
                             {
-                                gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AndGotAcceptedIntoTheGang");
+                                gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "AndGotAcceptedIntoTheGang");
                             }
                             else
                             {
                                 passNumGotThere = 15 - passTo.MemberNum;
-                                gangRecruitingEvent.AppendLineFormat(LocalString.ResourceStringCategory.Global,
+                                gangRecruitingEvent.AppendLineFormat(LocalString.ResourceStringCategory.GangMission,
                                     "But[GangName]CouldOnlyTake[Number]OfThem",
                                     new List<FormatStringParameter>() { new FormatStringParameter("GangName", passTo.Name), new FormatStringParameter("Number", passNumGotThere) });
                             }
@@ -4386,17 +4280,17 @@ namespace WMaster.Manager
                         }
                         else
                         {
-                            gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "ButNoneShowedUp");
+                            gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "ButNoneShowedUp");
                         }
-                        passTo.m_Events.AddMessage(pss.ToString(), ImageTypes.PROFILE, EventType.GANG);
+                        passTo.m_Events.AddMessage(pss.ToString(), ImageType.PROFILE, EventType.Gang);
                     }
                     else
                     {
-                        gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "HadToTurnAwayTheRest");
+                        gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "HadToTurnAwayTheRest");
                     }
                 }
             }
-            gang.m_Events.AddMessage(gangRecruitingEvent.ToString(), ImageTypes.PROFILE, EventType.GANG);
+            gang.m_Events.AddMessage(gangRecruitingEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             gang.HasSeenCombat = true; // though not actually combat, this prevents the automatic +1 member at the end of the week
             return false;
         }
@@ -4415,57 +4309,57 @@ namespace WMaster.Manager
             {
                 LocalString loseGangEvent = new LocalString();
                 GangMissionBase mission = gang.CurrentMission ?? GangMissionBase.None;
-                loseGangEvent.AppendFormat(LocalString.ResourceStringCategory.Global,
+                loseGangEvent.AppendFormat(LocalString.ResourceStringCategory.GangMission,
                     "[GangName]WasLostWhile[GangMissionName]",
                     new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name), new FormatStringParameter("GangMissionName", mission.GetMissionName()) });
 
                 //switch (mission)
                 //{
                 //    case GangMissions.Guarding:
-                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "Guarding");
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "MissionGuarding");
                 //        break;
                 //    case GangMissions.Sabotage:
-                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "AttackingYourRivals");
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "MissionSabotage");
                 //        break;
                 //    case GangMissions.SpyGirls:
-                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "SpyingOnYourGirls");
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "MissionSpyGirls");
                 //        // TODO : Log, a gang cant be lose while spying girl
                 //        break;
                 //    case GangMissions.RecaptureGirls:
-                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "TryingToRecaptureARunaway");
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "MissionRecaptureGirls");
                 //        break;
                 //    case GangMissions.Extortion:
-                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "TryingToExtortNewBusinesses");
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "MissionExtortion");
                 //        break;
                 //    case GangMissions.PettyTheft:
-                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "PerformingPettyCrimes");
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "MissionPettyTheft");
                 //        break;
                 //    case GangMissions.GrandTheft:
-                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "PerformingMajorCrimes");
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "MissionGrandTheft");
                 //        break;
                 //    case GangMissions.KidnappGirls:
-                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "TryingToKidnapGirls");
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "MissionKidnappGirls");
                 //        break;
                 //    case GangMissions.Catacombs:
-                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "ExploringTheCatacombs");
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "MissionCatacombs");
                 //        break;
                 //    case GangMissions.Training:
-                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "Training");
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "MissionTraining");
                 //        // TODO : Log, a gang cant be lose while training
                 //        break;
                 //    case GangMissions.Recruit:
-                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "Recruiting");
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "MissionRecruit");
                 //        // TODO : Log, a gang cant be lose while recruiting
                 //        break;
                 //    case GangMissions.Service:
-                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "HelpingTheCommunity");
+                //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "MissionService");
                 //        break;
                 //    default:
                 //        loseGangEvent.Append(LocalString.ResourceStringCategory.Global, "OnAMission");
                 //        // TODO : Log, GangMissions unknown
                 //        break;
                 //}
-                Game.MessageQue.Enqueue(loseGangEvent.ToString(), MessageCategory.COLOR_RED);
+                Game.MessageQue.Enqueue(loseGangEvent.ToString(), MessageCategory.Red);
                 RemoveGang(gang);
                 return true;
             }
@@ -4487,10 +4381,10 @@ namespace WMaster.Manager
             else if (gang.MemberNum <= 5 && gang.MissionType != EnuGangMissions.Recruit)
             {
                 checkGangRecruitEvent.AppendLineFormat(
-                    LocalString.ResourceStringCategory.Global,
+                    LocalString.ResourceStringCategory.GangMission,
                     "Gang[GangName]WereSetToRecruitDueToLowNumbers",
                     new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
-                gang.m_Events.AddMessage(checkGangRecruitEvent.ToString(), ImageTypes.PROFILE, EventType.WARNING);
+                gang.m_Events.AddMessage(checkGangRecruitEvent.ToString(), ImageType.PROFILE, EventType.Warning);
                 gang.AutoRecruit = true;
                 gang.LastMission = gang.CurrentMission;
                 GangMissionBase.SetGangMission(EnuGangMissions.Recruit, gang);
@@ -4500,7 +4394,7 @@ namespace WMaster.Manager
                 if (gang.AutoRecruit)
                 {
                     checkGangRecruitEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "Gang[GangName]WerePlacedBackOnTheirPreviousMissionNowThatTheirNumbersAreBackToNormal",
                         new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
                     gang.CurrentMission = gang.LastMission;
@@ -4509,12 +4403,12 @@ namespace WMaster.Manager
                 else
                 {
                     checkGangRecruitEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "Gang[GangName]WerePlacedOnGuardDutyFromRecruitmentAsTheirNumbersAreFull",
                         new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
                     GangMissionBase.SetGangMission(EnuGangMissions.Guarding, gang);
                 }
-                gang.m_Events.AddMessage(checkGangRecruitEvent.ToString(), ImageTypes.PROFILE, EventType.WARNING);
+                gang.m_Events.AddMessage(checkGangRecruitEvent.ToString(), ImageType.PROFILE, EventType.Warning);
             }
         }
 
@@ -4525,7 +4419,7 @@ namespace WMaster.Manager
         /// </summary>
         public void GangStartOfShift()
         {
-            cTariff tariff = new cTariff();
+            Tariff tariff = new Tariff();
             LocalString gangStartOfShiftEvent = new LocalString();
 
             RestockNetsAndPots();
@@ -4554,10 +4448,10 @@ namespace WMaster.Manager
                 if (currentGang.MemberNum <= 0) // clear dead
                 {
                     gangStartOfShiftEvent.AppendLineFormat(
-                        LocalString.ResourceStringCategory.Global,
+                        LocalString.ResourceStringCategory.GangMission,
                         "AllOfTheMenInGang[GangName]HaveDied",
                         new List<FormatStringParameter>() { new FormatStringParameter("GangName", currentGang.Name) });
-                    Game.MessageQue.Enqueue(gangStartOfShiftEvent.ToString(), MessageCategory.COLOR_RED);
+                    Game.MessageQue.Enqueue(gangStartOfShiftEvent.ToString(), MessageCategory.Red);
 
                     RemoveGang(currentGang);
                     continue;
@@ -4565,7 +4459,7 @@ namespace WMaster.Manager
 
                 currentGang.HasSeenCombat = false;
                 currentGang.m_Events.Clear();
-                cost += tariff.goon_mission_cost(currentGang.MissionType); // sum up the cost of all the goon missions
+                cost += tariff.GoonMissionCost(currentGang.MissionType); // sum up the cost of all the goon missions
                 currentGang.NetLimit = 0;
                 currentGang.HealLimit = 0;
 
@@ -4573,20 +4467,20 @@ namespace WMaster.Manager
 
                 if (currentGang.MissionType == EnuGangMissions.SpyGirls)
                 {
-                    string localString = LocalString.GetStringFormatLine(LocalString.ResourceStringCategory.Global,
+                    string localString = LocalString.GetStringFormatLine(LocalString.ResourceStringCategory.GangMission,
                             "Gang[GangName]IsSpyingOnYourGirls",
                             new List<FormatStringParameter>() { new FormatStringParameter("GangName", currentGang.Name) } );
-                    currentGang.m_Events.AddMessage(localString, ImageTypes.PROFILE, EventType.GANG);
+                    currentGang.m_Events.AddMessage(localString, ImageType.PROFILE, EventType.Gang);
                 }
                 if (currentGang.MissionType == EnuGangMissions.Guarding)
                 {
-                    string localString = LocalString.GetStringFormatLine(LocalString.ResourceStringCategory.Global,
+                    string localString = LocalString.GetStringFormatLine(LocalString.ResourceStringCategory.GangMission,
                             "Gang[GangName]IsGuarding",
                             new List<FormatStringParameter>() { new FormatStringParameter("GangName", currentGang.Name) } );
-                    currentGang.m_Events.AddMessage(localString, ImageTypes.PROFILE, EventType.GANG);
+                    currentGang.m_Events.AddMessage(localString, ImageType.PROFILE, EventType.Gang);
                 }
             }
-            Game.Gold.goon_wages(cost);
+            Game.Gold.GoonWages(cost);
 
             if (m_PlayerGangList.Count < 1)
             {
@@ -4598,6 +4492,7 @@ namespace WMaster.Manager
             }
 
             // check numbers needed
+            // TODO : Transfert treatment to GangMission.GangsNeedingPots() et GangMission.GangsNeedingNets() returning number of Pots/Nets need for mission.
             foreach (Gang currentGang in m_PlayerGangList)
             {
                 switch (currentGang.MissionType)
@@ -4795,5 +4690,19 @@ namespace WMaster.Manager
         }
         #endregion
 
+
+        /// <summary>
+        /// Initialize GangManager datas
+        /// </summary>
+        public void Initialise()
+        {
+            m_PlayerGangList.Clear();
+            m_HireableGangList.Clear();
+            m_BusinessesExtorted = 0;
+            m_NumHealingPotions = m_SwordLevel = m_NumNets = 0;
+            m_KeepHealStocked = m_KeepNetsStocked = 0;
+            m_ControlGangs = false;
+            m_GangGetsGirls = m_GangGetsItems = m_GangGetsBeast = 0;
+        }
     }
 }

@@ -31,10 +31,10 @@ namespace WMaster.Manager
         public void Dispose()
         { throw new NotImplementedException(); }
 
-        void Free()
+        public void Free()
         { throw new NotImplementedException(); }
 
-        void GenerateCustomers(sBrothel brothel, DayShift Day0Night1 = DayShift.Day)
+        public void GenerateCustomers(sBrothel brothel, DayShift Day0Night1 = DayShift.Day)
         { throw new NotImplementedException(); } // generates a random amount of possible customers based on the number of poor, rich, and middle class
         sCustomer CreateCustomer(sBrothel brothel)
         { throw new NotImplementedException(); }

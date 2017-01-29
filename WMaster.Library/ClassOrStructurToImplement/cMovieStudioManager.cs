@@ -72,7 +72,7 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); }
         int GetNumScenes()
         { throw new NotImplementedException(); }
-        public List<sMovieScene> m_movieScenes = new List<sMovieScene>();
+        private List<sMovieScene> m_movieScenes = new List<sMovieScene>();
         int AddScene(sGirl girl, int Job, int Bonus = 0)
         { throw new NotImplementedException(); } // Added job parameter so different types of sex could effect film quality. --PP
         void AddGirl(int brothelID, sGirl girl)

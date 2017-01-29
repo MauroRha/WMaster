@@ -265,5 +265,119 @@ namespace WMaster.Tool
         {
             Thread.CurrentThread.CurrentCulture = Serialiser.CurrentCulture;
         }
+
+        /// <summary>
+        /// Try to convert <paramref name="source"/> string data (from XML file for example) into <paramref name="destination"/> data.
+        /// </summary>
+        /// <param name="source">String representation data to convert.</param>
+        /// <param name="destination">Reference to destination to set with converted data.</param>
+        /// <returns><b>True</b> if convertion was done.</returns>
+        public static bool SetValue(string source, ref int destination)
+        {
+            if (string.IsNullOrWhiteSpace(source)) { return false; }
+
+            int convert;
+            try
+            {
+                if (int.TryParse(source, out convert)) { destination = convert; }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WMLog.Trace(ex, WMLog.TraceLog.ERROR);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Try to convert <paramref name="source"/> string data (from XML file for example) into <paramref name="destination"/> data.
+        /// </summary>
+        /// <param name="source">String representation data to convert.</param>
+        /// <param name="destination">Reference to destination to set with converted data.</param>
+        /// <returns><b>True</b> if convertion was done.</returns>
+        public static bool SetValue(string source, ref string destination)
+        {
+            if (source == null) { return false; }
+
+            try
+            {
+                destination = source;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WMLog.Trace(ex, WMLog.TraceLog.ERROR);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Try to convert <paramref name="source"/> string data (from XML file for example) into <paramref name="destination"/> data.
+        /// </summary>
+        /// <param name="source">String representation data to convert.</param>
+        /// <param name="destination">Reference to destination to set with converted data.</param>
+        /// <returns><b>True</b> if convertion was done.</returns>
+        public static bool SetValue(string source, ref bool destination)
+        {
+            if (string.IsNullOrWhiteSpace(source)) { return false; }
+
+            bool convert;
+            try
+            {
+                if (bool.TryParse(source, out convert)) { destination = convert; }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WMLog.Trace(ex, WMLog.TraceLog.ERROR);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Try to convert <paramref name="source"/> string data (from XML file for example) into <paramref name="destination"/> data.
+        /// </summary>
+        /// <param name="source">String representation data to convert.</param>
+        /// <param name="destination">Reference to destination to set with converted data.</param>
+        /// <returns><b>True</b> if convertion was done.</returns>
+        public static bool SetValue(string source, ref double destination)
+        {
+            if (string.IsNullOrWhiteSpace(source)) { return false; }
+
+            double convert;
+            try
+            {
+                if (double.TryParse(source, out convert)) { destination = convert; }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WMLog.Trace(ex, WMLog.TraceLog.ERROR);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Try to convert <paramref name="source"/> string data (from XML file for example) into <paramref name="destination"/> data.
+        /// </summary>
+        /// <param name="source">String representation data to convert.</param>
+        /// <param name="destination">Reference to destination to set with converted data.</param>
+        /// <returns><b>True</b> if convertion was done.</returns>
+        public static bool SetPercentage(string source, ref double destination)
+        {
+            if (string.IsNullOrWhiteSpace(source)) { return false; }
+
+            double convert;
+            try
+            {
+                if (double.TryParse(source.Replace("%", string.Empty), out convert)) { destination = convert; }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                WMLog.Trace(ex, WMLog.TraceLog.ERROR);
+                return false;
+            }
+        }
     }
 }

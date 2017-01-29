@@ -73,12 +73,22 @@ namespace WMaster
             this._value = value ?? string.Empty;
         }
 
+        ///// <summary>
+        ///// Initialise a new <see cref="FormatStringParameter"/>.
+        ///// </summary>
+        ///// <param name="name">ame of parameter.</param>
+        ///// <param name="value">Value of parameter.</param>
+        //public FormatStringParameter(string name, int value)
+        //    : this(name, value.ToString())
+        //{
+        //}
+
         /// <summary>
         /// Initialise a new <see cref="FormatStringParameter"/>.
         /// </summary>
         /// <param name="name">ame of parameter.</param>
         /// <param name="value">Value of parameter.</param>
-        public FormatStringParameter(string name, int value)
+        public FormatStringParameter(string name, long value)
             : this(name, value.ToString())
         {
         }

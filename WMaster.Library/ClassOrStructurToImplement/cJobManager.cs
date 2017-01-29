@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WMaster.Concept;
 using WMaster.Concept.Attributs;
 using WMaster.Entity.Living;
+using WMaster.Enums;
 
 namespace WMaster.ClassOrStructurToImplement
 {
@@ -18,11 +19,12 @@ namespace WMaster.ClassOrStructurToImplement
         //static vector<sJobBase *> job_list; - Changed until it is working - necro
         // using an array of function pointers
         //	WorkJobF JobFunc[NUM_JOBS];
-        public delegate bool JobFuncDelegate(sGirl NamelessParameter1, sBrothel NamelessParameter2, bool NamelessParameter3, string NamelessParameter4);
+        public delegate bool JobFuncDelegate(sGirl NamelessParameter1, sBrothel NamelessParameter2, DayShift NamelessParameter3, LocalString NamelessParameter4);
         public JobFuncDelegate[] JobFunc = new JobFuncDelegate[(int)WMaster.Enums.Jobs.NUM_JOBS];
         public delegate double JobPerfDelegate(sGirl NamelessParameter1, bool estimate); // `J` a replacement for job performance - work in progress
         public JobPerfDelegate[] JobPerf = new JobPerfDelegate[(int)WMaster.Enums.Jobs.NUM_JOBS];
 
+        [Obsolete("Use localized jobs name", false)]
         public string[] JobName = new string[(int)WMaster.Enums.Jobs.NUM_JOBS]; // short descriptive name of job
         public string[] JobQkNm = new string[(int)WMaster.Enums.Jobs.NUM_JOBS]; // a shorter name of job
         public string[] JobDesc = new string[(int)WMaster.Enums.Jobs.NUM_JOBS]; // longer description of job
@@ -33,10 +35,10 @@ namespace WMaster.ClassOrStructurToImplement
         string JobDescriptionCount(int job_id, int brothel_id, int day = (int)WMaster.Enums.DayShift.Day, bool isClinic = false, bool isStudio = false, bool isArena = false, bool isCentre = false, bool isHouse = false, bool isFarm = false)
         { throw new NotImplementedException(); } // return a job description along with a count of how many girls are on it
 
-        bool HandleSpecialJobs(int TargetBrothel, sGirl Girl, int JobID, int OldJobID, bool Day0Night1, bool fulltime = false)
+        public bool HandleSpecialJobs(int targetBrothel, sGirl girl, Jobs job, Jobs oldJob, DayShift Day0Night1, bool fulltime = false)
         { throw new NotImplementedException(); } // check for and handle special job assignments
 
-        void Setup()
+        public void Setup()
         { throw new NotImplementedException(); }
 
         // - Misc
@@ -477,23 +479,23 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
         static void get_training_set(List<sGirl> v, List<sGirl> set)
         { throw new NotImplementedException(); }
-        static void do_training(sBrothel brothel, bool Day0Night1)
+        public static void do_training(sBrothel brothel, DayShift Day0Night1)
         { throw new NotImplementedException(); }
-        static void do_training_set(List<sGirl> girls, bool Day0Night1)
+        static void do_training_set(List<sGirl> girls, DayShift Day0Night1)
         { throw new NotImplementedException(); }
-        static void do_solo_training(sGirl girl, bool Day0Night1)
+        static void do_solo_training(sGirl girl, DayShift Day0Night1)
         { throw new NotImplementedException(); }
-        static void do_advertising(sBrothel brothel, bool Day0Night1)
+        public static void do_advertising(sBrothel brothel, DayShift Day0Night1)
         { throw new NotImplementedException(); }
-        static void do_whorejobs(sBrothel brothel, bool Day0Night1)
+        public static void do_whorejobs(sBrothel brothel, DayShift Day0Night1)
         { throw new NotImplementedException(); }
-        static void do_custjobs(sBrothel brothel, bool Day0Night1)
+        public static void do_custjobs(sBrothel brothel, DayShift Day0Night1)
         { throw new NotImplementedException(); }
         public void Dispose()
         {
         }
 
-        bool is_job_Paid_Player(int Job)
+        public static bool is_job_Paid_Player(Jobs Job)
         { throw new NotImplementedException(); } //    WD:    Test for all jobs paid by player
         bool FullTimeJob(int Job)
         { throw new NotImplementedException(); } //    `J`    Test if job is takes both shifts

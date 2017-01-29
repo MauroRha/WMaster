@@ -22,6 +22,7 @@ namespace WMaster.Manager
     using System;
     using System.Collections.Generic;
     using WMaster.ClassOrStructurToImplement;
+    using WMaster.Concept.Attributs;
     using WMaster.Entity.Item;
     using WMaster.Enums;
 
@@ -33,7 +34,7 @@ namespace WMaster.Manager
         public void Dispose()
         { throw new NotImplementedException(); }
 
-        void Free()
+        public void Free()
         { throw new NotImplementedException(); }
 
         /*
@@ -58,9 +59,9 @@ namespace WMaster.Manager
         bool LoadGirlsXML(IXmlHandle hGirls)
         { throw new NotImplementedException(); }
 
-        void AddGirl(sGirl girl)
+        public void AddGirl(sGirl girl)
         { throw new NotImplementedException(); } // adds a girl to the list
-        void RemoveGirl(sGirl girl, bool deleteGirl = false)
+        public void RemoveGirl(sGirl girl, bool deleteGirl = false)
         { throw new NotImplementedException(); } // Removes a girl from the list (only used with editor where all girls are available)
 
         sGirl GetGirl(int girl)
@@ -92,15 +93,15 @@ namespace WMaster.Manager
         public int TakeCombatDamage(sGirl girl, int amt)
         { throw new NotImplementedException(); }
 
-        void LevelUp(sGirl girl)
+        public void LevelUp(sGirl girl)
         { throw new NotImplementedException(); }// advances a girls level
         void LevelUpStats(sGirl girl)
         { throw new NotImplementedException(); } // Functionalized stat increase for LevelUp
 
-        void EndDayGirls(sBrothel brothel, sGirl girl)
+        public void EndDayGirls(sBrothel brothel, sGirl girl)
         { throw new NotImplementedException(); }
 
-        public int GetStat(sGirl girl, int stat)
+        public int GetStat(sGirl girl, EnumStats stat)
         { throw new NotImplementedException(); }
         void SetStat(sGirl girl, int stat, int amount)
         { throw new NotImplementedException(); }
@@ -177,7 +178,7 @@ namespace WMaster.Manager
         void MutuallyExclusiveTraits(sGirl girl, bool apply, sTrait trait = null, bool rememberflag = false)
         { throw new NotImplementedException(); }
 
-        bool PossiblyGainNewTrait(sGirl girl, string Trait, int Threshold, int ActionType, string Message, bool Day0Night1, EventType eventtype = EventType.GOODNEWS)
+        bool PossiblyGainNewTrait(sGirl girl, string Trait, int Threshold, int ActionType, string Message, bool Day0Night1, EventType eventtype = EventType.GoodNews)
         { throw new NotImplementedException(); }
         bool PossiblyLoseExistingTrait(sGirl girl, string Trait, int Threshold, int ActionType, string Message, bool Day0Night1)
         { throw new NotImplementedException(); }
@@ -291,7 +292,7 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); }
         void SellInvItem(sGirl girl, int num)
         { throw new NotImplementedException(); }
-        void UseItems(sGirl girl)
+        public void UseItems(sGirl girl)
         { throw new NotImplementedException(); }
         int HasItem(sGirl girl, string name)
         { throw new NotImplementedException(); }
@@ -341,10 +342,10 @@ namespace WMaster.Manager
         public bool CheckVirginity(sGirl girl)
         { throw new NotImplementedException(); }
 
-        void CalculateAskPrice(sGirl girl, bool vari)
+        public void CalculateAskPrice(sGirl girl, bool vari)
         { throw new NotImplementedException(); }
 
-        void AddTiredness(sGirl girl)
+        public void AddTiredness(sGirl girl)
         { throw new NotImplementedException(); }
 
         public void SetAntiPreg(sGirl girl, bool useAntiPreg)
@@ -352,7 +353,7 @@ namespace WMaster.Manager
             girl.m_UseAntiPreg = useAntiPreg;
         }
 
-        void CalculateGirlType(sGirl girl)
+        public void CalculateGirlType(sGirl girl)
         { throw new NotImplementedException(); } // updates a girls fetish type based on her traits and stats
         bool CheckGirlType(sGirl girl, int type)
         { throw new NotImplementedException(); }// Checks if a girl has this fetish type
@@ -367,7 +368,7 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); }
         bool child_is_due(sGirl girl, sChild child, string summary, bool PlayerControlled = true)
         { throw new NotImplementedException(); }
-        void HandleChildren(sGirl girl, string summary, bool PlayerControlled = true)
+        public void HandleChildren(sGirl girl, string summary, bool PlayerControlled = true)
         { throw new NotImplementedException(); } // ages children and handles pregnancy
         public bool CalcPregnancy(sGirl girl, int chance, int type, int[] stats, int[] skills)
         { throw new NotImplementedException(); } // checks if a girl gets pregnant
@@ -394,11 +395,11 @@ namespace WMaster.Manager
 
         // end mod
 
-        void updateTemp(sGirl girl)
+        public void updateTemp(sGirl girl)
         { throw new NotImplementedException(); } // `J` group all the temp updates into one area
 
         // WD:	Consolidate common code in BrothelUpdate and DungeonUpdate to fn's
-        void updateGirlAge(sGirl girl, bool inc_inService = false)
+        public void updateGirlAge(sGirl girl, bool inc_inService = false)
         { throw new NotImplementedException(); }
         void updateTempStats(sGirl girl)
         { throw new NotImplementedException(); }
@@ -412,11 +413,11 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); }
         void updateTempTraits(sGirl girl, string trait, int amount)
         { throw new NotImplementedException(); }
-        void updateSTD(sGirl girl)
+        public void updateSTD(sGirl girl)
         { throw new NotImplementedException(); }
-        void updateHappyTraits(sGirl girl)
+        public void updateHappyTraits(sGirl girl)
         { throw new NotImplementedException(); }
-        void updateGirlTurnStats(sGirl girl)
+        public void updateGirlTurnStats(sGirl girl)
         { throw new NotImplementedException(); }
 
         bool girl_has_matron(sGirl girl, int shift = 0)
@@ -461,5 +462,10 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); }
         sRandomGirl find_random_girl_by_name(string name, ref int index_pt)
         { throw new NotImplementedException(); }
+
+        public int GetStat(sGirl girl, int stat)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

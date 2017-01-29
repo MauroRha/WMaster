@@ -36,20 +36,45 @@ namespace WMaster
         /// <summary>
         /// Resource cotegory to find string.
         /// </summary>
+        [Flags]
         public enum ResourceStringCategory
         {
             /// <summary>
-            /// Global game resource.
+            /// Global related string.
             /// </summary>
-            Global,
+            Global = /*        */ 0x0001,
+            /// <summary>
+            /// Player related string.
+            /// </summary>
+            Player = /*        */ 0x0002,
+            /// <summary>
+            /// Brothel report.
+            /// </summary>
+            Brothel = /*       */ 0x0003,
+            /// <summary>
+            /// Gang related string.
+            /// </summary>
+            Gang = /*          */ 0x0010,
+            /// <summary>
+            /// Gang mission report.
+            /// </summary>
+            GangMission = /*   */ 0x0011,
+            /// <summary>
+            /// Girl related string.
+            /// </summary>
+            Girl = /*          */ 0x0020,
+            /// <summary>
+            /// Girl job report.
+            /// </summary>
+            GirlJob = /*       */ 0x0021,
             /// <summary>
             /// Girls text resources. To find in girl subdirectory.
             /// </summary>
-            Girls,
+            ExternalGirls = /* */ 0xFFE0,
             /// <summary>
             /// Items text resources. To find in item subdirectory.
             /// </summary>
-            Items
+            ExternalItems = /* */ 0xFFF0
         }
 
         /// <summary>
@@ -100,7 +125,8 @@ namespace WMaster
             {
                 if (LocalizedString[category].ContainsKey(resourceName))
                 {
-                    return LocalizedString[category][resourceName];
+                    string returnValue = LocalizedString[category][resourceName].Replace("[[:NewLine:]]", Environment.NewLine);
+                    return returnValue;
                 }
                 else
                 {
@@ -276,6 +302,37 @@ namespace WMaster
         }
 
         /// <summary>
+        /// Append string <paramref name="litteral"/> without modification.
+        /// </summary>
+        /// <param name="litteral">Litteral to add as is.</param>
+        public void AppendLineLitteral(string litteral)
+        {
+            if (litteral == null)
+            {
+                WMLog.Trace("LocalString.AppendLitteral : litteral is null.", WMLog.TraceLog.ERROR);
+                return;
+            }
+
+            this.AppendLitteral(litteral);
+            this.NewLine();
+        }
+
+        /// <summary>
+        /// Append string <paramref name="litteral"/> without modification.
+        /// </summary>
+        /// <param name="litteral">Litteral to add as is.</param>
+        public void AppendLitteral(string litteral)
+        {
+            if (litteral == null)
+            {
+                WMLog.Trace("LocalString.AppendLitteral : litteral is null.", WMLog.TraceLog.ERROR);
+                return;
+            }
+
+            this.m_String.Append(litteral);
+        }
+
+        /// <summary>
         /// Append resource string end with new line.
         /// </summary>
         /// <param name="category">Categorie of resource.</param>
@@ -317,12 +374,29 @@ namespace WMaster
         }
 
         /// <summary>
+        /// Clear the <see cref="LocalString"/> buffer.
+        /// </summary>
+        public void Clear()
+        {
+            this.m_String.Clear();
+        }
+
+        /// <summary>
         /// Get string composition.
         /// </summary>
         /// <returns>Result of string composition.</returns>
         public override string ToString()
         {
             return this.m_String.ToString();
+        }
+
+        /// <summary>
+        /// If <see cref="LocalString"/> have message set.
+        /// </summary>
+        /// <returns><b>True</b> if <see cref="LocalString"/> has message set.</returns>
+        public bool HasMessage()
+        {
+            return !this.m_String.Length.Equals(0);
         }
     }
 }

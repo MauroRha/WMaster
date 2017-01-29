@@ -23,7 +23,7 @@ namespace WMaster.ClassOrStructurToImplement
         public int m_newRandomFixed;
 
         public string m_Name; // The girls name
-        public string m_Realname; // this is the name displayed in text
+        public string Realname { get; set; } // this is the name displayed in text
         /*	`J` adding first and surnames for future use.
         *	m_Realname will be used for girl tracking until first and surnames are fully integrated
         *	a girl id number system may be added in the future to allow for absolute tracking
@@ -45,12 +45,30 @@ namespace WMaster.ClassOrStructurToImplement
         public byte m_NumRememTraits; // number of traits that are apart of the girls starting traits
         public sTrait[] m_RememTraits = new sTrait[Constants.MAXNUM_TRAITS * 2]; // List of traits they have inbuilt
 
-        public uint m_DayJob; // id for what job the girl is currently doing
-        public uint m_NightJob; // id for what job the girl is currently doing
-        public uint m_PrevDayJob; // id for what job the girl was doing
-        public uint m_PrevNightJob; // id for what job the girl was doing
-        public uint m_YesterDayJob; // id for what job the girl did yesterday
-        public uint m_YesterNightJob; // id for what job the girl did yesternight
+        /// <summary>
+        /// What job the girl is currently doing the day.
+        /// </summary>
+        public Jobs DayJob { get; set; }
+        /// <summary>
+        /// What job the girl is currently doing the night.
+        /// </summary>
+        public Jobs NightJob { get; set; }
+        /// <summary>
+        /// What job the girl was doing the day.
+        /// </summary>
+        public Jobs PrevDayJob { get; set; }
+        /// <summary>
+        /// What job the girl was doing the night.
+        /// </summary>
+        public Jobs PrevNightJob { get; set; }
+        /// <summary>
+        /// What job the girl did yesterday day.
+        /// </summary>
+        public Jobs YesterDayJob { get; set; }
+        /// <summary>
+        /// What job the girl did yesterday night.
+        /// </summary>
+        public Jobs YesterNightJob { get; set; }
 
         //ADB needs to be int because player might have more than 256
         public int m_NumInventory; // current amount of inventory they have
@@ -109,25 +127,43 @@ namespace WMaster.ClassOrStructurToImplement
         public bool m_Tort; // if true then have already tortured today
         public bool m_JustGaveBirth; // did she give birth this current week?
 
-        public int m_Pay; // used to keep track of pay this turn
-        public int m_Tips; // used to keep track of tips this turn
+        /// <summary>
+        /// Keep track of pay this turn.
+        /// </summary>
+        public int Pay { get; set; }
+        /// <summary>
+        /// Keep track of tips this turn.
+        /// </summary>
+        public int Tips { get; set; }
 
         public int m_FetishTypes; // the types of fetishes this girl has
 
         public string m_Flags = new string(new char[Constants.NUM_GIRLFLAGS]); // flags used by scripts
 
-        public Events m_Events = new Events(); // Each girl keeps track of all her events that happened to her in the last turn
+        /// <summary>
+        /// Each girl keeps track of all her events that happened to her in the last turn.
+        /// </summary>
+        private EventManager m_Events;
+        /// <summary>
+        /// Get <see cref="EventManager"/>of all her events that happened to her in the last turn.
+        /// </summary>
+        public EventManager Events
+        {
+            get
+            {
+                if (this.m_Events == null)
+                { m_Events = new EventManager(); }
+                return m_Events;
+            }
+        }
 
 
         public cTriggerList m_Triggers = new cTriggerList(); // triggers for the girl
 
         public byte m_DaysUnhappy; // used to track how many days they are really unhappy for
 
-        public sGirl m_Next;
-        public sGirl m_Prev;
-
         public int m_WeeksPreg; // number of weeks pregnant or inseminated
-        public int m_PregCooldown; // number of weeks until can get pregnant again
+        public int PregCooldown { get; set; } // number of weeks until can get pregnant again
         public cChildList m_Children = new cChildList();
         public int[] m_ChildrenCount = new int[Constants.CHILD_COUNT_TYPES];
 
@@ -514,7 +550,7 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
         string JobRatingLetter(double value)
         { throw new NotImplementedException(); }
-        bool FixFreeTimeJobs()
+        public bool FixFreeTimeJobs()
         { throw new NotImplementedException(); }
         /*
         *	notice that if we do tweak get_stat to reference the stats array
@@ -778,7 +814,7 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
         int breast_size()
         { throw new NotImplementedException(); }
-        bool is_dead(bool sendmessage = false)
+        public bool is_dead(bool sendmessage = false)
         { throw new NotImplementedException(); } // `J` replaces a few DeadGirl checks
         bool is_addict(bool onlyhard = false)
         { throw new NotImplementedException(); } // `J` added bool onlyhard to allow only hard drugs to be checked for
@@ -790,7 +826,7 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
         int preg_type(int image_type)
         { throw new NotImplementedException(); }
-        sGirl run_away()
+        public sGirl run_away()
         { throw new NotImplementedException(); }
 
         public bool is_slave()
