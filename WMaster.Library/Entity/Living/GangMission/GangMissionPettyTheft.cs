@@ -114,7 +114,7 @@ namespace WMaster.Entity.Living.GangMission
                 else
                 {
                     pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenLoseTheFight");
-                    this.GangCible.m_Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
+                    this.GangCible.Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
                     return false;
                 }
                 if (rival != null && rival.m_NumGangs > 0 && rivalGang.MemberNum <= 0)
@@ -170,8 +170,8 @@ namespace WMaster.Entity.Living.GangMission
                     if (!GangManager.GangCombat(girl, this.GangCible))
                     {
                         gangMemberNumLost += gangMemberNumStart - this.GangCible.MemberNum;
-                        int goldWin = girl.m_Money > 0 ? girl.m_Money : WMRand.Random(100) + 1; // take all her money or 1-100 if she has none
-                        girl.m_Money = 0;
+                        int goldWin = girl.Money > 0 ? girl.Money : WMRand.Random(100) + 1; // take all her money or 1-100 if she has none
+                        girl.Money = 0;
                         Game.Gold.PettyTheft(goldWin);
 
                         if (gangMemberNumLost > gangMemberNumStart / 2)
@@ -196,7 +196,7 @@ namespace WMaster.Entity.Living.GangMission
                             new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("Number", goldWin) });
                         girlImageType = ImageType.DEATH;
                         dungeonReason = DungeonReasons.GIRLKIDNAPPED;
-                        girl.m_Stats[(int)EnumStats.OBEDIENCE] = 0;
+                        girl.m_Stats[(int)EnumStats.Obedience] = 0;
                         girl.add_trait("Kidnapped", 5 + WMRand.Random(11));
 
                         // TODO : What to do with NGmsg ?!?
@@ -204,22 +204,22 @@ namespace WMaster.Entity.Living.GangMission
                             LocalString.ResourceStringCategory.Girl,
                             "[GirlName]TriedToStop[GangName]FromComittingPettyTheftButLostSheWasDraggedBackToTheDungeon",
                             new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.Realname), new FormatStringParameter("GangName", this.GangCible.Name) });
-                        GangManager.BoostGangSkill(this.GangCible.Skills[EnumSkills.COMBAT], 1);
+                        GangManager.BoostGangSkill(this.GangCible.Skills[EnumSkills.Combat], 1);
 
-                        if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.STEALXAMOUNTOFGOLD))
+                        if ((Game.Brothels.CurrentObjective != null) && (Game.Brothels.CurrentObjective.Objective == Objectives.STEALXAMOUNTOFGOLD))
                         {
-                            Game.Brothels.GetObjective().m_SoFar += goldWin;
+                            Game.Brothels.CurrentObjective.SoFar += goldWin;
                         }
-                        if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.KIDNAPXGIRLS))
+                        if ((Game.Brothels.CurrentObjective != null) && (Game.Brothels.CurrentObjective.Objective == Objectives.KIDNAPXGIRLS))
                         {
-                            Game.Brothels.GetObjective().m_SoFar++; // `J` You are technically kidnapping her
+                            Game.Brothels.CurrentObjective.SoFar++; // `J` You are technically kidnapping her
                         }
                         return true;
                     }
                     else
                     {
                         pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "SheDefeatsYourMenAndDisappearsBackIntoTheShadows");
-                        this.GangCible.m_Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
+                        this.GangCible.Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
                         return false;
                     }
                 }
@@ -331,13 +331,13 @@ namespace WMaster.Entity.Living.GangMission
                 }
             }
 
-            this.GangCible.m_Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
+            this.GangCible.Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
 
             Game.Gold.PettyTheft(gold);
 
-            if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.STEALXAMOUNTOFGOLD))
+            if ((Game.Brothels.CurrentObjective != null) && (Game.Brothels.CurrentObjective.Objective == Objectives.STEALXAMOUNTOFGOLD))
             {
-                Game.Brothels.GetObjective().m_SoFar += gold;
+                Game.Brothels.CurrentObjective.SoFar += gold;
             }
             return true;
         }

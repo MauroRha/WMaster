@@ -86,14 +86,14 @@ namespace WMaster.Entity.Living.GangMission
             int oldService = this.GangCible.Service;
 
             List<IValuableAttribut> possibleSkills = new List<IValuableAttribut>();
-            possibleSkills.Add(this.GangCible.Skills[EnumSkills.COMBAT]);
-            possibleSkills.Add(this.GangCible.Skills[EnumSkills.MAGIC]);
-            possibleSkills.Add(this.GangCible.Stats[EnumStats.INTELLIGENCE]);
-            possibleSkills.Add(this.GangCible.Stats[EnumStats.AGILITY]);
-            possibleSkills.Add(this.GangCible.Stats[EnumStats.CONSTITUTION]);
-            possibleSkills.Add(this.GangCible.Stats[EnumStats.CHARISMA]);
-            possibleSkills.Add(this.GangCible.Stats[EnumStats.STRENGTH]);
-            possibleSkills.Add(this.GangCible.Skills[EnumSkills.SERVICE]);
+            possibleSkills.Add(this.GangCible.Skills[EnumSkills.Combat]);
+            possibleSkills.Add(this.GangCible.Skills[EnumSkills.Magic]);
+            possibleSkills.Add(this.GangCible.Stats[EnumStats.Intelligence]);
+            possibleSkills.Add(this.GangCible.Stats[EnumStats.Agility]);
+            possibleSkills.Add(this.GangCible.Stats[EnumStats.Constitution]);
+            possibleSkills.Add(this.GangCible.Stats[EnumStats.Charisma]);
+            possibleSkills.Add(this.GangCible.Stats[EnumStats.Strength]);
+            possibleSkills.Add(this.GangCible.Skills[EnumSkills.Service]);
 
             int count = WMRand.Random(3) + 2; // get 2-4 potential skill/stats to boost
             for (int i = 0; i < count; i++)
@@ -103,48 +103,48 @@ namespace WMaster.Entity.Living.GangMission
             }
             possibleSkills.Clear();
 
-            if (this.GangCible.Skills[EnumSkills.COMBAT].Value > oldCombat)
+            if (this.GangCible.Skills[EnumSkills.Combat].Value > oldCombat)
             {
-                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Skills[EnumSkills.COMBAT].Value - oldCombat));
-                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributCombat");
+                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Skills[EnumSkills.Combat].Value - oldCombat));
+                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeCombat");
             }
-            if (this.GangCible.Skills[EnumSkills.MAGIC].Value > oldMagic)
+            if (this.GangCible.Skills[EnumSkills.Magic].Value > oldMagic)
             {
-                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Skills[EnumSkills.MAGIC].Value - oldMagic));
-                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributMagic");
+                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Skills[EnumSkills.Magic].Value - oldMagic));
+                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeMagic");
             }
-            if (this.GangCible.Stats[EnumStats.INTELLIGENCE].Value > oldIntelligence)
+            if (this.GangCible.Stats[EnumStats.Intelligence].Value > oldIntelligence)
             {
-                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.INTELLIGENCE].Value - oldIntelligence));
-                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributIntelligence");
+                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.Intelligence].Value - oldIntelligence));
+                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeIntelligence");
             }
-            if (this.GangCible.Stats[EnumStats.AGILITY].Value > oldAgility)
+            if (this.GangCible.Stats[EnumStats.Agility].Value > oldAgility)
             {
-                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.AGILITY].Value - oldAgility));
-                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributAgility");
+                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.Agility].Value - oldAgility));
+                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeAgility");
             }
-            if (this.GangCible.Stats[EnumStats.CONSTITUTION].Value > oldConstitution)
+            if (this.GangCible.Stats[EnumStats.Constitution].Value > oldConstitution)
             {
-                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.CONSTITUTION].Value - oldConstitution));
-                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributToughness");
+                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.Constitution].Value - oldConstitution));
+                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeToughness");
             }
-            if (this.GangCible.Stats[EnumStats.CHARISMA].Value > oldCharisma)
+            if (this.GangCible.Stats[EnumStats.Charisma].Value > oldCharisma)
             {
-                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.CHARISMA].Value - oldCharisma));
-                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributCharisma");
+                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.Charisma].Value - oldCharisma));
+                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeCharisma");
             }
-            if (this.GangCible.Stats[EnumStats.STRENGTH].Value > oldStrength)
+            if (this.GangCible.Stats[EnumStats.Strength].Value > oldStrength)
             {
-                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.STRENGTH].Value - oldStrength));
-                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributStrength");
+                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.Strength].Value - oldStrength));
+                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeStrength");
             }
-            if (this.GangCible.Skills[EnumSkills.SERVICE].Value > oldService)
+            if (this.GangCible.Skills[EnumSkills.Service].Value > oldService)
             {
-                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Skills[EnumSkills.SERVICE].Value - oldService));
-                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributService");
+                gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Skills[EnumSkills.Service].Value - oldService));
+                gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeService");
             }
 
-            this.GangCible.m_Events.AddMessage(gangTrainingEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+            this.GangCible.Events.AddMessage(gangTrainingEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             this.GangCible.HasSeenCombat = false;
             return false;
         }

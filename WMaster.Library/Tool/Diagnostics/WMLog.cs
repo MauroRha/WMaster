@@ -156,7 +156,7 @@ namespace WMaster
         }
 
         /// <summary>
-        /// Trace le contenu du buffer (StringBuilder)
+        /// Trace buffer content (StringBuilder).
         /// </summary>
         /// <param name="typeTrace"><see cref="WMLog.TraceLog"/> severity level trace. <see cref="WMLog.TraceLog.ERROR"/> par default.</param>
         public static void TraceBuffer(WMLog.TraceLog typeTrace = WMLog.TraceLog.INFORMATION)

@@ -87,7 +87,7 @@
     <Compile Include="ClassOrStructurToImplement\cCustomers.cs" />
     <Compile Include="ClassOrStructurToImplement\cFarmManager.cs" />
     <Compile Include="Manager\GangManager.cs" />
-    <Compile Include="ClassOrStructurToImplement\cGirls.cs" />
+    <Compile Include="ClassOrStructurToImplement\ToDoFirst\cGirls.cs" />
     <Compile Include="ClassOrStructurToImplement\cHouseManager.cs" />
     <Compile Include="ClassOrStructurToImplement\cMovieStudioManager.cs" />
     <Compile Include="ClassOrStructurToImplement\cScript.cs" />
@@ -257,7 +257,7 @@
     <Compile Include="ClassOrStructurToImplement\cDungeon.cs" />
     <Compile Include="ClassOrStructurToImplement\ToDoFirst\cPlayer.cs" />
     <Compile Include="ClassOrStructurToImplement\sBrothel.cs" />
-    <Compile Include="ClassOrStructurToImplement\sGirl.cs" />
+    <Compile Include="ClassOrStructurToImplement\ToDoFirst\sGirl.cs" />
     <Compile Include="ClassOrStructurToImplement\sInventoryItem.cs" />
     <Compile Include="ClassOrStructurToImplement\sObjective.cs" />
     <Compile Include="ClassOrStructurToImplement\HFileToImport\IXmlElement.cs" />

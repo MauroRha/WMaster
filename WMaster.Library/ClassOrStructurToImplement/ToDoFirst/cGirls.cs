@@ -29,6 +29,34 @@ namespace WMaster.Manager
     // Keeps track of all the available (not used by player) girls in the game.
     public class cGirls : cAbstractGirls, System.IDisposable
     {
+        // From root function C++
+        // TODO : REFACTORING - Use List<Jobs>.Contain()
+        public static bool is_she_cleaning(sGirl girl)
+        {
+            if (girl.DayJob == Jobs.CLEANING || girl.NightJob == Jobs.CLEANING || girl.DayJob == Jobs.CLEANARENA || girl.NightJob == Jobs.CLEANARENA || girl.DayJob == Jobs.STAGEHAND || girl.NightJob == Jobs.STAGEHAND || girl.DayJob == Jobs.JANITOR || girl.NightJob == Jobs.JANITOR || girl.DayJob == Jobs.CLEANCENTRE || girl.NightJob == Jobs.CLEANCENTRE || girl.DayJob == Jobs.FARMHAND || girl.NightJob == Jobs.FARMHAND || girl.DayJob == Jobs.CLEANHOUSE || girl.NightJob == Jobs.CLEANHOUSE)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        // From root function C++
+        public static bool is_she_resting(sGirl girl)
+        {
+            return girl.is_resting();
+        }
+
+        // From root function C++
+        // TODO : REFACTORING - Use List<Jobs>.Contain()
+        public static bool is_she_stripping(sGirl girl)
+        {
+            if (girl.DayJob == Jobs.BARSTRIPPER || girl.NightJob == Jobs.BARSTRIPPER || girl.DayJob == Jobs.BROTHELSTRIPPER || girl.NightJob == Jobs.BROTHELSTRIPPER || girl.DayJob == Jobs.PEEP || girl.NightJob == Jobs.PEEP)
+            {
+                return true;
+            }
+            return false;
+        }
+        
         public cGirls()
         { throw new NotImplementedException(); }
         public void Dispose()
@@ -105,12 +133,20 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); }
         void SetStat(sGirl girl, int stat, int amount)
         { throw new NotImplementedException(); }
+        // TODO : REFACTORING - Replace int stat to EnumStat stat
+        [Obsolete("Replace Replace int stat to EnumStat stat", false)]
         public void UpdateStat(sGirl girl, int stat, int amount, bool usetraits = true)
         { throw new NotImplementedException(); } // updates a stat
+        // TODO : REFACTORING - Replace int stat to EnumStat stat
+        [Obsolete("Replace Replace int stat to EnumStat stat", false)]
         public void UpdateStatTemp(sGirl girl, int stat, int amount)
         { throw new NotImplementedException(); } // updates a stat temporarily
+        // TODO : REFACTORING - Replace int stat to EnumStat stat
+        [Obsolete("Replace Replace int stat to EnumStat stat", false)]
         void UpdateStatMod(sGirl girl, int stat, int amount)
         { throw new NotImplementedException(); } // updates a statmod usually from items
+        // TODO : REFACTORING - Replace int stat to EnumStat stat
+        [Obsolete("Replace Replace int stat to EnumStat stat", false)]
         void UpdateStatTr(sGirl girl, int stat, int amount)
         { throw new NotImplementedException(); } // updates a statTr from traits
 
@@ -133,6 +169,8 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); } // `J` added
         void SetEnjoymentTR(sGirl girl, int a_Enjoy, int amount)
         { throw new NotImplementedException(); } // `J` added for traits
+        // TODO : REFACTORING - Replace int whatSheEnjoys to ActionTypes whatSheEnjoys
+        [Obsolete("Replace int whatSheEnjoys to ActionTypes whatSheEnjoys", false)]
         public void UpdateEnjoyment(sGirl girl, int whatSheEnjoys, int amount)
         { throw new NotImplementedException(); } // updates what she enjoys
         void UpdateEnjoymentTR(sGirl girl, int whatSheEnjoys, int amount)
@@ -163,12 +201,20 @@ namespace WMaster.Manager
         double GetAverageOfNSxSkills(sGirl girl)
         { throw new NotImplementedException(); } // `J` added
 
+        // TODO : REFACTORING - Replace string trait to enum or instace of trait
+        [Obsolete("Replace string trait to enum or instace of trait", false)]
         public bool HasTrait(sGirl girl, string trait)
         { throw new NotImplementedException(); }
+        // TODO : REFACTORING - Replace string trait to enum or instace of trait
+        [Obsolete("Replace string trait to enum or instace of trait", false)]
         bool HasRememberedTrait(sGirl girl, string trait)
         { throw new NotImplementedException(); }
+        // TODO : REFACTORING - Replace string trait to enum or instace of trait
+        [Obsolete("Replace string trait to enum or instace of trait", false)]
         int HasTempTrait(sGirl girl, string trait)
         { throw new NotImplementedException(); }
+        // TODO : REFACTORING - Replace string trait to enum or instace of trait
+        [Obsolete("Replace string trait to enum or instace of trait", false)]
         bool RestoreRememberedTrait(sGirl girl, string trait)
         { throw new NotImplementedException(); }
 
@@ -225,7 +271,7 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); } // girl makes sure best armor and weapons are equipped, ready for combat
         void UnequipCombat(sGirl girl)
         { throw new NotImplementedException(); } // girl unequips armor and weapons, ready for brothel work or other non-aggressive jobs
-        bool RemoveInvByNumber(sGirl girl, int Pos)
+        public bool RemoveInvByNumber(sGirl girl, int Pos)
         { throw new NotImplementedException(); }
 
         byte girl_fights_girl(sGirl a, sGirl b)
@@ -280,7 +326,7 @@ namespace WMaster.Manager
             }
             return true;
         }
-        int AddInv(sGirl girl, sInventoryItem item)
+        public int AddInv(sGirl girl, sInventoryItem item)
         { throw new NotImplementedException(); }
         bool EquipItem(sGirl girl, int num, bool force)
         { throw new NotImplementedException(); }
@@ -294,13 +340,21 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); }
         public void UseItems(sGirl girl)
         { throw new NotImplementedException(); }
-        int HasItem(sGirl girl, string name)
+        // TODO : REFACTORING - replace string name to item instance
+        [Obsolete("replace string name to item instance", false)]
+        public int HasItem(sGirl girl, string name)
         { throw new NotImplementedException(); }
-        int HasItemJ(sGirl girl, string name)
+        // TODO : REFACTORING - replace string name to item instance
+        [Obsolete("replace string name to item instance", false)]
+        public int HasItemJ(sGirl girl, string name)
         { throw new NotImplementedException(); } // `J` added
         //	void RemoveTrait(sGirl* girl, string name, bool addrememberlist = false, bool force = false);
+        // TODO : REFACTORING - replace string name to trait instance or enum
+        [Obsolete("replace string name to trait instance or enum", false)]
         public bool RemoveTrait(sGirl girl, string name, bool addrememberlist = false, bool force = false, bool keepinrememberlist = false)
         { throw new NotImplementedException(); }
+        // TODO : REFACTORING - replace string name to trait instance or enum
+        [Obsolete("replace string name to trait instance or enum", false)]
         void RemoveRememberedTrait(sGirl girl, string name)
         { throw new NotImplementedException(); }
         void RemoveAllRememberedTraits(sGirl girl)
@@ -331,8 +385,12 @@ namespace WMaster.Manager
         string GetGirlMood(sGirl girl)
         { throw new NotImplementedException(); }
 
+        // TODO : REFACTORING - replace string name to trait instance or enum
+        [Obsolete("replace string name to trait instance or enum", false)]
         public bool AddTrait(sGirl girl, string name, int temptime = 0, bool removeitem = false, bool inrememberlist = false)
         { throw new NotImplementedException(); }
+        // TODO : REFACTORING - replace string name to trait instance or enum
+        [Obsolete("replace string name to trait instance or enum", false)]
         void AddRememberedTrait(sGirl girl, string name)
         { throw new NotImplementedException(); }
         public bool LoseVirginity(sGirl girl, bool removeitem = false, bool remember = false)
@@ -429,7 +487,7 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); }
         string AccommodationDetails(sGirl girl, int acc)
         { throw new NotImplementedException(); }
-        int PreferredAccom(sGirl girl)
+        public int PreferredAccom(sGirl girl)
         { throw new NotImplementedException(); }
         public string catacombs_look_for(int girls, int items, int beast)
         { throw new NotImplementedException(); }

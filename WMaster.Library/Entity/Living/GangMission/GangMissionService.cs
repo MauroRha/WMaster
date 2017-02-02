@@ -209,32 +209,32 @@ namespace WMaster.Entity.Living.GangMission
             }
             if (service > 0)
             {
-                this.GangCible.AdjustSkill(EnumSkills.SERVICE, service);
-                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributService");
+                this.GangCible.AdjustSkill(EnumSkills.Service, service);
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributeService");
                 serviceMissionEvent.AppendLitteral(string.Format(" + {0}", service));
             }
             if (charisma > 0)
             {
-                this.GangCible.AdjustStat(EnumStats.CHARISMA, charisma);
-                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributCharisma");
+                this.GangCible.AdjustStat(EnumStats.Charisma, charisma);
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributeCharisma");
                 serviceMissionEvent.AppendLitteral(string.Format(" + {0}", charisma));
             }
             if (intelligence > 0)
             {
-                this.GangCible.AdjustStat(EnumStats.INTELLIGENCE, intelligence);
-                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributIntelligence");
+                this.GangCible.AdjustStat(EnumStats.Intelligence, intelligence);
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributeIntelligence");
                 serviceMissionEvent.AppendLitteral(string.Format(" + {0}", intelligence));
             }
             if (agility > 0)
             {
-                this.GangCible.AdjustStat(EnumStats.AGILITY, agility);
-                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributAgility");
+                this.GangCible.AdjustStat(EnumStats.Agility, agility);
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributeAgility");
                 serviceMissionEvent.AppendLitteral(string.Format(" + {0}", agility));
             }
             if (magic > 0)
             {
-                this.GangCible.AdjustSkill(EnumSkills.MAGIC, magic);
-                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributMagic");
+                this.GangCible.AdjustSkill(EnumSkills.Magic, magic);
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributeMagic");
                 serviceMissionEvent.AppendLitteral(string.Format(" + {0}", magic));
             }
             if (gold > 0)
@@ -245,7 +245,7 @@ namespace WMaster.Entity.Living.GangMission
                     new List<FormatStringParameter>() { new FormatStringParameter("Number", gold) });
             }
 
-            this.GangCible.m_Events.AddMessage(serviceMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+            this.GangCible.Events.AddMessage(serviceMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             return true;
         }
     }

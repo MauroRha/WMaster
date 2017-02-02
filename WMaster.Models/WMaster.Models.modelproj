@@ -22,6 +22,9 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="'$(VSToolsPath)' != ''" />
   <ItemGroup>
+    <None Include="ExportBitmap\GangManager.png">
+      <SubType>Content</SubType>
+    </None>
     <Content Include="NewGame.sequencediagram">
       <SubType>Content</SubType>
     </Content>
@@ -29,6 +32,7 @@
       <SubType>Content</SubType>
       <DependentUpon>NewGame.sequencediagram</DependentUpon>
     </Content>
+    <Folder Include="ExportBitmap\" />
     <Folder Include="ModelDefinition\" />
     <Content Include="GangManager.classdiagram">
       <SubType>Content</SubType>

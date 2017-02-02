@@ -314,8 +314,8 @@ namespace WMaster.Manager
                 }
                 item.Value = new_val;
             }
-            newGang.Stats[EnumStats.HEALTH].Value = 100;
-            newGang.Stats[EnumStats.HAPPINESS].Value = 100;
+            newGang.Stats[EnumStats.Health].Value = 100;
+            newGang.Stats[EnumStats.Happiness].Value = 100;
 
             newGang.Name = GetNewGangName();
 
@@ -531,8 +531,8 @@ namespace WMaster.Manager
             {
                 item.Value = WMRand.Random(30) + 21;
             }
-            newGang.Stats[EnumStats.HEALTH].Value = 100;
-            newGang.Stats[EnumStats.HAPPINESS].Value = 100;
+            newGang.Stats[EnumStats.Health].Value = 100;
+            newGang.Stats[EnumStats.Happiness].Value = 100;
             return newGang;
         }
         /// <summary>
@@ -554,8 +554,8 @@ namespace WMaster.Manager
                 item.Value = WMRand.Random(40) + 21 + WMRand.Random(mod);
                 item.Value = Math.Max(Math.Min(item.Value, 100), 1);
             }
-            newGang.Stats[EnumStats.HEALTH].Value = 100;
-            newGang.Stats[EnumStats.HAPPINESS].Value = 100;
+            newGang.Stats[EnumStats.Health].Value = 100;
+            newGang.Stats[EnumStats.Happiness].Value = 100;
 
             return newGang;
         }
@@ -578,7 +578,7 @@ namespace WMaster.Manager
             {
                 item.Value = WMRand.Random(30) + 51;
             }
-            newGang.Stats[EnumStats.HEALTH].Value = 100;
+            newGang.Stats[EnumStats.Health].Value = 100;
             return newGang;
         }
 
@@ -604,10 +604,10 @@ namespace WMaster.Manager
         {
             List<IValuableAttribut> possibleSkills = new List<IValuableAttribut>();
 
-            possibleSkills.Add(gang.Skills[EnumSkills.COMBAT]);
-            possibleSkills.Add(gang.Skills[EnumSkills.MAGIC]);
-            possibleSkills.Add(gang.Stats[EnumStats.AGILITY]);
-            possibleSkills.Add(gang.Stats[EnumStats.CONSTITUTION]);
+            possibleSkills.Add(gang.Skills[EnumSkills.Combat]);
+            possibleSkills.Add(gang.Skills[EnumSkills.Magic]);
+            possibleSkills.Add(gang.Stats[EnumStats.Agility]);
+            possibleSkills.Add(gang.Stats[EnumStats.Constitution]);
 
             BoostGangRandomSkill(possibleSkills, count, 1);
         }
@@ -733,21 +733,21 @@ namespace WMaster.Manager
             Tariff tariff = new Tariff();
             // Player's gang or first gang if rivalVrival = true
             gang1.HasSeenCombat = true;
-            EnumSkills g1attack = EnumSkills.COMBAT;
+            EnumSkills g1attack = EnumSkills.Combat;
             int initalNumber1 = gang1.MemberNum;
-            int g1dodge = gang1.Stats[EnumStats.AGILITY].Value;
+            int g1dodge = gang1.Stats[EnumStats.Agility].Value;
             if (rivalVrival)
             {
                 gang1.HealLimit = 10;
             }
-            int g1SwordLevel = (rivalVrival ? Math.Min(5, WMRand.Random(gang1.Skills[EnumSkills.COMBAT].Value / 20) + 1) : SwordLevel);
+            int g1SwordLevel = (rivalVrival ? Math.Min(5, WMRand.Random(gang1.Skills[EnumSkills.Combat].Value / 20) + 1) : SwordLevel);
 
             gang2.HasSeenCombat = true;
-            EnumSkills g2attack = EnumSkills.COMBAT;
+            EnumSkills g2attack = EnumSkills.Combat;
             int initalNumber2 = gang2.MemberNum;
-            int g2dodge = gang2.Stats[EnumStats.AGILITY].Value;
+            int g2dodge = gang2.Stats[EnumStats.Agility].Value;
             gang2.HealLimit = 10;
-            int g2SwordLevel = Math.Min(5, WMRand.Random(gang2.Skills[EnumSkills.COMBAT].Value / 20) + 1);
+            int g2SwordLevel = Math.Min(5, WMRand.Random(gang2.Skills[EnumSkills.Combat].Value / 20) + 1);
 
             int tmp = (gang1.MemberNum > gang2.MemberNum) ? gang1.MemberNum : gang2.MemberNum; // get the largest gang's number
 
@@ -757,32 +757,32 @@ namespace WMaster.Manager
                 int g1Mana = 100;
                 int g2Health = 100;
                 int g2Mana = 100;
-                g1attack = EnumSkills.MAGIC;
-                g2attack = EnumSkills.MAGIC;
+                g1attack = EnumSkills.Magic;
+                g2attack = EnumSkills.Magic;
 
                 while (g1Health > 0 && g2Health > 0)
                 {
                     // set what they attack with
-                    g1attack = g1Mana <= 0 ? EnumSkills.COMBAT : EnumSkills.MAGIC;
-                    g2attack = g2Mana <= 0 ? EnumSkills.COMBAT : EnumSkills.MAGIC;
+                    g1attack = g1Mana <= 0 ? EnumSkills.Combat : EnumSkills.Magic;
+                    g2attack = g2Mana <= 0 ? EnumSkills.Combat : EnumSkills.Magic;
 
                     // gang1 attacks
-                    if (g1attack == EnumSkills.MAGIC)
+                    if (g1attack == EnumSkills.Magic)
                     {
                         g1Mana -= 7; // spend the mana before attacking
                     }
                     if (WMRand.Percent(gang1.Skills[g1attack].Value))
                     {
                         int damage = (g1SwordLevel + 1) * Math.Max(1, gang1.Strength / 10);
-                        if (g1attack == EnumSkills.MAGIC)
+                        if (g1attack == EnumSkills.Magic)
                         {
-                            damage += gang1.Skills[EnumSkills.MAGIC].Value / 10 + 3;
+                            damage += gang1.Skills[EnumSkills.Magic].Value / 10 + 3;
                         }
 
                         // gang 2 attempts Dodge
                         if (!WMRand.Percent(g2dodge))
                         {
-                            damage = Math.Max(1, (damage - (gang2.Stats[EnumStats.CONSTITUTION].Value / 15)));
+                            damage = Math.Max(1, (damage - (gang2.Stats[EnumStats.Constitution].Value / 15)));
                             g2Health -= damage;
                         }
                     }
@@ -795,21 +795,21 @@ namespace WMaster.Manager
                     }
 
                     // gang2 Attacks
-                    if (g2attack == EnumSkills.MAGIC)
+                    if (g2attack == EnumSkills.Magic)
                     {
                         g2Mana -= 7; // spend the mana before attacking
                     }
                     if (WMRand.Percent(gang2.Skills[g2attack].Value))
                     {
                         int damage = (g2SwordLevel + 1) * Math.Max(1, gang2.Strength / 10);
-                        if (g2attack == EnumSkills.MAGIC)
+                        if (g2attack == EnumSkills.Magic)
                         {
-                            damage += gang2.Skills[EnumSkills.MAGIC].Value / 10 + 3;
+                            damage += gang2.Skills[EnumSkills.Magic].Value / 10 + 3;
                         }
 
                         if (!WMRand.Percent(g1dodge))
                         {
-                            damage = Math.Max(1, (damage - (gang1.Stats[EnumStats.CONSTITUTION].Value / 15)));
+                            damage = Math.Max(1, (damage - (gang1.Stats[EnumStats.Constitution].Value / 15)));
                             g1Health -= damage;
                         }
                     }
@@ -887,7 +887,7 @@ namespace WMaster.Manager
                 // MYR: Sanity check: Incorporeal is an auto-win.
                 if (girl.has_trait("Incorporeal"))
                 {
-                    girl.m_Stats[(int)EnumStats.HEALTH] = 100;
+                    girl.m_Stats[(int)EnumStats.Health] = 100;
                     WMLog.Trace(string.Format("Girl vs. Goons: '{0}' is incorporeal, so she wins.", girl.Realname), WMLog.TraceLog.INFORMATION);
                     gang.MemberNum = (int)gang.MemberNum / 2;
                     while (gang.MemberNum > 0) // Do the casualty calculation
@@ -912,13 +912,13 @@ namespace WMaster.Manager
                 }
 
                 int dodge = 0;
-                EnumSkills attack = EnumSkills.COMBAT; // determined later, defaults to combat
-                EnumSkills gattack = EnumSkills.COMBAT;
+                EnumSkills attack = EnumSkills.Combat; // determined later, defaults to combat
+                EnumSkills gattack = EnumSkills.Combat;
 
                 int initalNumber = gang.MemberNum;
 
-                attack = (girl.combat() >= girl.magic()) ? EnumSkills.COMBAT : EnumSkills.MAGIC; // first determine what she will fight with
-                gattack = (gang.Combat >= gang.Magic) ? EnumSkills.COMBAT : EnumSkills.MAGIC; // determine how gang will fight
+                attack = (girl.combat() >= girl.magic()) ? EnumSkills.Combat : EnumSkills.Magic; // first determine what she will fight with
+                gattack = (gang.Combat >= gang.Magic) ? EnumSkills.Combat : EnumSkills.Magic; // determine how gang will fight
 
                 dodge = Math.Max(0, (girl.agility()) - girl.tiredness());
 
@@ -942,7 +942,7 @@ namespace WMaster.Manager
                 for (int i = 0; i < numGoons; i++)
                 {
                     int gHealth = 100;
-                    int gDodge = gang.Stats[EnumStats.AGILITY].Value;
+                    int gDodge = gang.Stats[EnumStats.Agility].Value;
                     int gMana = 100;
 
                     WMLog.Trace(string.Format("Goon #{0}: Health 100, Dodge {1}, Mana", i, gDodge), WMLog.TraceLog.INFORMATION);
@@ -952,7 +952,7 @@ namespace WMaster.Manager
                         // Girl attacks
                         WMLog.Trace(string.Format("    {0} attacks the goon.", girl.Realname), WMLog.TraceLog.INFORMATION);
 
-                        if (attack == EnumSkills.MAGIC)
+                        if (attack == EnumSkills.Magic)
                         {
                             if (girl.mana() < 7)
                             {
@@ -1006,7 +1006,7 @@ namespace WMaster.Manager
                             }
                             else
                             {
-                                int conMod = gang.Stats[EnumStats.CONSTITUTION].Value / 10;
+                                int conMod = gang.Stats[EnumStats.Constitution].Value / 10;
                                 gHealth -= conMod;
                                 WMLog.Trace(string.Format("      Failure!" + Environment.NewLine
                                     + "      Goon takes {0} damage, less {1} for CON" + Environment.NewLine
@@ -1038,11 +1038,11 @@ namespace WMaster.Manager
                             WMLog.Trace("      attack succeeds!", WMLog.TraceLog.INFORMATION);
 
                             int damage = (SwordLevel + 1) * Math.Max(1, gang.Strength / 10);
-                            if (gattack == EnumSkills.MAGIC)
+                            if (gattack == EnumSkills.Magic)
                             {
                                 if (gMana <= 0)
                                 {
-                                    gattack = EnumSkills.COMBAT;
+                                    gattack = EnumSkills.Combat;
                                 }
                                 else
                                 {
@@ -1054,8 +1054,8 @@ namespace WMaster.Manager
                             // girl attempts Dodge
                             if (!WMRand.Percent(dodge))
                             {
-                                damage = Math.Max(1, (damage - (Game.Girls.GetStat(girl, (int)EnumStats.CONSTITUTION) / 15)));
-                                Game.Girls.UpdateStat(girl, (int)EnumStats.HEALTH, -damage);
+                                damage = Math.Max(1, (damage - (Game.Girls.GetStat(girl, (int)EnumStats.Constitution) / 15)));
+                                Game.Girls.UpdateStat(girl, (int)EnumStats.Health, -damage);
                             }
                         }
 
@@ -1073,7 +1073,7 @@ namespace WMaster.Manager
                         }
                     }
 
-                    if (Game.Girls.GetStat(girl, (int)EnumStats.HEALTH) <= 20)
+                    if (Game.Girls.GetStat(girl, (int)EnumStats.Health) <= 20)
                     {
                         BoostGangCombatSkills(gang, 2);
                         Game.Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, -1);
@@ -1132,7 +1132,7 @@ namespace WMaster.Manager
             // MYR: Sanity check: Incorporeal is an auto-win.
             if (girl.has_trait("Incorporeal"))
             {
-                girl.m_Stats[(int)EnumStats.HEALTH] = 100;
+                girl.m_Stats[(int)EnumStats.Health] = 100;
 
                 WMLog.Trace(string.Format("Girl vs. Goons: {0} is incorporeal, so she wins.", girl.Realname), WMLog.TraceLog.INFORMATION);
 
@@ -1152,11 +1152,11 @@ namespace WMaster.Manager
                 return true;
             }
 
-            int dodge = Game.Girls.GetStat(girl, (int)EnumStats.AGILITY); // MYR: Was 0
-            int mana = Game.Girls.GetStat(girl, (int)EnumStats.MANA); // MYR: Like agility, mana is now per battle
+            int dodge = Game.Girls.GetStat(girl, (int)EnumStats.Agility); // MYR: Was 0
+            int mana = Game.Girls.GetStat(girl, (int)EnumStats.Mana); // MYR: Like agility, mana is now per battle
 
-            EnumSkills attack = EnumSkills.COMBAT; // determined later, defaults to combat
-            EnumSkills goonAttack = EnumSkills.COMBAT;
+            EnumSkills attack = EnumSkills.Combat; // determined later, defaults to combat
+            EnumSkills goonAttack = EnumSkills.Combat;
 
             if (enemyGang == null || enemyGang.MemberNum == 0)
             {
@@ -1164,23 +1164,23 @@ namespace WMaster.Manager
             }
 
             // first determine what she will fight with
-            if (Game.Girls.GetSkill(girl, (int)EnumSkills.COMBAT) > Game.Girls.GetSkill(girl, (int)EnumSkills.MAGIC))
+            if (Game.Girls.GetSkill(girl, (int)EnumSkills.Combat) > Game.Girls.GetSkill(girl, (int)EnumSkills.Magic))
             {
-                attack = EnumSkills.COMBAT;
+                attack = EnumSkills.Combat;
             }
             else
             {
-                attack = EnumSkills.MAGIC;
+                attack = EnumSkills.Magic;
             }
 
             // determine how gang will fight
-            if (enemyGang.Skills[EnumSkills.COMBAT].Value > enemyGang.Skills[EnumSkills.MAGIC].Value)
+            if (enemyGang.Skills[EnumSkills.Combat].Value > enemyGang.Skills[EnumSkills.Magic].Value)
             {
-                goonAttack = EnumSkills.COMBAT;
+                goonAttack = EnumSkills.Combat;
             }
             else
             {
-                goonAttack = EnumSkills.MAGIC;
+                goonAttack = EnumSkills.Magic;
             }
 
             int initialNum = enemyGang.MemberNum;
@@ -1191,34 +1191,34 @@ namespace WMaster.Manager
             WMLog.Trace(string.Format("{0}: Health {1}, Dodge {2}, Mana {3}",
                 girl.Realname,
                 girl.health(),
-                Game.Girls.GetStat(girl, (int)EnumStats.AGILITY),
+                Game.Girls.GetStat(girl, (int)EnumStats.Agility),
                 girl.mana()), WMLog.TraceLog.INFORMATION);
 
             for (int i = 0; i < initialNum; i++)
             {
                 WMLog.Trace(string.Format("Goon #{0}: Health: {1}, Mana: {2}, Dodge: {3}, Attack:{4}, Constitution:{5}",
                     i,
-                    enemyGang.Stats[EnumStats.HEALTH].Value,
-                    enemyGang.Stats[EnumStats.MANA].Value,
-                    enemyGang.Stats[EnumStats.AGILITY].Value,
+                    enemyGang.Stats[EnumStats.Health].Value,
+                    enemyGang.Stats[EnumStats.Mana].Value,
+                    enemyGang.Stats[EnumStats.Agility].Value,
                     enemyGang.Skills[goonAttack].Value,
-                    enemyGang.Stats[EnumStats.CONSTITUTION].Value), WMLog.TraceLog.INFORMATION);
+                    enemyGang.Stats[EnumStats.Constitution].Value), WMLog.TraceLog.INFORMATION);
 
-                int gHealth = enemyGang.Stats[EnumStats.HEALTH].Value;
-                int gDodge = enemyGang.Stats[EnumStats.AGILITY].Value;
-                int gMana = enemyGang.Stats[EnumStats.MANA].Value;
+                int gHealth = enemyGang.Stats[EnumStats.Health].Value;
+                int gDodge = enemyGang.Stats[EnumStats.Agility].Value;
+                int gMana = enemyGang.Stats[EnumStats.Mana].Value;
 
-                while (Game.Girls.GetStat(girl, (int)EnumStats.HEALTH) >= 20 && gHealth > 0)
+                while (Game.Girls.GetStat(girl, (int)EnumStats.Health) >= 20 && gHealth > 0)
                 {
                     // Girl attacks
                     WMLog.Trace(string.Format("  {0} attacks the goon.", girl.Realname), WMLog.TraceLog.INFORMATION);
 
-                    if (attack == EnumSkills.MAGIC)
+                    if (attack == EnumSkills.Magic)
                     {
 
                         if (mana < 5)
                         {
-                            attack = EnumSkills.COMBAT;
+                            attack = EnumSkills.Combat;
                             WMLog.Trace(string.Format("    {0} insufficient mana: using combat.", girl.Realname), WMLog.TraceLog.INFORMATION);
                         }
                         else
@@ -1259,7 +1259,7 @@ namespace WMaster.Manager
                         }
                         else
                         {
-                            int conMod = enemyGang.Stats[EnumStats.CONSTITUTION].Value / 20;
+                            int conMod = enemyGang.Stats[EnumStats.Constitution].Value / 20;
                             damage -= conMod;
                             if (damage <= 0) // MYR: Minimum 1 damage on hit
                             {
@@ -1291,11 +1291,11 @@ namespace WMaster.Manager
                         // MYR: Goon damage calculation is different from girl's.  Do we care?
                         int damage = 5 + enemyGang.Skills[goonAttack].Value / 10;
 
-                        if (goonAttack == EnumSkills.MAGIC)
+                        if (goonAttack == EnumSkills.Magic)
                         {
                             if (gMana < 10)
                             {
-                                goonAttack = EnumSkills.COMBAT;
+                                goonAttack = EnumSkills.Combat;
                             }
                             else
                             {
@@ -1347,7 +1347,7 @@ namespace WMaster.Manager
                     }
                 } // While loop
 
-                if (Game.Girls.GetStat(girl, (int)EnumStats.HEALTH) <= 20)
+                if (Game.Girls.GetStat(girl, (int)EnumStats.Health) <= 20)
                 {
                     WMLog.Trace(string.Format("The gang overwhelmed and defeated {0}. She lost the battle.", girl.Realname), WMLog.TraceLog.INFORMATION);
                     Game.Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, -5);
@@ -1743,7 +1743,7 @@ namespace WMaster.Manager
                 pc += (int)(5 * item.MemberNum * mod);
 
                 // GBN : Moving upgrading inteligence stat inside loop to affect all gangs instead of only last of them.
-                BoostGangSkill(item.Stats[EnumStats.INTELLIGENCE], 1);
+                BoostGangSkill(item.Stats[EnumStats.Intelligence], 1);
             }
             if (pc > 100)
             {
@@ -1778,7 +1778,7 @@ namespace WMaster.Manager
             if (!WMRand.Percent(Math.Min(90, gang.Intelligence)))
             {
 
-                gang.m_Events.AddMessage(
+                gang.Events.AddMessage(
                     LocalString.GetString(LocalString.ResourceStringCategory.GangMission, "TheyFailedToFindAnyEnemyAssetsToHit"),
                     ImageType.PROFILE, EventType.Gang);
                 return false;
@@ -1797,7 +1797,7 @@ namespace WMaster.Manager
             Gang rivalGang;
             if (rival == null)
             {
-                gang.m_Events.AddMessage(
+                gang.Events.AddMessage(
                     LocalString.GetString(LocalString.ResourceStringCategory.GangMission, "ScoutedTheCityInVainSeekingWouldBeChallengersToYourDominance"),
                     ImageType.PROFILE, EventType.Gang);
                 return false;
@@ -1834,7 +1834,7 @@ namespace WMaster.Manager
                             "YourMenLostThe[GangMemberNum]SurvivorsFightTheirWayBackToFriendlyTerritory",
                             new List<FormatStringParameter>() { new FormatStringParameter("GangMemberNum", gang.MemberNum) });
                     }
-                    gang.m_Events.AddMessage(sabotageEvent.ToString(), ImageType.PROFILE, EventType.Danger);
+                    gang.Events.AddMessage(sabotageEvent.ToString(), ImageType.PROFILE, EventType.Danger);
                     return false;
                 }
                 else
@@ -1878,7 +1878,7 @@ namespace WMaster.Manager
             }
 
             // if we had an objective to attack a rival we just achieved it
-            if (Game.Brothels.GetObjective() != null && Game.Brothels.GetObjective().m_Objective == (int)Objectives.LAUNCHSUCCESSFULATTACK)
+            if (Game.Brothels.CurrentObjective != null && Game.Brothels.CurrentObjective.Objective == Objectives.LAUNCHSUCCESSFULATTACK)
             {
                 Game.Brothels.PassObjective();
             }
@@ -2145,8 +2145,8 @@ namespace WMaster.Manager
                 }
             }
 
-            BoostGangSkill(gang.Stats[EnumStats.INTELLIGENCE], 2);
-            gang.m_Events.AddMessage(sabotageEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+            BoostGangSkill(gang.Stats[EnumStats.Intelligence], 2);
+            gang.Events.AddMessage(sabotageEvent.ToString(), ImageType.PROFILE, EventType.Gang);
 
             // See if the rival is eliminated:  If 4 or more are zero or less, the rival is eliminated
             int VictoryPoints = 0;
@@ -2183,7 +2183,7 @@ namespace WMaster.Manager
                     "YouHaveDealt[RivalName]AFatalBlowTheirCriminalOrganizationCrumblesToNothingBeforeYou",
                     new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 Game.Brothels.m_Rivals.RemoveRival(rival);
-                gang.m_Events.AddMessage(ssVic.ToString(), ImageType.PROFILE, EventType.GoodNews);
+                gang.Events.AddMessage(ssVic.ToString(), ImageType.PROFILE, EventType.GoodNews);
             }
             return true;
         }
@@ -2210,7 +2210,7 @@ namespace WMaster.Manager
                 recaptureEven.AppendLine(
                     LocalString.ResourceStringCategory.GangMission,
                     "ThereAreNoneOfYourGirlsWhoHaveRunAwaySoTheyHaveNooneToLookFor");
-                gang.m_Events.AddMessage(recaptureEven.ToString(), ImageType.PROFILE, EventType.Gang);
+                gang.Events.AddMessage(recaptureEven.ToString(), ImageType.PROFILE, EventType.Gang);
                 return false;
             }
 
@@ -2297,7 +2297,7 @@ namespace WMaster.Manager
                         LocalString.ResourceStringCategory.Girl,
                         "[GirlName]WasCapturedInANetAndDraggedBackToTheDungeonBy[GangName]",
                         new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", gang.Name) });
-                    BoostGangSkill(gang.Stats[EnumStats.INTELLIGENCE], 2);
+                    BoostGangSkill(gang.Stats[EnumStats.Intelligence], 2);
                 }
                 else
                 {
@@ -2328,7 +2328,7 @@ namespace WMaster.Manager
                             LocalString.ResourceStringCategory.Girl,
                             "[GirlName]FoughtWith[GangName]ButLostSheWasDraggedBackToTheDungeon",
                             new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", gang.Name) });
-                        BoostGangSkill(gang.Skills[EnumSkills.COMBAT], 1);
+                        BoostGangSkill(gang.Skills[EnumSkills.Combat], 1);
                         captured = true;
                     }
                     else
@@ -2364,7 +2364,7 @@ namespace WMaster.Manager
                 }
             }
 
-            gang.m_Events.AddMessage(recaptureEven.ToString(), ImageType.PROFILE, gangEventType);
+            gang.Events.AddMessage(recaptureEven.ToString(), ImageType.PROFILE, gangEventType);
             if (captured)
             {
                 runnaway.Events.AddMessage(RGmsg.ToString(), girlImageType, EventType.Gang);
@@ -2490,7 +2490,7 @@ namespace WMaster.Manager
                         else
                         {
                             extortionEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourGangHasBeenDefeatedAndFailToTakeControlOfAnyNewTerritory");
-                            gang.m_Events.AddMessage(extortionEven.ToString(), ImageType.PROFILE, EventType.Gang);
+                            gang.Events.AddMessage(extortionEven.ToString(), ImageType.PROFILE, EventType.Gang);
                             return false;
                         }
                         rival_gang = null;
@@ -2537,11 +2537,11 @@ namespace WMaster.Manager
                 }
             }
 
-            gang.m_Events.AddMessage(extortionEven.ToString(), ImageType.PROFILE, EventType.Gang);
+            gang.Events.AddMessage(extortionEven.ToString(), ImageType.PROFILE, EventType.Gang);
 
-            if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.EXTORTXNEWBUSINESS))
+            if ((Game.Brothels.CurrentObjective != null) && (Game.Brothels.CurrentObjective.Objective == Objectives.EXTORTXNEWBUSINESS))
             {
-                Game.Brothels.GetObjective().m_SoFar += n;
+                Game.Brothels.CurrentObjective.SoFar += n;
             }
 
             return true;
@@ -2596,7 +2596,7 @@ namespace WMaster.Manager
                 else
                 {
                     pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenLoseTheFight");
-                    gang.m_Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
+                    gang.Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
                     return false;
                 }
                 if (rival != null && rival.m_NumGangs > 0 && rivalGang.MemberNum <= 0)
@@ -2652,8 +2652,8 @@ namespace WMaster.Manager
                     if (!GangCombat(girl, gang))
                     {
                         gangMemberNumLost += gangMemberNumStart - gang.MemberNum;
-                        int goldWin = girl.m_Money > 0 ? girl.m_Money : WMRand.Random(100) + 1; // take all her money or 1-100 if she has none
-                        girl.m_Money = 0;
+                        int goldWin = girl.Money > 0 ? girl.Money : WMRand.Random(100) + 1; // take all her money or 1-100 if she has none
+                        girl.Money = 0;
                         Game.Gold.PettyTheft(goldWin);
 
                         if (gangMemberNumLost > gangMemberNumStart / 2)
@@ -2678,7 +2678,7 @@ namespace WMaster.Manager
                             new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("Number", goldWin) });
                         girlImageType = ImageType.DEATH;
                         dungeonReason = DungeonReasons.GIRLKIDNAPPED;
-                        girl.m_Stats[(int)EnumStats.OBEDIENCE] = 0;
+                        girl.m_Stats[(int)EnumStats.Obedience] = 0;
                         girl.add_trait("Kidnapped", 5 + WMRand.Random(11));
 
                         // TODO : What to do with NGmsg ?!?
@@ -2686,22 +2686,22 @@ namespace WMaster.Manager
                             LocalString.ResourceStringCategory.Girl,
                             "[GirlName]TriedToStop[GangName]FromComittingPettyTheftButLostSheWasDraggedBackToTheDungeon",
                             new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.Realname), new FormatStringParameter("GangName", gang.Name) });
-                        BoostGangSkill(gang.Skills[EnumSkills.COMBAT], 1);
+                        BoostGangSkill(gang.Skills[EnumSkills.Combat], 1);
 
-                        if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.STEALXAMOUNTOFGOLD))
+                        if ((Game.Brothels.CurrentObjective != null) && (Game.Brothels.CurrentObjective.Objective == Objectives.STEALXAMOUNTOFGOLD))
                         {
-                            Game.Brothels.GetObjective().m_SoFar += goldWin;
+                            Game.Brothels.CurrentObjective.SoFar += goldWin;
                         }
-                        if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.KIDNAPXGIRLS))
+                        if ((Game.Brothels.CurrentObjective != null) && (Game.Brothels.CurrentObjective.Objective == Objectives.KIDNAPXGIRLS))
                         {
-                            Game.Brothels.GetObjective().m_SoFar++; // `J` You are technically kidnapping her
+                            Game.Brothels.CurrentObjective.SoFar++; // `J` You are technically kidnapping her
                         }
                         return true;
                     }
                     else
                     {
                         pettyTheftEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "SheDefeatsYourMenAndDisappearsBackIntoTheShadows");
-                        gang.m_Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
+                        gang.Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
                         return false;
                     }
                 }
@@ -2813,13 +2813,13 @@ namespace WMaster.Manager
                 }
             }
 
-            gang.m_Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
+            gang.Events.AddMessage(pettyTheftEven.ToString(), ImageType.PROFILE, EventType.Gang);
 
             Game.Gold.PettyTheft(gold);
 
-            if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.STEALXAMOUNTOFGOLD))
+            if ((Game.Brothels.CurrentObjective != null) && (Game.Brothels.CurrentObjective.Objective == Objectives.STEALXAMOUNTOFGOLD))
             {
-                Game.Brothels.GetObjective().m_SoFar += gold;
+                Game.Brothels.CurrentObjective.SoFar += gold;
             }
             return true;
         }
@@ -2922,7 +2922,7 @@ namespace WMaster.Manager
                 if (!GangBrawl(gang, defenders, false))
                 {
                     grandTheftEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenLoseTheFight");
-                    gang.m_Events.AddMessage(grandTheftEvent.ToString(), ImageType.PROFILE, EventType.Danger);
+                    gang.Events.AddMessage(grandTheftEvent.ToString(), ImageType.PROFILE, EventType.Danger);
                     return false;
                 }
                 grandTheftEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenWin");
@@ -2946,11 +2946,11 @@ namespace WMaster.Manager
             Game.Player.suspicion(gold / 1000);
 
             Game.Gold.GrandTheft(gold);
-            gang.m_Events.AddMessage(grandTheftEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+            gang.Events.AddMessage(grandTheftEvent.ToString(), ImageType.PROFILE, EventType.Gang);
 
-            if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.STEALXAMOUNTOFGOLD))
+            if ((Game.Brothels.CurrentObjective != null) && (Game.Brothels.CurrentObjective.Objective == Objectives.STEALXAMOUNTOFGOLD))
             {
-                Game.Brothels.GetObjective().m_SoFar += gold;
+                Game.Brothels.CurrentObjective.SoFar += gold;
             }
             return true;
         }
@@ -2995,7 +2995,7 @@ namespace WMaster.Manager
                     are at zero or set to zero when they are sent to the dungeon. I'm not sure
                     how to fix it, so I'm explicitly setting the percentage to 60 here */
                     // TODO : Remove house stat fixing when bug set to 0 when enter dungeon as fixed
-                    girl.m_Stats[(int)EnumStats.HOUSE] = 60;
+                    girl.m_Stats[(int)EnumStats.House] = 60;
 
                     if (WMRand.Percent(Math.Min(75, gang.Charisma))) // convince her
                     {
@@ -3008,12 +3008,12 @@ namespace WMaster.Manager
                            "[GirlName]WasTalkedIntoWorkingForYouBy[GangName]",
                            new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", gang.Name) });
                         dungeonReason = DungeonReasons.NEWGIRL;
-                        BoostGangSkill(gang.Stats[EnumStats.CHARISMA], 3);
+                        BoostGangSkill(gang.Stats[EnumStats.Charisma], 3);
                         captured = true;
-                        if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.KIDNAPXGIRLS))
+                        if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().Objective == Objectives.KIDNAPXGIRLS))
                         {
-                            Game.Brothels.GetObjective().m_SoFar++; // `J` Added to make Charisma Kidnapping count
-                            if (WMRand.Percent(Game.Brothels.GetObjective().m_Target * 10)) // but possibly reduce the reward to gold only
+                            Game.Brothels.GetObjective().SoFar++; // `J` Added to make Charisma Kidnapping count
+                            if (WMRand.Percent(Game.Brothels.GetObjective().Target * 10)) // but possibly reduce the reward to gold only
                             {
                                 Game.Brothels.GetObjective().m_Reward = (int)Rewards.GOLD;
                             }
@@ -3081,7 +3081,7 @@ namespace WMaster.Manager
                                 "SheStrugglesAgainstTheNetYourMenUseButItIsPointlessSheIsInYourDungeonNow");
                             girlImageType = ImageType.DEATH;
                             dungeonReason = DungeonReasons.GIRLKIDNAPPED;
-                            girl.m_Stats[(int)EnumStats.OBEDIENCE] = 0;
+                            girl.m_Stats[(int)EnumStats.Obedience] = 0;
                             girl.add_trait("Kidnapped", 5 + WMRand.Random(11));
                             kidnappMissionEvent.AppendLineFormat(
                                 LocalString.ResourceStringCategory.GangMission,
@@ -3091,7 +3091,7 @@ namespace WMaster.Manager
                                 LocalString.ResourceStringCategory.Girl,
                                 "[GirlName]WasCapturedInANetAndDraggedBackToTheDungeonBy[GangName]",
                                 new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", gang.Name) });
-                            BoostGangSkill(gang.Stats[EnumStats.INTELLIGENCE], 2);
+                            BoostGangSkill(gang.Stats[EnumStats.Intelligence], 2);
                         }
                         else
                         {
@@ -3116,14 +3116,14 @@ namespace WMaster.Manager
                             {
                                 girlImageType = ImageType.DEATH;
                                 dungeonReason = DungeonReasons.GIRLKIDNAPPED;
-                                girl.m_Stats[(int)EnumStats.OBEDIENCE] = 0;
+                                girl.m_Stats[(int)EnumStats.Obedience] = 0;
                                 girl.add_trait("Kidnapped", 10 + WMRand.Random(11));
                                 kidnappMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "SheFightsBackButYourMenSucceedInKidnappingHer");
                                 NGmsg.AppendLineFormat(
                                     LocalString.ResourceStringCategory.Girl,
                                     "[GirlName]FoughtWith[GangName]ButLostSheWasDraggedBackToTheDungeon",
                                     new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.Realname), new FormatStringParameter("GangName", gang.Name) });
-                                BoostGangSkill(gang.Skills[EnumSkills.COMBAT], 1);
+                                BoostGangSkill(gang.Skills[EnumSkills.Combat], 1);
                                 captured = true;
                             }
                             else
@@ -3167,20 +3167,20 @@ namespace WMaster.Manager
                     {
                         girl.Events.AddMessage(NGmsg.ToString(), girlImageType, eventType);
                         Game.Dungeon.AddGirl(girl, dungeonReason);
-                        BoostGangSkill(gang.Stats[EnumStats.INTELLIGENCE], 1);
+                        BoostGangSkill(gang.Stats[EnumStats.Intelligence], 1);
                     }
-                    gang.m_Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, gangEventType);
+                    gang.Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, gangEventType);
                 }
                 else
                 {
                     kidnappMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheyFailedToFindAnyGirlsToKidnap");
-                    gang.m_Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+                    gang.Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
                 }
             }
             else
             {
                 kidnappMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheyFailedToFindAnyGirlsToKidnap");
-                gang.m_Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+                gang.Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             }
             return captured;
         }
@@ -3347,9 +3347,9 @@ namespace WMaster.Manager
                             }
                         }
 
-                        if ((Game.Brothels.GetObjective() != null) && Game.Brothels.GetObjective().m_Objective == (int)Objectives.CAPTUREXCATACOMBGIRLS)
+                        if ((Game.Brothels.GetObjective() != null) && Game.Brothels.GetObjective().Objective == Objectives.CAPTUREXCATACOMBGIRLS)
                         {
-                            Game.Brothels.GetObjective().m_SoFar++;
+                            Game.Brothels.GetObjective().SoFar++;
                         }
 
                         catacombsMissionEvent.NewLine();
@@ -3654,9 +3654,9 @@ namespace WMaster.Manager
                                 }
                             }
                             if ((ugirl != null) && (Game.Brothels.GetObjective() != null)
-                                && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.CAPTUREXCATACOMBGIRLS))
+                                && (Game.Brothels.GetObjective().Objective == Objectives.CAPTUREXCATACOMBGIRLS))
                             {
-                                Game.Brothels.GetObjective().m_SoFar++;
+                                Game.Brothels.GetObjective().SoFar++;
                             }
                         }
                     }
@@ -3758,7 +3758,7 @@ namespace WMaster.Manager
                     }
                 }
             }
-            gang.m_Events.AddMessage(catacombsMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+            gang.Events.AddMessage(catacombsMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             return true;
  
         }
@@ -3909,32 +3909,32 @@ namespace WMaster.Manager
             }
             if (service > 0)
             {
-                gang.AdjustSkill(EnumSkills.SERVICE, service);
-                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributService");
+                gang.AdjustSkill(EnumSkills.Service, service);
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributeService");
                 serviceMissionEvent.AppendLitteral(string.Format(" + {0}", service));
             }
             if (charisma > 0)
             {
-                gang.AdjustStat(EnumStats.CHARISMA, charisma);
-                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributCharisma");
+                gang.AdjustStat(EnumStats.Charisma, charisma);
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributeCharisma");
                 serviceMissionEvent.AppendLitteral(string.Format(" + {0}", charisma));
             }
             if (intelligence > 0)
             {
-                gang.AdjustStat(EnumStats.INTELLIGENCE, intelligence);
-                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributIntelligence");
+                gang.AdjustStat(EnumStats.Intelligence, intelligence);
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributeIntelligence");
                 serviceMissionEvent.AppendLitteral(string.Format(" + {0}", intelligence));
             }
             if (agility > 0)
             {
-                gang.AdjustStat(EnumStats.AGILITY, agility);
-                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributAgility");
+                gang.AdjustStat(EnumStats.Agility, agility);
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributeAgility");
                 serviceMissionEvent.AppendLitteral(string.Format(" + {0}", agility));
             }
             if (magic > 0)
             {
-                gang.AdjustSkill(EnumSkills.MAGIC, magic);
-                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributMagic");
+                gang.AdjustSkill(EnumSkills.Magic, magic);
+                serviceMissionEvent.Append(LocalString.ResourceStringCategory.Global, "AttributeMagic");
                 serviceMissionEvent.AppendLitteral(string.Format(" + {0}", magic));
             }
             if (gold > 0)
@@ -3945,7 +3945,7 @@ namespace WMaster.Manager
                     new List<FormatStringParameter>() { new FormatStringParameter("Number", gold) });
             }
 
-            gang.m_Events.AddMessage(serviceMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+            gang.Events.AddMessage(serviceMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             return true;
         }
 
@@ -3993,42 +3993,42 @@ namespace WMaster.Manager
             //if (gang.Skills[EnumSkills.COMBAT].Value > oldCombat)
             //{
             //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Skills[EnumSkills.COMBAT].Value - oldCombat));
-            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributCombat");
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeCombat");
             //}
             //if (gang.Skills[EnumSkills.MAGIC].Value > oldMagic)
             //{
             //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Skills[EnumSkills.MAGIC].Value - oldMagic));
-            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributMagic");
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeMagic");
             //}
             //if (gang.Stats[EnumStats.INTELLIGENCE].Value > oldIntelligence)
             //{
             //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.INTELLIGENCE].Value - oldIntelligence));
-            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributIntelligence");
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeIntelligence");
             //}
             //if (gang.Stats[EnumStats.AGILITY].Value > oldAgility)
             //{
             //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.AGILITY].Value - oldAgility));
-            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributAgility");
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeAgility");
             //}
             //if (gang.Stats[EnumStats.CONSTITUTION].Value > oldConstitution)
             //{
             //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.CONSTITUTION].Value - oldConstitution));
-            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributToughness");
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeToughness");
             //}
             //if (gang.Stats[EnumStats.CHARISMA].Value > oldCharisma)
             //{
             //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.CHARISMA].Value - oldCharisma));
-            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributCharisma");
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeCharisma");
             //}
             //if (gang.Stats[EnumStats.STRENGTH].Value > oldStrength)
             //{
             //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Stats[EnumStats.STRENGTH].Value - oldStrength));
-            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributStrength");
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeStrength");
             //}
             //if (gang.Skills[EnumSkills.SERVICE].Value > oldService)
             //{
             //    gangTrainingEvent.AppendLitteral(string.Format("{0} ", this.GangCible.Skills[EnumSkills.SERVICE].Value - oldService));
-            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributService");
+            //    gangTrainingEvent.AppendLine(LocalString.ResourceStringCategory.Global, "AttributeService");
             //}
 
             //gang.m_Events.AddMessage(gangTrainingEvent.ToString(), ImageType.PROFILE, EventType.Gang);
@@ -4282,7 +4282,7 @@ namespace WMaster.Manager
                         {
                             gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "ButNoneShowedUp");
                         }
-                        passTo.m_Events.AddMessage(pss.ToString(), ImageType.PROFILE, EventType.Gang);
+                        passTo.Events.AddMessage(pss.ToString(), ImageType.PROFILE, EventType.Gang);
                     }
                     else
                     {
@@ -4290,7 +4290,7 @@ namespace WMaster.Manager
                     }
                 }
             }
-            gang.m_Events.AddMessage(gangRecruitingEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+            gang.Events.AddMessage(gangRecruitingEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             gang.HasSeenCombat = true; // though not actually combat, this prevents the automatic +1 member at the end of the week
             return false;
         }
@@ -4384,7 +4384,7 @@ namespace WMaster.Manager
                     LocalString.ResourceStringCategory.GangMission,
                     "Gang[GangName]WereSetToRecruitDueToLowNumbers",
                     new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
-                gang.m_Events.AddMessage(checkGangRecruitEvent.ToString(), ImageType.PROFILE, EventType.Warning);
+                gang.Events.AddMessage(checkGangRecruitEvent.ToString(), ImageType.PROFILE, EventType.Warning);
                 gang.AutoRecruit = true;
                 gang.LastMission = gang.CurrentMission;
                 GangMissionBase.SetGangMission(EnuGangMissions.Recruit, gang);
@@ -4408,7 +4408,7 @@ namespace WMaster.Manager
                         new List<FormatStringParameter>() { new FormatStringParameter("GangName", gang.Name) });
                     GangMissionBase.SetGangMission(EnuGangMissions.Guarding, gang);
                 }
-                gang.m_Events.AddMessage(checkGangRecruitEvent.ToString(), ImageType.PROFILE, EventType.Warning);
+                gang.Events.AddMessage(checkGangRecruitEvent.ToString(), ImageType.PROFILE, EventType.Warning);
             }
         }
 
@@ -4458,7 +4458,7 @@ namespace WMaster.Manager
                 }
 
                 currentGang.HasSeenCombat = false;
-                currentGang.m_Events.Clear();
+                currentGang.Events.Clear();
                 cost += tariff.GoonMissionCost(currentGang.MissionType); // sum up the cost of all the goon missions
                 currentGang.NetLimit = 0;
                 currentGang.HealLimit = 0;
@@ -4470,14 +4470,14 @@ namespace WMaster.Manager
                     string localString = LocalString.GetStringFormatLine(LocalString.ResourceStringCategory.GangMission,
                             "Gang[GangName]IsSpyingOnYourGirls",
                             new List<FormatStringParameter>() { new FormatStringParameter("GangName", currentGang.Name) } );
-                    currentGang.m_Events.AddMessage(localString, ImageType.PROFILE, EventType.Gang);
+                    currentGang.Events.AddMessage(localString, ImageType.PROFILE, EventType.Gang);
                 }
                 if (currentGang.MissionType == EnuGangMissions.Guarding)
                 {
                     string localString = LocalString.GetStringFormatLine(LocalString.ResourceStringCategory.GangMission,
                             "Gang[GangName]IsGuarding",
                             new List<FormatStringParameter>() { new FormatStringParameter("GangName", currentGang.Name) } );
-                    currentGang.m_Events.AddMessage(localString, ImageType.PROFILE, EventType.Gang);
+                    currentGang.Events.AddMessage(localString, ImageType.PROFILE, EventType.Gang);
                 }
             }
             Game.Gold.GoonWages(cost);

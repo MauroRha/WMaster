@@ -32,6 +32,7 @@ namespace WMaster.Concept.Attributs
     public abstract class Attribute<TEnumType> : ITurnable, IValuableAttribut
         where TEnumType : struct, IConvertible
     {
+        protected const string PREFIX_ATTRIBUTE_NAME = "Attribute";
         #region Fields & Properties
         /// <summary>
         /// Current value of Attribute. Arribut value with all modifiers applies.
@@ -151,6 +152,16 @@ namespace WMaster.Concept.Attributs
         public int YearProgression()
         {
             return (this.LastYearValue.HasValue) ? (this.Value - this.LastYearValue.Value) : 0;
+        }
+
+        /// <summary>
+        /// Get attribute name.
+        /// </summary>
+        /// <returns>Localized attribut name.</returns>
+        public static string GetName(TEnumType attribut)
+        {
+            // TODO : Finalize add name to resource xml.
+            return LocalString.GetString(LocalString.ResourceStringCategory.Global, PREFIX_ATTRIBUTE_NAME + attribut.ToString());
         }
     }
 }

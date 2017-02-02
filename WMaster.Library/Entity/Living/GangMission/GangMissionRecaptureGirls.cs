@@ -68,7 +68,7 @@ namespace WMaster.Entity.Living.GangMission
             { return true; }
 
             // No girls to recapture... go to KidnapMission for this turn.
-            this.GangCible.m_Events.AddMessage(
+            this.GangCible.Events.AddMessage(
                 LocalString.GetStringLine(LocalString.ResourceStringCategory.GangMission, "ThisGangWasSentToLookForRunawaysButThereAreNoneSoTheyWentLookingForAnyGirlToKidnapInstead"),
                 ImageType.PROFILE, EventType.Gang);
 
@@ -99,7 +99,7 @@ namespace WMaster.Entity.Living.GangMission
                 recaptureEven.AppendLine(
                     LocalString.ResourceStringCategory.GangMission,
                     "ThereAreNoneOfYourGirlsWhoHaveRunAwaySoTheyHaveNooneToLookFor");
-                this.GangCible.m_Events.AddMessage(recaptureEven.ToString(), ImageType.PROFILE, EventType.Gang);
+                this.GangCible.Events.AddMessage(recaptureEven.ToString(), ImageType.PROFILE, EventType.Gang);
                 return false;
             }
 
@@ -186,7 +186,7 @@ namespace WMaster.Entity.Living.GangMission
                         LocalString.ResourceStringCategory.Girl,
                         "[GirlName]WasCapturedInANetAndDraggedBackToTheDungeonBy[GangName]",
                         new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", this.GangCible.Name) });
-                    GangManager.BoostGangSkill(this.GangCible.Stats[EnumStats.INTELLIGENCE], 2);
+                    GangManager.BoostGangSkill(this.GangCible.Stats[EnumStats.Intelligence], 2);
                 }
                 else
                 {
@@ -217,7 +217,7 @@ namespace WMaster.Entity.Living.GangMission
                             LocalString.ResourceStringCategory.Girl,
                             "[GirlName]FoughtWith[GangName]ButLostSheWasDraggedBackToTheDungeon",
                             new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", this.GangCible.Name) });
-                        GangManager.BoostGangSkill(this.GangCible.Skills[EnumSkills.COMBAT], 1);
+                        GangManager.BoostGangSkill(this.GangCible.Skills[EnumSkills.Combat], 1);
                         captured = true;
                     }
                     else
@@ -253,7 +253,7 @@ namespace WMaster.Entity.Living.GangMission
                 }
             }
 
-            this.GangCible.m_Events.AddMessage(recaptureEven.ToString(), ImageType.PROFILE, gangEventType);
+            this.GangCible.Events.AddMessage(recaptureEven.ToString(), ImageType.PROFILE, gangEventType);
             if (captured)
             {
                 runnaway.Events.AddMessage(RGmsg.ToString(), girlImageType, EventType.Gang);

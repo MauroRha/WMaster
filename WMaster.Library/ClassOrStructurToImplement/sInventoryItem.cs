@@ -223,7 +223,7 @@ namespace WMaster.Entity.Item
         /// <summary>
         /// Item type
         /// </summary>
-        private Type m_Type;
+        public Type m_Type;
         #endregion
 
         #region Properties

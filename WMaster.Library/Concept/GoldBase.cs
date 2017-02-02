@@ -747,6 +747,12 @@ namespace WMaster.Concept
             detailIncome.Misc += income;
         }
 
+        public void BrothelWork(double income)
+        {
+            m_Income += income;
+            detailIncome.BrothelWork += income;
+        }
+
         /*
          *	this doesn't get added to the player's
          *	cash in hand - it's just here for

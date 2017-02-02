@@ -104,7 +104,7 @@ namespace WMaster.Entity.Living.GangMission
                     are at zero or set to zero when they are sent to the dungeon. I'm not sure
                     how to fix it, so I'm explicitly setting the percentage to 60 here */
                     // TODO : Remove house stat fixing when bug set to 0 when enter dungeon as fixed
-                    girl.m_Stats[(int)EnumStats.HOUSE] = 60;
+                    girl.m_Stats[(int)EnumStats.House] = 60;
 
                     if (WMRand.Percent(Math.Min(75, this.GangCible.Charisma))) // convince her
                     {
@@ -117,14 +117,14 @@ namespace WMaster.Entity.Living.GangMission
                            "[GirlName]WasTalkedIntoWorkingForYouBy[GangName]",
                            new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", this.GangCible.Name) });
                         dungeonReason = DungeonReasons.NEWGIRL;
-                        GangManager.BoostGangSkill(this.GangCible.Stats[EnumStats.CHARISMA], 3);
+                        GangManager.BoostGangSkill(this.GangCible.Stats[EnumStats.Charisma], 3);
                         captured = true;
-                        if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.KIDNAPXGIRLS))
+                        if ((Game.Brothels.CurrentObjective != null) && (Game.Brothels.CurrentObjective.Objective == Objectives.KIDNAPXGIRLS))
                         {
-                            Game.Brothels.GetObjective().m_SoFar++; // `J` Added to make Charisma Kidnapping count
-                            if (WMRand.Percent(Game.Brothels.GetObjective().m_Target * 10)) // but possibly reduce the reward to gold only
+                            Game.Brothels.CurrentObjective.SoFar++; // `J` Added to make Charisma Kidnapping count
+                            if (WMRand.Percent(Game.Brothels.CurrentObjective.Target * 10)) // but possibly reduce the reward to gold only
                             {
-                                Game.Brothels.GetObjective().m_Reward = (int)Rewards.GOLD;
+                                Game.Brothels.CurrentObjective.m_Reward = (int)Rewards.GOLD;
                             }
                         }
                     }
@@ -190,7 +190,7 @@ namespace WMaster.Entity.Living.GangMission
                                 "SheStrugglesAgainstTheNetYourMenUseButItIsPointlessSheIsInYourDungeonNow");
                             girlImageType = ImageType.DEATH;
                             dungeonReason = DungeonReasons.GIRLKIDNAPPED;
-                            girl.m_Stats[(int)EnumStats.OBEDIENCE] = 0;
+                            girl.m_Stats[(int)EnumStats.Obedience] = 0;
                             girl.add_trait("Kidnapped", 5 + WMRand.Random(11));
                             kidnappMissionEvent.AppendLineFormat(
                                 LocalString.ResourceStringCategory.GangMission,
@@ -200,7 +200,7 @@ namespace WMaster.Entity.Living.GangMission
                                 LocalString.ResourceStringCategory.Girl,
                                 "[GirlName]WasCapturedInANetAndDraggedBackToTheDungeonBy[GangName]",
                                 new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName), new FormatStringParameter("GangName", this.GangCible.Name) });
-                            GangManager.BoostGangSkill(this.GangCible.Stats[EnumStats.INTELLIGENCE], 2);
+                            GangManager.BoostGangSkill(this.GangCible.Stats[EnumStats.Intelligence], 2);
                         }
                         else
                         {
@@ -225,14 +225,14 @@ namespace WMaster.Entity.Living.GangMission
                             {
                                 girlImageType = ImageType.DEATH;
                                 dungeonReason = DungeonReasons.GIRLKIDNAPPED;
-                                girl.m_Stats[(int)EnumStats.OBEDIENCE] = 0;
+                                girl.m_Stats[(int)EnumStats.Obedience] = 0;
                                 girl.add_trait("Kidnapped", 10 + WMRand.Random(11));
                                 kidnappMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "SheFightsBackButYourMenSucceedInKidnappingHer");
                                 NGmsg.AppendLineFormat(
                                     LocalString.ResourceStringCategory.Girl,
                                     "[GirlName]FoughtWith[GangName]ButLostSheWasDraggedBackToTheDungeon",
                                     new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.Realname), new FormatStringParameter("GangName", this.GangCible.Name) });
-                                GangManager.BoostGangSkill(this.GangCible.Skills[EnumSkills.COMBAT], 1);
+                                GangManager.BoostGangSkill(this.GangCible.Skills[EnumSkills.Combat], 1);
                                 captured = true;
                             }
                             else
@@ -276,20 +276,20 @@ namespace WMaster.Entity.Living.GangMission
                     {
                         girl.Events.AddMessage(NGmsg.ToString(), girlImageType, eventType);
                         Game.Dungeon.AddGirl(girl, dungeonReason);
-                        GangManager.BoostGangSkill(this.GangCible.Stats[EnumStats.INTELLIGENCE], 1);
+                        GangManager.BoostGangSkill(this.GangCible.Stats[EnumStats.Intelligence], 1);
                     }
-                    this.GangCible.m_Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, gangEventType);
+                    this.GangCible.Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, gangEventType);
                 }
                 else
                 {
                     kidnappMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheyFailedToFindAnyGirlsToKidnap");
-                    this.GangCible.m_Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+                    this.GangCible.Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
                 }
             }
             else
             {
                 kidnappMissionEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "TheyFailedToFindAnyGirlsToKidnap");
-                this.GangCible.m_Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+                this.GangCible.Events.AddMessage(kidnappMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             }
             return captured;
         }

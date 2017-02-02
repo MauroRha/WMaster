@@ -436,7 +436,7 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
         static void customer_rape(sGirl girl, int numberofattackers)
         { throw new NotImplementedException(); }
-        static string GetGirlAttackedString(EnumSkills attacktype = EnumSkills.COMBAT)
+        static string GetGirlAttackedString(EnumSkills attacktype = EnumSkills.Combat)
         { throw new NotImplementedException(); } // `J` added attacktype to be used with sextype for more specific attacks defaulting to combat
 
 

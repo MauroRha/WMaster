@@ -40,6 +40,7 @@ namespace WMaster.Concept.Attributs
 
     // TODO : REFACTORING - Rename enum value to lower case UC first
 
+    // WARNING !! : When adding EnumSkills you must add skill name to resource manager. Code is "PREFIX_ATTRIBUTE_NAME + enum.tostring()" in Global category
     /// <summary>
     /// Editable Character skills (used for traits).
     /// <remarks><para>`J` When modifying Stats or Skills, search for "J-Change-Stats-Skills"  :  found in >> Constants.h</para></remarks>
@@ -51,28 +52,28 @@ namespace WMaster.Concept.Attributs
         /// Anal performing skill.
         /// </summary>
         [XmlEnum("SKILL_ANAL")]
-        ANAL = /*          */ 0x00001,
-        MAGIC = /*         */ 0x00010,
-        BDSM = /*          */ 0x00011,
-        NORMALSEX = /*     */ 0x00100,
-        BEASTIALITY = /*   */ 0x00101,
-        GROUP = /*         */ 0x00110,
-        LESBIAN = /*       */ 0x00111,
-        SERVICE = /*       */ 0x01000,
-        STRIP = /*         */ 0x01001,
-        COMBAT = /*        */ 0x01010,
-        ORALSEX = /*       */ 0x01011,
-        TITTYSEX = /*      */ 0x01100,
-        MEDICINE = /*      */ 0x01101,
-        PERFORMANCE = /*   */ 0x01110,
-        HANDJOB = /*       */ 0x01111,
-        CRAFTING = /*      */ 0x10000,
-        HERBALISM = /*     */ 0x10001,
-        FARMING = /*       */ 0x10010,
-        BREWING = /*       */ 0x10011,
-        ANIMALHANDLING = /**/ 0x10100,
-        FOOTJOB = /*       */ 0x10101,
-        COOKING = /*       */ 0x10110,
+        Anal = /*           */ 0x00001,
+        Magic = /*          */ 0x00010,
+        BDSM = /*           */ 0x00011,
+        NormalSex = /*      */ 0x00100,
+        Beastiality = /*    */ 0x00101,
+        GroupSex = /*       */ 0x00110,
+        Lesbian = /*        */ 0x00111,
+        Service = /*        */ 0x01000,
+        Striptease = /*     */ 0x01001,
+        Combat = /*         */ 0x01010,
+        OralSex = /*        */ 0x01011,
+        TittySex = /*       */ 0x01100,
+        Medicine = /*       */ 0x01101,
+        Performance = /*    */ 0x01110,
+        HandJob = /*        */ 0x01111,
+        Crafting = /*       */ 0x10000,
+        Herbalism = /*      */ 0x10001,
+        Farming = /*        */ 0x10010,
+        Brewing = /*        */ 0x10011,
+        AnimalHandling = /* */ 0x10100,
+        FootJob = /*        */ 0x10101,
+        Cooking = /*        */ 0x10110,
 
         /// <summary>
         /// 1 more than the last skill.

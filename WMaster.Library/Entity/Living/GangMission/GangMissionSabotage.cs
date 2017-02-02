@@ -83,7 +83,7 @@ namespace WMaster.Entity.Living.GangMission
             if (!WMRand.Percent(Math.Min(90, this.GangCible.Intelligence)))
             {
 
-                this.GangCible.m_Events.AddMessage(
+                this.GangCible.Events.AddMessage(
                     LocalString.GetString(LocalString.ResourceStringCategory.GangMission, "TheyFailedToFindAnyEnemyAssetsToHit"),
                     ImageType.PROFILE, EventType.Gang);
                 return false;
@@ -102,7 +102,7 @@ namespace WMaster.Entity.Living.GangMission
             Gang rivalGang;
             if (rival == null)
             {
-                this.GangCible.m_Events.AddMessage(
+                this.GangCible.Events.AddMessage(
                     LocalString.GetString(LocalString.ResourceStringCategory.GangMission, "ScoutedTheCityInVainSeekingWouldBeChallengersToYourDominance"),
                     ImageType.PROFILE, EventType.Gang);
                 return false;
@@ -139,7 +139,7 @@ namespace WMaster.Entity.Living.GangMission
                             "YourMenLostThe[GangMemberNum]SurvivorsFightTheirWayBackToFriendlyTerritory",
                             new List<FormatStringParameter>() { new FormatStringParameter("GangMemberNum", this.GangCible.MemberNum) });
                     }
-                    this.GangCible.m_Events.AddMessage(sabotageEvent.ToString(), ImageType.PROFILE, EventType.Danger);
+                    this.GangCible.Events.AddMessage(sabotageEvent.ToString(), ImageType.PROFILE, EventType.Danger);
                     return false;
                 }
                 else
@@ -183,7 +183,7 @@ namespace WMaster.Entity.Living.GangMission
             }
 
             // if we had an objective to attack a rival we just achieved it
-            if (Game.Brothels.GetObjective() != null && Game.Brothels.GetObjective().m_Objective == (int)Objectives.LAUNCHSUCCESSFULATTACK)
+            if (Game.Brothels.CurrentObjective != null && Game.Brothels.CurrentObjective.Objective == Objectives.LAUNCHSUCCESSFULATTACK)
             {
                 Game.Brothels.PassObjective();
             }
@@ -450,8 +450,8 @@ namespace WMaster.Entity.Living.GangMission
                 }
             }
 
-            GangManager.BoostGangSkill(this.GangCible.Stats[EnumStats.INTELLIGENCE], 2);
-            this.GangCible.m_Events.AddMessage(sabotageEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+            GangManager.BoostGangSkill(this.GangCible.Stats[EnumStats.Intelligence], 2);
+            this.GangCible.Events.AddMessage(sabotageEvent.ToString(), ImageType.PROFILE, EventType.Gang);
 
             // See if the rival is eliminated:  If 4 or more are zero or less, the rival is eliminated
             int VictoryPoints = 0;
@@ -488,7 +488,7 @@ namespace WMaster.Entity.Living.GangMission
                     "YouHaveDealt[RivalName]AFatalBlowTheirCriminalOrganizationCrumblesToNothingBeforeYou",
                     new List<FormatStringParameter>() { new FormatStringParameter("RivalName", rival.m_Name) });
                 Game.Brothels.m_Rivals.RemoveRival(rival);
-                this.GangCible.m_Events.AddMessage(ssVic.ToString(), ImageType.PROFILE, EventType.GoodNews);
+                this.GangCible.Events.AddMessage(ssVic.ToString(), ImageType.PROFILE, EventType.GoodNews);
             }
             return true;
         }

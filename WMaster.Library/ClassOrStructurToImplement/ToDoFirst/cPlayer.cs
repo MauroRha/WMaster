@@ -42,7 +42,7 @@ namespace WMaster.ClassOrStructurToImplement
         private string m_Surname; // basic surname
         private string m_RealName; // m_FirstName + " " + m_Surname
 
-        private int m_PlayerGender; // `J` added - not going to be changeable yet but adding it in for later
+        private Gender m_PlayerGender; // `J` added - not going to be changeable yet but adding it in for later
 
 
         public string Title()
@@ -71,7 +71,7 @@ namespace WMaster.ClassOrStructurToImplement
         string SetRealName(string realname)
         { throw new NotImplementedException(); }
 
-        public int Gender()
+        public Gender Gender()
         {
             return m_PlayerGender;
         }

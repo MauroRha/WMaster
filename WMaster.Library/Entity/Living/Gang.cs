@@ -194,7 +194,11 @@ namespace WMaster.Entity.Living
             set { m_Combat = value; }
         }
 
-        public EventManager m_Events = new EventManager();
+        private EventManager m_Events = new EventManager();
+        public EventManager Events
+        {
+            get { return this.m_Events; }
+        }
 
         public IXmlElement SaveGangXML(IXmlElement pRoot)
         {
@@ -277,14 +281,14 @@ namespace WMaster.Entity.Living
         /// </summary>
         public int Magic
         {
-            get { return Skills[EnumSkills.MAGIC].Value; }
+            get { return Skills[EnumSkills.Magic].Value; }
         }
         /// <summary>
         /// Get Combat skill value.
         /// </summary>
         public int Combat
         {
-            get { return Skills[EnumSkills.COMBAT].Value; }
+            get { return Skills[EnumSkills.Combat].Value; }
         }
         /// <summary>
         /// Get Service skill value.
@@ -292,49 +296,49 @@ namespace WMaster.Entity.Living
         /// </summary>
         public int Service
         {
-            get { return Skills[EnumSkills.SERVICE].Value; }
+            get { return Skills[EnumSkills.Service].Value; }
         }
         /// <summary>
         /// Get Intelligence stats value.
         /// </summary>
         public int Intelligence
         {
-            get { return Stats[EnumStats.INTELLIGENCE].Value; }
+            get { return Stats[EnumStats.Intelligence].Value; }
         }
         /// <summary>
         /// Get Agility stats value.
         /// </summary>
         public int Agility
         {
-            get { return Stats[EnumStats.AGILITY].Value; }
+            get { return Stats[EnumStats.Agility].Value; }
         }
         /// <summary>
         /// Get Constitution stats value.
         /// </summary>
         public int Constitution
         {
-            get { return Stats[EnumStats.CONSTITUTION].Value; }
+            get { return Stats[EnumStats.Constitution].Value; }
         }
         /// <summary>
         /// Get Charisma stats value.
         /// </summary>
         public int Charisma
         {
-            get { return Stats[EnumStats.CHARISMA].Value; }
+            get { return Stats[EnumStats.Charisma].Value; }
         }
         /// <summary>
         /// Get Strength stats value.
         /// </summary>
         public int Strength
         {
-            get { return Stats[EnumStats.STRENGTH].Value; }
+            get { return Stats[EnumStats.Strength].Value; }
         }
         /// <summary>
         /// Get Happiness stats value.
         /// </summary>
         public int Happy
         {
-            get { return Stats[EnumStats.HAPPINESS].Value; }
+            get { return Stats[EnumStats.Happiness].Value; }
         }
 
         /// <summary>
@@ -389,7 +393,7 @@ namespace WMaster.Entity.Living
         /// <param name="amount">Adjusting amount value.</param>
         public void AdjustMagic(int amount)
         {
-            this.AdjustSkill(EnumSkills.MAGIC, amount);
+            this.AdjustSkill(EnumSkills.Magic, amount);
         }
         /// <summary>
         /// Adjusting Combat gang skill to <paramref name="amount"/>
@@ -397,7 +401,7 @@ namespace WMaster.Entity.Living
         /// <param name="amount">Adjusting amount value.</param>
         public void AdjustCombat(int amount)
         {
-            this.AdjustSkill(EnumSkills.COMBAT, amount);
+            this.AdjustSkill(EnumSkills.Combat, amount);
         }
         /// <summary>
         /// Adjusting Service gang skill to <paramref name="amount"/>
@@ -405,7 +409,7 @@ namespace WMaster.Entity.Living
         /// <param name="amount">Adjusting amount value.</param>
         public void AdjustService(int amount)
         {
-            this.AdjustSkill(EnumSkills.SERVICE, amount);
+            this.AdjustSkill(EnumSkills.Service, amount);
         }
         /// <summary>
         /// Adjusting Intelligence gang stat to <paramref name="amount"/>
@@ -413,7 +417,7 @@ namespace WMaster.Entity.Living
         /// <param name="amount">Adjusting amount value.</param>
         public void AdjustIntelligence(int amount)
         {
-            this.AdjustStat(EnumStats.INTELLIGENCE, amount);
+            this.AdjustStat(EnumStats.Intelligence, amount);
         }
         /// <summary>
         /// Adjusting Agility gang stat to <paramref name="amount"/>
@@ -421,7 +425,7 @@ namespace WMaster.Entity.Living
         /// <param name="amount">Adjusting amount value.</param>
         public void AdjustAgility(int amount)
         {
-            this.AdjustStat(EnumStats.AGILITY, amount);
+            this.AdjustStat(EnumStats.Agility, amount);
         }
         /// <summary>
         /// Adjusting Constitution gang stat to <paramref name="amount"/>
@@ -429,7 +433,7 @@ namespace WMaster.Entity.Living
         /// <param name="amount">Adjusting amount value.</param>
         public void AdjustConstitution(int amount)
         {
-            this.AdjustStat(EnumStats.CONSTITUTION, amount);
+            this.AdjustStat(EnumStats.Constitution, amount);
         }
         /// <summary>
         /// Adjusting Charisma gang stat to <paramref name="amount"/>
@@ -437,7 +441,7 @@ namespace WMaster.Entity.Living
         /// <param name="amount">Adjusting amount value.</param>
         public void AdjustCharisma(int amount)
         {
-            this.AdjustStat(EnumStats.CHARISMA, amount);
+            this.AdjustStat(EnumStats.Charisma, amount);
         }
         /// <summary>
         /// Adjusting Strength gang stat to <paramref name="amount"/>
@@ -445,7 +449,7 @@ namespace WMaster.Entity.Living
         /// <param name="amount">Adjusting amount value.</param>
         public void AdjustStrength(int amount)
         {
-            this.AdjustStat(EnumStats.STRENGTH, amount);
+            this.AdjustStat(EnumStats.Strength, amount);
         }
         /// <summary>
         /// Adjusting Happiness gang stat to <paramref name="amount"/>
@@ -453,7 +457,7 @@ namespace WMaster.Entity.Living
         /// <param name="amount">Adjusting amount value.</param>
         public void AdjustHappy(int amount)
         {
-            this.AdjustStat(EnumStats.HAPPINESS, amount);
+            this.AdjustStat(EnumStats.Happiness, amount);
         }
 
         /// <summary>
@@ -474,8 +478,8 @@ namespace WMaster.Entity.Living
             { item.Value = 0; }
             foreach (Stat item in this.Stats)
             { item.Value = 0; }
-            this.Stats[EnumStats.HEALTH].Value = 100;
-            this.Stats[EnumStats.HAPPINESS].Value = 100;
+            this.Stats[EnumStats.Health].Value = 100;
+            this.Stats[EnumStats.Happiness].Value = 100;
         }
 
         public void NextWeek()

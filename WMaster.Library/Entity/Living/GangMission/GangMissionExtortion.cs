@@ -176,7 +176,7 @@ namespace WMaster.Entity.Living.GangMission
                         else
                         {
                             extortionEven.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourGangHasBeenDefeatedAndFailToTakeControlOfAnyNewTerritory");
-                            this.GangCible.m_Events.AddMessage(extortionEven.ToString(), ImageType.PROFILE, EventType.Gang);
+                            this.GangCible.Events.AddMessage(extortionEven.ToString(), ImageType.PROFILE, EventType.Gang);
                             return false;
                         }
                         rival_gang = null;
@@ -223,11 +223,11 @@ namespace WMaster.Entity.Living.GangMission
                 }
             }
 
-            this.GangCible.m_Events.AddMessage(extortionEven.ToString(), ImageType.PROFILE, EventType.Gang);
+            this.GangCible.Events.AddMessage(extortionEven.ToString(), ImageType.PROFILE, EventType.Gang);
 
-            if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.EXTORTXNEWBUSINESS))
+            if ((Game.Brothels.CurrentObjective != null) && (Game.Brothels.CurrentObjective.Objective == Objectives.EXTORTXNEWBUSINESS))
             {
-                Game.Brothels.GetObjective().m_SoFar += n;
+                Game.Brothels.CurrentObjective.SoFar += n;
             }
 
             return true;

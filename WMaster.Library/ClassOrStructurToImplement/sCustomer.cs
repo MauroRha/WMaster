@@ -49,7 +49,7 @@ namespace WMaster.ClassOrStructurToImplement
 
         public int happiness()
         {
-            return m_Stats[(int)EnumStats.HAPPINESS];
+            return m_Stats[(int)EnumStats.Happiness];
         }
     }
 }

@@ -161,7 +161,7 @@ namespace WMaster.Entity.Living.GangMission
                 if (!GangManager.GangBrawl(this.GangCible, defenders, false))
                 {
                     grandTheftEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenLoseTheFight");
-                    this.GangCible.m_Events.AddMessage(grandTheftEvent.ToString(), ImageType.PROFILE, EventType.Danger);
+                    this.GangCible.Events.AddMessage(grandTheftEvent.ToString(), ImageType.PROFILE, EventType.Danger);
                     return false;
                 }
                 grandTheftEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "YourMenWin");
@@ -185,11 +185,11 @@ namespace WMaster.Entity.Living.GangMission
             Game.Player.suspicion(gold / 1000);
 
             Game.Gold.GrandTheft(gold);
-            this.GangCible.m_Events.AddMessage(grandTheftEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+            this.GangCible.Events.AddMessage(grandTheftEvent.ToString(), ImageType.PROFILE, EventType.Gang);
 
-            if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.STEALXAMOUNTOFGOLD))
+            if ((Game.Brothels.CurrentObjective != null) && (Game.Brothels.CurrentObjective.Objective == Objectives.STEALXAMOUNTOFGOLD))
             {
-                Game.Brothels.GetObjective().m_SoFar += gold;
+                Game.Brothels.CurrentObjective.SoFar += gold;
             }
             return true;
         }

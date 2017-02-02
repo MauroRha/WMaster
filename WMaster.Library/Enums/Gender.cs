@@ -40,6 +40,7 @@ namespace WMaster.Enums
     // TODO : REFACTORING - Rename enum value to lower case UC first
     // TODO : REFACTOR V2 - Convert to Class/Instance for PTVO use ?
 
+    // TODO : REFACTORING - Gender hase 4 value to know if Gender is with or withour (P)enis, (T)estes, (V)agina and (O)varies -> Need to convert to class.
     /// <summary>
     /// Gender enumeration with or withour (P)enis, (T)estes, (V)agina and (O)varies
     /// </summary>

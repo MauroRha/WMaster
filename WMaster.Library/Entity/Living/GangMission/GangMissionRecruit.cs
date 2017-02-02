@@ -309,7 +309,7 @@ namespace WMaster.Entity.Living.GangMission
                         {
                             gangRecruitingEvent.AppendLine(LocalString.ResourceStringCategory.GangMission, "ButNoneShowedUp");
                         }
-                        passTo.m_Events.AddMessage(pss.ToString(), ImageType.PROFILE, EventType.Gang);
+                        passTo.Events.AddMessage(pss.ToString(), ImageType.PROFILE, EventType.Gang);
                     }
                     else
                     {
@@ -317,7 +317,7 @@ namespace WMaster.Entity.Living.GangMission
                     }
                 }
             }
-            this.GangCible.m_Events.AddMessage(gangRecruitingEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+            this.GangCible.Events.AddMessage(gangRecruitingEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             this.GangCible.HasSeenCombat = true; // though not actually combat, this prevents the automatic +1 member at the end of the week
             return false;
         }

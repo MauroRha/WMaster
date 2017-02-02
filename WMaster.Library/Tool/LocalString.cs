@@ -68,6 +68,10 @@ namespace WMaster
             /// </summary>
             GirlJob = /*       */ 0x0021,
             /// <summary>
+            /// item text resources..
+            /// </summary>
+            Items = /*         */ 0x0030,
+            /// <summary>
             /// Girls text resources. To find in girl subdirectory.
             /// </summary>
             ExternalGirls = /* */ 0xFFE0,
@@ -327,6 +331,32 @@ namespace WMaster
             {
                 WMLog.Trace("LocalString.AppendLitteral : litteral is null.", WMLog.TraceLog.ERROR);
                 return;
+            }
+
+            this.m_String.Append(litteral);
+        }
+
+        /// <summary>
+        /// Append string <paramref name="litteral"/> without modification.
+        /// </summary>
+        /// <param name="litteral">Litteral to add as is.</param>
+        /// <param name="replacementValues">List of parameters to replace in string.</param>
+        public void AppendLitteralFormat(string litteral, List<FormatStringParameter> replacementValues)
+        {
+            if (litteral == null)
+            {
+                WMLog.Trace("LocalString.AppendLitteralFormat : litteral is null.", WMLog.TraceLog.ERROR);
+                return;
+            }
+            if (replacementValues == null)
+            {
+                WMLog.Trace("LocalString.AppendLitteralFormat : replacementValues is null.", WMLog.TraceLog.ERROR);
+                return;
+            }
+
+            foreach (FormatStringParameter replacement in replacementValues)
+            {
+                litteral = litteral.Replace(string.Format("[[:{0}:]]", replacement.Name), replacement.Value);
             }
 
             this.m_String.Append(litteral);

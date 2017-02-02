@@ -226,9 +226,9 @@ namespace WMaster.Entity.Living.GangMission
                             }
                         }
 
-                        if ((Game.Brothels.GetObjective() != null) && Game.Brothels.GetObjective().m_Objective == (int)Objectives.CAPTUREXCATACOMBGIRLS)
+                        if ((Game.Brothels.CurrentObjective != null) && Game.Brothels.CurrentObjective.Objective == Objectives.CAPTUREXCATACOMBGIRLS)
                         {
-                            Game.Brothels.GetObjective().m_SoFar++;
+                            Game.Brothels.CurrentObjective.SoFar++;
                         }
 
                         catacombsMissionEvent.NewLine();
@@ -532,10 +532,10 @@ namespace WMaster.Entity.Living.GangMission
                                     Game.Brothels.GetDungeon().AddGirl(ugirl, DungeonReasons.GIRLCAPTURED);
                                 }
                             }
-                            if ((ugirl != null) && (Game.Brothels.GetObjective() != null)
-                                && (Game.Brothels.GetObjective().m_Objective == (int)Objectives.CAPTUREXCATACOMBGIRLS))
+                            if ((ugirl != null) && (Game.Brothels.CurrentObjective != null)
+                                && (Game.Brothels.CurrentObjective.Objective == Objectives.CAPTUREXCATACOMBGIRLS))
                             {
-                                Game.Brothels.GetObjective().m_SoFar++;
+                                Game.Brothels.CurrentObjective.SoFar++;
                             }
                         }
                     }
@@ -637,7 +637,7 @@ namespace WMaster.Entity.Living.GangMission
                     }
                 }
             }
-            this.GangCible.m_Events.AddMessage(catacombsMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
+            this.GangCible.Events.AddMessage(catacombsMissionEvent.ToString(), ImageType.PROFILE, EventType.Gang);
             return true;
         }
     }

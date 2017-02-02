@@ -40,6 +40,7 @@ namespace WMaster.Concept.Attributs
 
     // TODO : REFACTORING - Rename enum value to lower case UC first
 
+    // WARNING !! : When adding EnumStats you must add stat name to resource manager. Code is "PREFIX_ATTRIBUTE_NAME + enum.tostring()" in Global category
     /// <summary>
     /// Editable Character Stats (used for traits).
     /// <remarks><para>`J` When modifying Stats or Skills, search for "J-Change-Stats-Skills"  :  found in >> Constants.h</para></remarks>
@@ -51,41 +52,41 @@ namespace WMaster.Concept.Attributs
         /// Anal performing skill.
         /// </summary>
         [XmlEnum("STAT_CHARISMA")]
-        CHARISMA = /*    */ 0x00001,
-        HAPPINESS = /*   */ 0x00010,
-        LIBIDO = /*      */ 0x00011,
-        CONSTITUTION = /**/ 0x00100,
-        INTELLIGENCE = /**/ 0x00101,
-        CONFIDENCE = /*  */ 0x00110,
-        MANA = /*        */ 0x00111,
-        AGILITY = /*     */ 0x01000,
-        FAME = /*        */ 0x01001,
-        LEVEL = /*       */ 0x01010,
-        ASKPRICE = /*    */ 0x01011,
-        HOUSE = /*       */ 0x01100,
-        EXP = /*         */ 0x01101,
-        AGE = /*         */ 0x01110,
-        OBEDIENCE = /*   */ 0x01111,
-        SPIRIT = /*      */ 0x10000,
-        BEAUTY = /*      */ 0x10001,
-        TIREDNESS = /*   */ 0x10010,
-        HEALTH = /*      */ 0x10011,
-        PCFEAR = /*      */ 0x10100,
-        PCLOVE = /*      */ 0x10101,
-        PCHATE = /*      */ 0x10110,
-        MORALITY = /*    */ 0x10111,
-        REFINEMENT = /*  */ 0x11000,
-        DIGNITY = /*     */ 0x11001,
-        LACTATION = /*   */ 0x11010,
-        STRENGTH = /*    */ 0x11011,
+        Charisma = /*     */ 0x00001,
+        Happiness = /*    */ 0x00010,
+        Libido = /*       */ 0x00011,
+        Constitution = /* */ 0x00100,
+        Intelligence = /* */ 0x00101,
+        Confidence = /*   */ 0x00110,
+        Mana = /*         */ 0x00111,
+        Agility = /*      */ 0x01000,
+        Fame = /*         */ 0x01001,
+        Level = /*        */ 0x01010,
+        AskPrice = /*     */ 0x01011,
+        House = /*        */ 0x01100,
+        Exp = /*          */ 0x01101,
+        Age = /*          */ 0x01110,
+        Obedience = /*    */ 0x01111,
+        Spirit = /*       */ 0x10000,
+        Beauty = /*       */ 0x10001,
+        Tiredness = /*    */ 0x10010,
+        Health = /*       */ 0x10011,
+        PCFear = /*       */ 0x10100,
+        PCLove = /*       */ 0x10101,
+        PCHate = /*       */ 0x10110,
+        Morality = /*     */ 0x10111,
+        Refinement = /*   */ 0x11000,
+        Dignity = /*      */ 0x11001,
+        Lactation = /*    */ 0x11010,
+        Strength = /*     */ 0x11011,
         /// <summary>
         /// Will be used for when a girl has a bf/gf to do different events
         /// </summary>
-        NPCLOVE = /*     */ 0x11100,
+        NPCLove = /*      */ 0x11100,
         /// <summary>
         /// SIN: Life is hard here...
         /// </summary>
-        SANITY = /*      */ 0x11101,
+        Sanity = /*       */ 0x11101,
 
         /// <summary>
         /// 1 more than the last stat.
