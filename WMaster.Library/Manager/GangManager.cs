@@ -3010,12 +3010,12 @@ namespace WMaster.Manager
                         dungeonReason = DungeonReasons.NEWGIRL;
                         BoostGangSkill(gang.Stats[EnumStats.Charisma], 3);
                         captured = true;
-                        if ((Game.Brothels.GetObjective() != null) && (Game.Brothels.GetObjective().Objective == Objectives.KIDNAPXGIRLS))
+                        if ((Game.Brothels.CurrentObjective != null) && (Game.Brothels.CurrentObjective.Objective == Objectives.KIDNAPXGIRLS))
                         {
-                            Game.Brothels.GetObjective().SoFar++; // `J` Added to make Charisma Kidnapping count
-                            if (WMRand.Percent(Game.Brothels.GetObjective().Target * 10)) // but possibly reduce the reward to gold only
+                            Game.Brothels.CurrentObjective.SoFar++; // `J` Added to make Charisma Kidnapping count
+                            if (WMRand.Percent(Game.Brothels.CurrentObjective.Target * 10)) // but possibly reduce the reward to gold only
                             {
-                                Game.Brothels.GetObjective().m_Reward = (int)Rewards.GOLD;
+                                Game.Brothels.CurrentObjective.m_Reward = (int)Rewards.GOLD;
                             }
                         }
                     }
@@ -3347,9 +3347,9 @@ namespace WMaster.Manager
                             }
                         }
 
-                        if ((Game.Brothels.GetObjective() != null) && Game.Brothels.GetObjective().Objective == Objectives.CAPTUREXCATACOMBGIRLS)
+                        if ((Game.Brothels.CurrentObjective != null) && Game.Brothels.CurrentObjective.Objective == Objectives.CAPTUREXCATACOMBGIRLS)
                         {
-                            Game.Brothels.GetObjective().SoFar++;
+                            Game.Brothels.CurrentObjective.SoFar++;
                         }
 
                         catacombsMissionEvent.NewLine();
@@ -3653,10 +3653,10 @@ namespace WMaster.Manager
                                     Game.Brothels.GetDungeon().AddGirl(ugirl, DungeonReasons.GIRLCAPTURED);
                                 }
                             }
-                            if ((ugirl != null) && (Game.Brothels.GetObjective() != null)
-                                && (Game.Brothels.GetObjective().Objective == Objectives.CAPTUREXCATACOMBGIRLS))
+                            if ((ugirl != null) && (Game.Brothels.CurrentObjective != null)
+                                && (Game.Brothels.CurrentObjective.Objective == Objectives.CAPTUREXCATACOMBGIRLS))
                             {
-                                Game.Brothels.GetObjective().SoFar++;
+                                Game.Brothels.CurrentObjective.SoFar++;
                             }
                         }
                     }
