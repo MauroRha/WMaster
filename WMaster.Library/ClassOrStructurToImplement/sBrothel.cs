@@ -263,6 +263,14 @@
             get { return this.m_GirlsList; }
         }
 
+        /// <summary>
+        /// sorts the list of girls.
+        /// </summary>
+        public void Sort()
+        {
+            m_GirlsList.Sort();
+        }
+
         public sBrothel m_Next;
 
         private int m_SecurityLevel;

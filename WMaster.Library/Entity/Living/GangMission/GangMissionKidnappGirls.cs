@@ -124,7 +124,7 @@ namespace WMaster.Entity.Living.GangMission
                             Game.Brothels.CurrentObjective.SoFar++; // `J` Added to make Charisma Kidnapping count
                             if (WMRand.Percent(Game.Brothels.CurrentObjective.Target * 10)) // but possibly reduce the reward to gold only
                             {
-                                Game.Brothels.CurrentObjective.m_Reward = (int)Rewards.GOLD;
+                                Game.Brothels.CurrentObjective.Reward = (int)Rewards.GOLD;
                             }
                         }
                     }

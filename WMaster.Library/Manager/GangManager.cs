@@ -969,7 +969,7 @@ namespace WMaster.Manager
                             WMLog.Trace(string.Format("    {0} using physical attack.", girl.Realname), WMLog.TraceLog.INFORMATION);
                         }
 
-                        int girlAttackChance = Game.Girls.GetSkill(girl, (int)attack);
+                        int girlAttackChance = Game.Girls.GetSkill(girl, attack);
                         int dieRoll = WMRand.Random();
 
                         WMLog.Trace(string.Format("    attack chance = {0}.", girlAttackChance), WMLog.TraceLog.INFORMATION);
@@ -992,7 +992,7 @@ namespace WMaster.Manager
                             if (gain != 0)
                             {
                                 WMLog.Trace(string.Format("    {0} gains {1} to attack skill.", girl.Realname, gain), WMLog.TraceLog.INFORMATION);
-                                Game.Girls.UpdateSkill(girl, (int)attack, gain);
+                                Game.Girls.UpdateSkill(girl, attack, gain);
                             }
 
                             dieRoll = WMRand.Random();
@@ -1055,7 +1055,7 @@ namespace WMaster.Manager
                             if (!WMRand.Percent(dodge))
                             {
                                 damage = Math.Max(1, (damage - (Game.Girls.GetStat(girl, (int)EnumStats.Constitution) / 15)));
-                                Game.Girls.UpdateStat(girl, (int)EnumStats.Health, -damage);
+                                Game.Girls.UpdateStat(girl, EnumStats.Health, -damage);
                             }
                         }
 
@@ -1164,7 +1164,7 @@ namespace WMaster.Manager
             }
 
             // first determine what she will fight with
-            if (Game.Girls.GetSkill(girl, (int)EnumSkills.Combat) > Game.Girls.GetSkill(girl, (int)EnumSkills.Magic))
+            if (Game.Girls.GetSkill(girl, EnumSkills.Combat) > Game.Girls.GetSkill(girl, EnumSkills.Magic))
             {
                 attack = EnumSkills.Combat;
             }
@@ -1233,7 +1233,7 @@ namespace WMaster.Manager
                         WMLog.Trace(string.Format("    {0} using physical attack.", girl.Realname), WMLog.TraceLog.INFORMATION);
                     }
 
-                    int girlAttackChance = Game.Girls.GetSkill(girl, (int)attack);
+                    int girlAttackChance = Game.Girls.GetSkill(girl, attack);
 
                     int dieRoll = WMRand.Random();
 
@@ -3015,7 +3015,7 @@ namespace WMaster.Manager
                             Game.Brothels.CurrentObjective.SoFar++; // `J` Added to make Charisma Kidnapping count
                             if (WMRand.Percent(Game.Brothels.CurrentObjective.Target * 10)) // but possibly reduce the reward to gold only
                             {
-                                Game.Brothels.CurrentObjective.m_Reward = (int)Rewards.GOLD;
+                                Game.Brothels.CurrentObjective.Reward = (int)Rewards.GOLD;
                             }
                         }
                     }

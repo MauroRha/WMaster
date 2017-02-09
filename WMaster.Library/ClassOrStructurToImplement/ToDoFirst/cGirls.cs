@@ -134,12 +134,12 @@ namespace WMaster.Manager
         void SetStat(sGirl girl, int stat, int amount)
         { throw new NotImplementedException(); }
         // TODO : REFACTORING - Replace int stat to EnumStat stat
-        [Obsolete("Replace Replace int stat to EnumStat stat", false)]
-        public void UpdateStat(sGirl girl, int stat, int amount, bool usetraits = true)
+        [Obsolete("Replace int stat to EnumStat stat", false)]
+        public void UpdateStat(sGirl girl, EnumStats stat, int amount, bool usetraits = true)
         { throw new NotImplementedException(); } // updates a stat
         // TODO : REFACTORING - Replace int stat to EnumStat stat
         [Obsolete("Replace Replace int stat to EnumStat stat", false)]
-        public void UpdateStatTemp(sGirl girl, int stat, int amount)
+        public void UpdateStatTemp(sGirl girl, EnumStats stat, int amount)
         { throw new NotImplementedException(); } // updates a stat temporarily
         // TODO : REFACTORING - Replace int stat to EnumStat stat
         [Obsolete("Replace Replace int stat to EnumStat stat", false)]
@@ -150,11 +150,11 @@ namespace WMaster.Manager
         void UpdateStatTr(sGirl girl, int stat, int amount)
         { throw new NotImplementedException(); } // updates a statTr from traits
 
-        public int GetSkill(sGirl girl, int skill)
+        public int GetSkill(sGirl girl, EnumSkills skill)
         { throw new NotImplementedException(); }
         void SetSkill(sGirl girl, int skill, int amount)
         { throw new NotImplementedException(); }
-        public void UpdateSkill(sGirl girl, int skill, int amount)
+        public void UpdateSkill(sGirl girl, EnumSkills skill, int amount)
         { throw new NotImplementedException(); } // updates a skill
         public void UpdateSkillTemp(sGirl girl, int skill, int amount)
         { throw new NotImplementedException(); } // updates a skill temporarily
@@ -207,7 +207,7 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); }
         // TODO : REFACTORING - Replace string trait to enum or instace of trait
         [Obsolete("Replace string trait to enum or instace of trait", false)]
-        bool HasRememberedTrait(sGirl girl, string trait)
+        public bool HasRememberedTrait(sGirl girl, string trait)
         { throw new NotImplementedException(); }
         // TODO : REFACTORING - Replace string trait to enum or instace of trait
         [Obsolete("Replace string trait to enum or instace of trait", false)]
@@ -369,7 +369,7 @@ namespace WMaster.Manager
         int GetSkillWorth(sGirl girl)
         { throw new NotImplementedException(); }
 
-        bool DisobeyCheck(sGirl girl, int action, sBrothel brothel = null)
+        public bool DisobeyCheck(sGirl girl, ActionTypes action, sBrothel brothel = null)
         { throw new NotImplementedException(); }
         bool AskedOutChance(sGirl girl, int action, sBrothel brothel = null)
         { throw new NotImplementedException(); }

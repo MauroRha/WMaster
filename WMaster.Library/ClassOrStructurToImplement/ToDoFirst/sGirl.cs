@@ -13,7 +13,7 @@ using WMaster.Concept.Attributs;
 namespace WMaster.ClassOrStructurToImplement
 {
     // Represents a single girl
-    public class sGirl : System.IDisposable
+    public class sGirl : System.IDisposable, IComparable<sGirl>
     {
         sGirl()
         { throw new NotImplementedException(); }
@@ -22,17 +22,39 @@ namespace WMaster.ClassOrStructurToImplement
 
         public int m_newRandomFixed;
 
-        public string m_Name; // The girls name
-        public string Realname { get; set; } // this is the name displayed in text
+        /// <summary>
+        /// Girls name
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// Name displayed in text
+        /// </summary>
+        public string Realname { get; set; }
         /*	`J` adding first and surnames for future use.
         *	m_Realname will be used for girl tracking until first and surnames are fully integrated
         *	a girl id number system may be added in the future to allow for absolute tracking
         */
-        public string m_FirstName; // this is the girl's first name
-        public string m_MiddleName; // this is the girl's middle name
-        public string m_Surname; // this is the girl's surname
-        public string m_MotherName; //    `J` added mother and father names
-        public string m_FatherName; //    `J` added mother and father names
+        /// <summary>
+        /// Girl's first name
+        /// </summary>
+        public string FirstName { get; set; } 
+        /// <summary>
+        /// Girl's middle name
+        /// </summary>
+        public string MiddleName { get; set; }
+        /// <summary>
+        /// Girl's surname
+        /// </summary>
+        public string Surname { get; set; }
+        //    `J` added mother and father names
+        /// <summary>
+        /// Mother names
+        /// </summary>
+        public string MotherName { get; set; }
+        /// <summary>
+        /// Father names
+        /// </summary>
+        public string FatherName { get; set; }
         /*
         *	MOD: changed from char* -- easier to change from lua -- doc
         */
@@ -274,15 +296,15 @@ namespace WMaster.ClassOrStructurToImplement
         {
             return GameEngine.Instance.g_GirlsPtr.GetStat(this, stat_id);
         }
-        public int upd_temp_stat(int stat_id, int amount)
+        public int upd_temp_stat(EnumStats stat, int amount)
         {
-            GameEngine.Instance.g_GirlsPtr.UpdateStatTemp(this, stat_id, amount);
-            return GameEngine.Instance.g_GirlsPtr.GetStat(this, stat_id);
+            GameEngine.Instance.g_GirlsPtr.UpdateStatTemp(this, stat, amount);
+            return GameEngine.Instance.g_GirlsPtr.GetStat(this, (int)stat);
         }
-        public int upd_stat(int stat_id, int amount, bool usetraits = true)
+        public int upd_stat(EnumStats stat, int amount, bool usetraits = true)
         {
-            GameEngine.Instance.g_GirlsPtr.UpdateStat(this, stat_id, amount, usetraits);
-            return GameEngine.Instance.g_GirlsPtr.GetStat(this, stat_id);
+            GameEngine.Instance.g_GirlsPtr.UpdateStat(this, stat, amount, usetraits);
+            return GameEngine.Instance.g_GirlsPtr.GetStat(this, (int)stat);
         }
 
         public int upd_temp_Enjoyment(int stat_id, int amount)
@@ -316,7 +338,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int charisma(int n)
         {
-            return upd_stat((int)EnumStats.Charisma, n);
+            return upd_stat(EnumStats.Charisma, n);
         }
         public int happiness()
         {
@@ -324,7 +346,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int happiness(int n)
         {
-            return upd_stat((int)EnumStats.Happiness, n);
+            return upd_stat(EnumStats.Happiness, n);
         }
         public int libido()
         {
@@ -332,7 +354,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int libido(int n)
         {
-            return upd_stat((int)EnumStats.Libido, n);
+            return upd_stat(EnumStats.Libido, n);
         }
         public int constitution()
         {
@@ -340,7 +362,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int constitution(int n)
         {
-            return upd_stat((int)EnumStats.Constitution, n);
+            return upd_stat(EnumStats.Constitution, n);
         }
         public int intelligence()
         {
@@ -348,7 +370,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int intelligence(int n)
         {
-            return upd_stat((int)EnumStats.Intelligence, n);
+            return upd_stat(EnumStats.Intelligence, n);
         }
         public int confidence()
         {
@@ -356,7 +378,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int confidence(int n)
         {
-            return upd_stat((int)EnumStats.Confidence, n);
+            return upd_stat(EnumStats.Confidence, n);
         }
         public int mana()
         {
@@ -364,7 +386,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int mana(int n)
         {
-            return upd_stat((int)EnumStats.Mana, n);
+            return upd_stat(EnumStats.Mana, n);
         }
         public int agility()
         {
@@ -372,7 +394,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int agility(int n)
         {
-            return upd_stat((int)EnumStats.Agility, n);
+            return upd_stat(EnumStats.Agility, n);
         }
         public int strength()
         {
@@ -380,7 +402,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int strength(int n)
         {
-            return upd_stat((int)EnumStats.Strength, n);
+            return upd_stat(EnumStats.Strength, n);
         }
         public int fame()
         {
@@ -388,7 +410,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int fame(int n)
         {
-            return upd_stat((int)EnumStats.Fame, n);
+            return upd_stat(EnumStats.Fame, n);
         }
         public int level()
         {
@@ -396,7 +418,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int level(int n)
         {
-            return upd_stat((int)EnumStats.Level, n);
+            return upd_stat(EnumStats.Level, n);
         }
         public int askprice()
         {
@@ -404,7 +426,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int askprice(int n)
         {
-            return upd_stat((int)EnumStats.AskPrice, n);
+            return upd_stat(EnumStats.AskPrice, n);
         }
         /* It's NOT lupus! */
         public int house()
@@ -413,7 +435,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int house(int n)
         {
-            return upd_stat((int)EnumStats.House, n);
+            return upd_stat(EnumStats.House, n);
         }
         public int exp()
         {
@@ -421,7 +443,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int exp(int n)
         {
-            return upd_stat((int)EnumStats.Exp, n);
+            return upd_stat(EnumStats.Exp, n);
         }
         public int age()
         {
@@ -429,7 +451,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int age(int n)
         {
-            return upd_stat((int)EnumStats.Age, n);
+            return upd_stat(EnumStats.Age, n);
         }
         public int obedience()
         {
@@ -437,7 +459,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int obedience(int n)
         {
-            return upd_stat((int)EnumStats.Obedience, n);
+            return upd_stat(EnumStats.Obedience, n);
         }
         public int spirit()
         {
@@ -445,7 +467,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int spirit(int n)
         {
-            return upd_stat((int)EnumStats.Spirit, n);
+            return upd_stat(EnumStats.Spirit, n);
         }
         public int beauty()
         {
@@ -453,7 +475,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int beauty(int n)
         {
-            return upd_stat((int)EnumStats.Beauty, n);
+            return upd_stat(EnumStats.Beauty, n);
         }
         public int tiredness()
         {
@@ -461,7 +483,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int tiredness(int n)
         {
-            return upd_stat((int)EnumStats.Tiredness, n);
+            return upd_stat(EnumStats.Tiredness, n);
         }
         public int health()
         {
@@ -469,7 +491,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int health(int n)
         {
-            return upd_stat((int)EnumStats.Health, n);
+            return upd_stat(EnumStats.Health, n);
         }
         public int pcfear()
         {
@@ -477,7 +499,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int pcfear(int n)
         {
-            return upd_stat((int)EnumStats.PCFear, n);
+            return upd_stat(EnumStats.PCFear, n);
         }
         public int pclove()
         {
@@ -485,7 +507,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int pclove(int n)
         {
-            return upd_stat((int)EnumStats.PCLove, n);
+            return upd_stat(EnumStats.PCLove, n);
         }
         public int pchate()
         {
@@ -493,7 +515,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int pchate(int n)
         {
-            return upd_stat((int)EnumStats.PCHate, n);
+            return upd_stat(EnumStats.PCHate, n);
         }
         public int morality()
         {
@@ -501,7 +523,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int morality(int n)
         {
-            return upd_stat((int)EnumStats.Morality, n);
+            return upd_stat(EnumStats.Morality, n);
         }
         public int refinement()
         {
@@ -509,7 +531,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int refinement(int n)
         {
-            return upd_stat((int)EnumStats.Refinement, n);
+            return upd_stat(EnumStats.Refinement, n);
         }
         public int dignity()
         {
@@ -517,7 +539,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int dignity(int n)
         {
-            return upd_stat((int)EnumStats.Dignity, n);
+            return upd_stat(EnumStats.Dignity, n);
         }
         public int lactation()
         {
@@ -525,7 +547,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int lactation(int n)
         {
-            return upd_stat((int)EnumStats.Lactation, n);
+            return upd_stat(EnumStats.Lactation, n);
         }
         public int npclove()
         {
@@ -533,7 +555,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int npclove(int n)
         {
-            return upd_stat((int)EnumStats.NPCLove, n);
+            return upd_stat(EnumStats.NPCLove, n);
         }
         public int sanity()
         {
@@ -541,7 +563,7 @@ namespace WMaster.ClassOrStructurToImplement
         }
         public int sanity(int n)
         {
-            return upd_stat((int)EnumStats.Sanity, n);
+            return upd_stat(EnumStats.Sanity, n);
         }
 
 
@@ -559,195 +581,195 @@ namespace WMaster.ClassOrStructurToImplement
         *
         *	similarly...
         */
-        public int get_skill(int skill_id)
+        public int get_skill(EnumSkills skill)
         {
-            return GameEngine.Instance.g_GirlsPtr.GetSkill(this, skill_id);
+            return GameEngine.Instance.g_GirlsPtr.GetSkill(this, skill);
         }
-        public int upd_temp_skill(int skill_id, int amount)
+        public int upd_temp_skill(EnumSkills skill, int amount)
         {
-            GameEngine.Instance.g_GirlsPtr.UpdateSkillTemp(this, skill_id, amount);
-            return GameEngine.Instance.g_GirlsPtr.GetSkill(this, skill_id);
+            GameEngine.Instance.g_GirlsPtr.UpdateSkillTemp(this, (int)skill, amount);
+            return GameEngine.Instance.g_GirlsPtr.GetSkill(this, skill);
         }
-        public int upd_skill(int skill_id, int amount)
+        public int upd_skill(EnumSkills skill, int amount)
         {
-            GameEngine.Instance.g_GirlsPtr.UpdateSkill(this, skill_id, amount);
-            return GameEngine.Instance.g_GirlsPtr.GetSkill(this, skill_id);
+            GameEngine.Instance.g_GirlsPtr.UpdateSkill(this, skill, amount);
+            return GameEngine.Instance.g_GirlsPtr.GetSkill(this, skill);
         }
         public int anal()
         {
-            return get_skill((int)EnumSkills.Anal);
+            return get_skill(EnumSkills.Anal);
         }
         public int anal(int n)
         {
-            return upd_skill((int)EnumSkills.Anal, n);
+            return upd_skill(EnumSkills.Anal, n);
         }
         public int bdsm()
         {
-            return get_skill((int)EnumSkills.BDSM);
+            return get_skill(EnumSkills.BDSM);
         }
         public int bdsm(int n)
         {
-            return upd_skill((int)EnumSkills.BDSM, n);
+            return upd_skill(EnumSkills.BDSM, n);
         }
         public int beastiality()
         {
-            return get_skill((int)EnumSkills.Beastiality);
+            return get_skill(EnumSkills.Beastiality);
         }
         public int beastiality(int n)
         {
-            return upd_skill((int)EnumSkills.Beastiality, n);
+            return upd_skill(EnumSkills.Beastiality, n);
         }
         public int combat()
         {
-            return get_skill((int)EnumSkills.Combat);
+            return get_skill(EnumSkills.Combat);
         }
         public int combat(int n)
         {
-            return upd_skill((int)EnumSkills.Combat, n);
+            return upd_skill(EnumSkills.Combat, n);
         }
         public int group()
         {
-            return get_skill((int)EnumSkills.GroupSex);
+            return get_skill(EnumSkills.GroupSex);
         }
         public int group(int n)
         {
-            return upd_skill((int)EnumSkills.GroupSex, n);
+            return upd_skill(EnumSkills.GroupSex, n);
         }
         public int lesbian()
         {
-            return get_skill((int)EnumSkills.Lesbian);
+            return get_skill(EnumSkills.Lesbian);
         }
         public int lesbian(int n)
         {
-            return upd_skill((int)EnumSkills.Lesbian, n);
+            return upd_skill(EnumSkills.Lesbian, n);
         }
         public int magic()
         {
-            return get_skill((int)EnumSkills.Magic);
+            return get_skill(EnumSkills.Magic);
         }
         public int magic(int n)
         {
-            return upd_skill((int)EnumSkills.Magic, n);
+            return upd_skill(EnumSkills.Magic, n);
         }
         public int normalsex()
         {
-            return get_skill((int)EnumSkills.NormalSex);
+            return get_skill(EnumSkills.NormalSex);
         }
         public int normalsex(int n)
         {
-            return upd_skill((int)EnumSkills.NormalSex, n);
+            return upd_skill(EnumSkills.NormalSex, n);
         }
         public int oralsex()
         {
-            return get_skill((int)EnumSkills.OralSex);
+            return get_skill(EnumSkills.OralSex);
         }
         public int oralsex(int n)
         {
-            return upd_skill((int)EnumSkills.OralSex, n);
+            return upd_skill(EnumSkills.OralSex, n);
         }
         public int tittysex()
         {
-            return get_skill((int)EnumSkills.TittySex);
+            return get_skill(EnumSkills.TittySex);
         }
         public int tittysex(int n)
         {
-            return upd_skill((int)EnumSkills.TittySex, n);
+            return upd_skill(EnumSkills.TittySex, n);
         }
         public int handjob()
         {
-            return get_skill((int)EnumSkills.HandJob);
+            return get_skill(EnumSkills.HandJob);
         }
         public int handjob(int n)
         {
-            return upd_skill((int)EnumSkills.HandJob, n);
+            return upd_skill(EnumSkills.HandJob, n);
         }
         public int footjob()
         {
-            return get_skill((int)EnumSkills.FootJob);
+            return get_skill(EnumSkills.FootJob);
         }
         public int footjob(int n)
         {
-            return upd_skill((int)EnumSkills.FootJob, n);
+            return upd_skill(EnumSkills.FootJob, n);
         }
         public int service()
         {
-            return get_skill((int)EnumSkills.Service);
+            return get_skill(EnumSkills.Service);
         }
         public int service(int n)
         {
-            return upd_skill((int)EnumSkills.Service, n);
+            return upd_skill(EnumSkills.Service, n);
         }
         public int strip()
         {
-            return get_skill((int)EnumSkills.Striptease);
+            return get_skill(EnumSkills.Striptease);
         }
         public int strip(int n)
         {
-            return upd_skill((int)EnumSkills.Striptease, n);
+            return upd_skill(EnumSkills.Striptease, n);
         }
         public int medicine()
         {
-            return get_skill((int)EnumSkills.Medicine);
+            return get_skill(EnumSkills.Medicine);
         }
         public int medicine(int n)
         {
-            return upd_skill((int)EnumSkills.Medicine, n);
+            return upd_skill(EnumSkills.Medicine, n);
         }
         public int performance()
         {
-            return get_skill((int)EnumSkills.Performance);
+            return get_skill(EnumSkills.Performance);
         }
         public int performance(int n)
         {
-            return upd_skill((int)EnumSkills.Performance, n);
+            return upd_skill(EnumSkills.Performance, n);
         }
         public int crafting()
         {
-            return get_skill((int)EnumSkills.Crafting);
+            return get_skill(EnumSkills.Crafting);
         }
         public int crafting(int n)
         {
-            return upd_skill((int)EnumSkills.Crafting, n);
+            return upd_skill(EnumSkills.Crafting, n);
         }
         public int herbalism()
         {
-            return get_skill((int)EnumSkills.Herbalism);
+            return get_skill(EnumSkills.Herbalism);
         }
         public int herbalism(int n)
         {
-            return upd_skill((int)EnumSkills.Herbalism, n);
+            return upd_skill(EnumSkills.Herbalism, n);
         }
         public int farming()
         {
-            return get_skill((int)EnumSkills.Farming);
+            return get_skill(EnumSkills.Farming);
         }
         public int farming(int n)
         {
-            return upd_skill((int)EnumSkills.Farming, n);
+            return upd_skill(EnumSkills.Farming, n);
         }
         public int brewing()
         {
-            return get_skill((int)EnumSkills.Brewing);
+            return get_skill(EnumSkills.Brewing);
         }
         public int brewing(int n)
         {
-            return upd_skill((int)EnumSkills.Brewing, n);
+            return upd_skill(EnumSkills.Brewing, n);
         }
         public int animalhandling()
         {
-            return get_skill((int)EnumSkills.AnimalHandling);
+            return get_skill(EnumSkills.AnimalHandling);
         }
         public int animalhandling(int n)
         {
-            return upd_skill((int)EnumSkills.AnimalHandling, n);
+            return upd_skill(EnumSkills.AnimalHandling, n);
         }
         public int cooking()
         {
-            return get_skill((int)EnumSkills.Cooking);
+            return get_skill(EnumSkills.Cooking);
         }
         public int cooking(int n)
         {
-            return upd_skill((int)EnumSkills.Cooking, n);
+            return upd_skill(EnumSkills.Cooking, n);
         }
 
         public int get_enjoyment(int actiontype)
@@ -786,13 +808,13 @@ namespace WMaster.ClassOrStructurToImplement
         int preg_chance(int base_pc, bool good = false, double factor = 1.0)
         { throw new NotImplementedException(); }
 
-        bool calc_pregnancy(int NamelessParameter1, cPlayer NamelessParameter2)
+        bool calc_pregnancy(int NamelessParameter1, Player NamelessParameter2)
         { throw new NotImplementedException(); }
-        bool calc_pregnancy(cPlayer player, bool good = false, double factor = 1.0)
+        bool calc_pregnancy(Player player, bool good = false, double factor = 1.0)
         { throw new NotImplementedException(); }
-        bool calc_insemination(cPlayer player, bool good = false, double factor = 1.0)
+        bool calc_insemination(Player player, bool good = false, double factor = 1.0)
         { throw new NotImplementedException(); }
-        bool calc_group_pregnancy(cPlayer player, bool good = false, double factor = 1.0)
+        bool calc_group_pregnancy(Player player, bool good = false, double factor = 1.0)
         { throw new NotImplementedException(); }
 
         bool calc_pregnancy(int NamelessParameter1, sCustomer NamelessParameter2)
@@ -883,5 +905,28 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
 
         // END MOD
+
+        public override int GetHashCode()
+        {
+            return this.Realname.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            sGirl girl = obj as sGirl;
+            if (obj == null) { return false; }
+            return this.Realname.Equals(girl.Realname);
+        }
+
+        public int CompareTo(sGirl other)
+        {
+            if (other == null)
+            {
+                return -1;
+            }
+
+            return this.Realname.CompareTo(other.Realname);
+            throw new NotImplementedException();
+        }
     }
 }

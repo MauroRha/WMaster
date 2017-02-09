@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace WMaster.Enums
 {
+    /// <summary>
+    /// Turn event summary type.
+    /// </summary>
     public enum Summary
     {
         GIRLS,

@@ -30,7 +30,7 @@
             {
                 cost *= 1.5; // virgins fetch a premium
             }
-            WMLog.Trace(string.Format("CTariff: base price for slave '{0}' = {1:0.00}", girl.m_Name, cost), WMLog.TraceLog.INFORMATION);
+            WMLog.Trace(string.Format("CTariff: base price for slave '{0}' = {1:0.00}", girl.Name, cost), WMLog.TraceLog.INFORMATION);
             return cost;
         }
 
@@ -239,10 +239,10 @@
 
             double cost = SlaveBasePrice(girl);
             double factor = Configuration.OutgoingFactors.SlaveCost;
-            WMLog.Trace(string.Format("CTariff: buy price config factor '{0}' = {1}", girl.m_Name, factor), WMLog.TraceLog.INFORMATION);
+            WMLog.Trace(string.Format("CTariff: buy price config factor '{0}' = {1}", girl.Name, factor), WMLog.TraceLog.INFORMATION);
 
             cost *= Configuration.OutgoingFactors.SlaveCost; // multiply by the config factor for buying slaves
-            WMLog.Trace(string.Format("CTariff: buy price for slave '{0}' = {1:0.00}", girl.m_Name, cost), WMLog.TraceLog.INFORMATION);
+            WMLog.Trace(string.Format("CTariff: buy price for slave '{0}' = {1:0.00}", girl.Name, cost), WMLog.TraceLog.INFORMATION);
             return (int)cost;
         }
         /// <summary>

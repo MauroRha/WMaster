@@ -16,7 +16,10 @@ namespace WMaster.ClassOrStructurToImplement
         /// Objective type.
         /// </summary>
         public Objectives Objective { get; set; }
-        public int m_Reward; // the reward type
+        /// <summary>
+        /// The reward type.
+        /// </summary>
+        public Rewards Reward { get; set; }
         /// <summary>
         /// The x variable for the objective.
         /// </summary>

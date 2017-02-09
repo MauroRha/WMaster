@@ -44,7 +44,7 @@ namespace WMaster.ClassOrStructurToImplement
         { throw new NotImplementedException(); }
         void OutputCustRow(int i, string Data, List<string> columnNames)
         { throw new NotImplementedException(); }
-        sDungeonGirl GetGirl(int i)
+        public sDungeonGirl GetGirl(int i)
         { throw new NotImplementedException(); }
         sDungeonGirl GetGirlByName(string name)
         { throw new NotImplementedException(); }

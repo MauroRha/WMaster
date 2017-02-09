@@ -255,7 +255,7 @@
     <Compile Include="ClassOrStructurToImplement\ToDoFirst\cRival.cs" />
     <Compile Include="ClassOrStructurToImplement\cJobManager.cs" />
     <Compile Include="ClassOrStructurToImplement\cDungeon.cs" />
-    <Compile Include="ClassOrStructurToImplement\ToDoFirst\cPlayer.cs" />
+    <Compile Include="Entity\Living\Player.cs" />
     <Compile Include="ClassOrStructurToImplement\sBrothel.cs" />
     <Compile Include="ClassOrStructurToImplement\ToDoFirst\sGirl.cs" />
     <Compile Include="ClassOrStructurToImplement\sInventoryItem.cs" />
@@ -288,6 +288,7 @@
     <Compile Include="ClassOrStructurToImplement\cBrothelManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tool\ResourceManager.cs" />
+    <Compile Include="Tool\StringHelper.cs" />
     <Compile Include="Tool\WMRand.cs" />
   </ItemGroup>
   <ItemGroup>

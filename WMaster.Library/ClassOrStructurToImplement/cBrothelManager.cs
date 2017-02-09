@@ -28,6 +28,7 @@ namespace WMaster.Manager
     using WMaster.Entity.Living;
     using WMaster.Entity.Living.GangMission;
     using WMaster.Enums;
+    using WMaster.Tool;
 
     /// <summary>
     /// Manages all brothels
@@ -73,7 +74,7 @@ namespace WMaster.Manager
             /* sBrothel */
             m_BrothelList = new List<sBrothel>();
             /* int */
-            m_Influence = m_NumInventory = m_HandmadeGoods = m_Beasts = m_Alchemy = 0;
+            m_Influence = m_NumInventory = m_HandmadeGoods = Beasts = m_Alchemy = 0;
             /* int */
             m_SupplyShedLevel = 1;
             /* int */
@@ -121,7 +122,7 @@ namespace WMaster.Manager
             /* long   */
             m_BribeRate = m_Bank = 0;
             /* int    */
-            m_Influence = m_HandmadeGoods = m_Beasts = m_Alchemy = 0;
+            m_Influence = m_HandmadeGoods = Beasts = m_Alchemy = 0;
             /* int    */
             m_SupplyShedLevel = 1;
             
@@ -134,22 +135,55 @@ namespace WMaster.Manager
         }
 
         public sGirl GetDrugPossessor()
-        { throw new NotImplementedException(); }
+        {
+            foreach (sBrothel current in m_BrothelList)
+            {
+                foreach (sGirl girl in current.GirlsList)
+                {
+                    if (!WMRand.Percent(Game.Girls.GetStat(girl, EnumStats.Intelligence))) // girls will only be found out if low intelligence
+                    {
+                        if (Game.Girls.HasItem(girl, "Shroud Mushroom") > 0 || Game.Girls.HasItem(girl, "Fairy Dust") > 0 || Game.Girls.HasItem(girl, "Vira Blood") > 0)
+                        {
+                            return girl;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
 
         public void AddGirlToPrison(sGirl girl)
-        { throw new NotImplementedException(); }
+        {
+            // remove from girl manager if she is there
+            Game.Girls.RemoveGirl(girl);
+
+            // remove girl from brothels if she is there
+            for (int i = 0; i < Game.Brothels.GetNumBrothels(); i++)
+            {
+                Game.Brothels.RemoveGirl(i, girl, false);
+            }
+
+            m_PrisonGirlList.Add(girl);
+        }
 
         [Obsolete("Remove from PrisonGrilList", true)]
         public void RemoveGirlFromPrison(sGirl girl)
-        { throw new NotImplementedException(); }
+        {
+            this.m_PrisonGirlList.Remove(girl);
+        }
 
         public int GetNumInPrison()
         { return m_PrisonGirlList.Count; }
 
         public void AddGirlToRunaways(sGirl girl)
-        { throw new NotImplementedException(); }
-        public void RemoveGirlFromRunaways(sGirl girl)
-        { throw new NotImplementedException(); }
+        {
+            if (girl == null) { return; }
+            // TODO : remove girl from their current place
+
+            girl.DayJob = girl.NightJob = Jobs.RUNAWAY;
+            m_RunawaysGirlList.Add(girl);
+        }
 
         public int GetNumRunaways()
         { return m_RunawaysGirlList.Count; }
@@ -578,15 +612,15 @@ namespace WMaster.Manager
 
             // keep gravitating player suspicion to 0
             /* */
-            if (Game.Player.suspicion() > 0)
+            if (Game.Player.Suspicion() > 0)
             {
                 Game.Player.suspicion(-1);
             }
-            else if (Game.Player.suspicion() < 0)
+            else if (Game.Player.Suspicion() < 0)
             {
                 Game.Player.suspicion(1);
             }
-            if (Game.Player.suspicion() > 20)
+            if (Game.Player.Suspicion() > 20)
             {
                 CheckRaid(); // is the player under suspision by the authorities
             }
@@ -980,7 +1014,7 @@ namespace WMaster.Manager
                                 matronMsg.AppendLineFormat(LocalString.ResourceStringCategory.Brothel,
                                     "YourMatronHelps[GirlName]ToRelax",
                                     new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName) });
-                                Game.Girls.UpdateStat(current, (int)EnumStats.Tiredness, -5);
+                                Game.Girls.UpdateStat(current, EnumStats.Tiredness, -5);
                             }
                         }
                     }
@@ -995,7 +1029,7 @@ namespace WMaster.Manager
                     matronMsg.AppendLineFormat(LocalString.ResourceStringCategory.Girl,
                         "YourMatronHelpsCheerUp[GirlName]AfterSheFeelsSad",
                         new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName) });
-                    Game.Girls.UpdateStat(current, (int)EnumStats.Happiness, 5);
+                    Game.Girls.UpdateStat(current, EnumStats.Happiness, 5);
                 }
 
                 if (Game.Girls.GetStat(current, (int)EnumStats.Health) < 40)
@@ -1016,7 +1050,7 @@ namespace WMaster.Manager
                             matronMsg.AppendLineFormat(LocalString.ResourceStringCategory.Girl,
                                 "YourMatronHelpsHeal[GirlName]",
                                 new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName) });
-                            Game.Girls.UpdateStat(current, (int)EnumStats.Health, 5);
+                            Game.Girls.UpdateStat(current, EnumStats.Health, 5);
                         }
                     }
                     else
@@ -1063,8 +1097,8 @@ namespace WMaster.Manager
                     do_daily_items(brothel, current); // `J` added
 
                     // Natural healing, 2% health and 2% tiredness per day
-                    Game.Girls.UpdateStat(current, (int)EnumStats.Health, 2, false);
-                    Game.Girls.UpdateStat(current, (int)EnumStats.Tiredness, -2, false);
+                    Game.Girls.UpdateStat(current, EnumStats.Health, 2, false);
+                    Game.Girls.UpdateStat(current, EnumStats.Tiredness, -2, false);
                 }
 
                 // Level the girl up if nessessary
@@ -1867,25 +1901,133 @@ namespace WMaster.Manager
         // End of automation functions
 
         public void UpdateAllGirlsStat(sBrothel brothel, EnumStats stat, int amount)
-        { throw new NotImplementedException(); }
-        public void SetGirlStat(sGirl girl, int stat, int amount)
-        { throw new NotImplementedException(); }
+        {
+            if (brothel != null)
+            {
+                foreach (sGirl current in brothel.GirlsList)
+                {
+                    Game.Girls.UpdateStat(current, stat, amount);
+                }
+            }
+            else
+            {
+                foreach (sBrothel curBroth in this.m_BrothelList)
+                {
+                    foreach (sGirl current in curBroth.GirlsList)
+                    {
+                        Game.Girls.UpdateStat(current, stat, amount);
+                    }
+                }
+            }
+        }
+
+        public void SetGirlStat(sGirl girl, EnumStats stat, int amount)
+        {
+            girl.m_Stats[(int)stat] = amount; // `J` changed from m_StatMods to m_Stats
+        }
 
         public sGirl GetPrison()
         { return m_PrisonGirlList.FirstOrDefault(); }
-        public int stat_lookup(string stat_name, int brothel_id = -1)
-        { throw new NotImplementedException(); }
+
+        // TODO : REFACTORING - Need to review this method -> implement accessor into brothel to get it directly (not using modifiable name as identifier inline)
+        //mod, damn it, I am trying to do python code in c++
+        [Obsolete("Need to review this method -> implement accessor into brothel to get it directly (not using modifiable name as identifier inline)", false)]
+        public int stat_lookup(string stat_name, int brothel_id)
+        {
+            if (stat_name == "filth")
+            {
+                return this.GetBrothel(brothel_id).Filthiness;
+            }
+            else if (stat_name == "advertising")
+            {
+                return (int)GetBrothel(brothel_id).AdvertisingBudget;
+            }
+            else if (stat_name == "security")
+            {
+                return GetBrothel(brothel_id).SecurityLevel;
+            }
+            else if (stat_name == "beasts")
+            {
+                return this.Beasts;
+            }
+            return m_Dummy;
+        }
+
 
         // Used by new security guard code
         public int GetGirlsCurrentBrothel(sGirl girl)
-        { throw new NotImplementedException(); }
+        {
+            if (girl == null)
+            { return -1; }
+
+            // Used by new security guard code
+            foreach (sBrothel item in m_BrothelList)
+            {
+                int index = item.GirlsList.ToList().IndexOf(girl);
+                if (index != -1)
+                { return index; }
+            }
+            return -1;
+        }
         // Also used by new security code
-        public List<sGirl> GirlsOnJob(int BrothelID, int JobID, bool Day0Night1)
-        { throw new NotImplementedException(); }
-        public sGirl GetRandomGirlOnJob(int BrothelID, int JobID, bool Day0Night1)
-        { throw new NotImplementedException(); } 	// `J` - added
-        public sGirl GetFirstGirlOnJob(int BrothelID, int JobID, bool Day0Night1)
-        { throw new NotImplementedException(); } 	// `J` - added
+        public List<sGirl> GirlsOnJob(int brothelId, Jobs job, DayShift dayShift)
+        {
+            // Used by new security code
+            sBrothel brothel = this.m_BrothelList
+                .Where(x => x.Id == brothelId)
+                .FirstOrDefault();
+
+            List<sGirl> GirlsOnJob = new List<sGirl>();
+
+            if (brothel != null)
+            {
+                //foreach (sGirl girl in brothel.GirlsList)
+                //{
+                if (dayShift == DayShift.Night)
+                {
+                        //if (girl.NightJob == job)
+                        //{
+                        //    GirlsOnJob.Add(girl);
+                        //}
+                    GirlsOnJob = brothel.GirlsList
+                        .Where(x => x.NightJob == job)
+                        .ToList();
+                }
+                else
+                {
+                        //if (girl.DayJob == job)
+                        //{
+                        //    GirlsOnJob.Add(girl);
+                        //}
+                    GirlsOnJob = brothel.GirlsList
+                        .Where(x => x.DayJob == job)
+                        .ToList();
+                }
+                //}
+            }
+            return GirlsOnJob;
+        }
+
+        public sGirl GetRandomGirlOnJob(int brothelId, Jobs job, DayShift dayShift)
+        {
+            List<sGirl> girls = GirlsOnJob(brothelId, job, dayShift);
+            if (!girls.Count.Equals(0))
+            {
+                return girls[WMRand.Random(girls.Count)];
+            }
+
+            return null;
+        }
+
+        public sGirl GetFirstGirlOnJob(int brothelId, Jobs job, DayShift dayShift)
+        {
+            List<sGirl> girls = GirlsOnJob(brothelId, job, dayShift);
+            if (!girls.Count.Equals(0))
+            {
+                return girls[0];
+            }
+            return null;
+        }
 
         /*	// `J` AntiPreg Potions rewriten and moved to individual buildings
             bool UseAntiPreg(bool use, int brothelID);
@@ -1896,12 +2038,119 @@ namespace WMaster.Manager
             bool GetPotionRestock()					{ return m_KeepPotionsStocked; }
         /* */
 
+        // TODO : REFACTORING - GetNumGirls in Building base class or interface. GetNumGirls move to brothel instead ok brothel manager
         public int GetTotalNumGirls(bool monster = false)
-        { throw new NotImplementedException(); }
+        {
+            int total = 0;
+            if (!monster)
+            {
+                for (int i = 0; i < m_BrothelList.Count; i++)
+                {
+                    total += GetNumGirls(i);
+                }
+                total += GetDungeon().GetNumGirls();
+                total += Game.Arena.GetNumGirls(0);
+                total += Game.Studios.GetNumGirls(0);
+                total += Game.Clinic.GetNumGirls(0);
+                total += Game.Centre.GetNumGirls(0);
+                total += Game.House.GetNumGirls(0);
+                total += Game.Farm.GetNumGirls(0);
+            }
+            else
+            {
+                foreach(sBrothel current in m_BrothelList)
+                {
+                    foreach (sGirl girl in current.GirlsList)
+                    {
+                        if (Game.Girls.HasTrait(girl, "Not Human"))
+                        {
+                            total++;
+                        }
+                    }
+                }
+                // TODO : REFACTORING - Dungeon implement List<Girl>
+                for (int i = 0; i < GetDungeon().GetNumGirls(); i++)
+                {
+                    sDungeonGirl dgirl = GetDungeon().GetGirl(i);
+                    if (Game.Girls.HasTrait(dgirl.m_Girl, "Not Human"))
+                    {
+                        total++;
+                    }
+                }
+                if (Game.Clinic.GetNumGirls(0) > 0)
+                {
+                    foreach (sGirl girl in Game.Clinic.GetBrothel(0).GirlsList)
+                    {
+                        if (Game.Girls.HasTrait(girl, "Not Human"))
+                        {
+                            total++;
+                        }
+                    }
+                }
+                if (Game.Studios.GetNumGirls(0) > 0)
+                {
+                    foreach (sGirl girl in Game.Studios.GetBrothel(0).GirlsList)
+                    {
+                        if (Game.Girls.HasTrait(girl, "Not Human"))
+                        {
+                            total++;
+                        }
+                    }
+                }
+                if (Game.Arena.GetNumGirls(0) > 0)
+                {
+                    foreach (sGirl girl in Game.Arena.GetBrothel(0).GirlsList)
+                    {
+                        if (Game.Girls.HasTrait(girl, "Not Human"))
+                        {
+                            total++;
+                        }
+                    }
+                }
+                if (Game.Centre.GetNumGirls(0) > 0)
+                {
+                    foreach (sGirl girl in Game.Centre.GetBrothel(0).GirlsList)
+                    {
+                        if (Game.Girls.HasTrait(girl, "Not Human"))
+                        {
+                            total++;
+                        }
+                    }
+                }
+                if (Game.Farm.GetNumGirls(0) > 0)
+                {
+                    foreach (sGirl girl in Game.Farm.GetBrothel(0).GirlsList)
+                    {
+                        if (Game.Girls.HasTrait(girl, "Not Human"))
+                        {
+                            total++;
+                        }
+                    }
+                }
+                if (Game.House.GetNumGirls(0) > 0)
+                {
+                    foreach (sGirl girl in Game.House.GetBrothel(0).GirlsList)
+                    {
+                        if (Game.Girls.HasTrait(girl, "Not Human"))
+                        {
+                            total++;
+                        }
+                    }
+                }
+            }
+
+            return total;
+        }
+
         public int GetFreeRooms(sBrothel brothel)
-        { throw new NotImplementedException(); }
+        {
+	        return brothel.NumRooms - brothel.NumGirls;
+        }
         public int GetFreeRooms(int brothelnum = 0)
-        { throw new NotImplementedException(); }
+        {
+            sBrothel brothel = Game.Brothels.GetBrothel(brothelnum);
+            return brothel.NumRooms - brothel.NumGirls;
+        }
 
         public void UpgradeSupplySheds()
         { m_SupplyShedLevel++; }
@@ -1994,21 +2243,60 @@ namespace WMaster.Manager
 
             brothel.RemoveGirl(girl);
         }
-        
+
+        // TODO : Move to game manager
         public sGirl GetFirstRunaway()
-        { throw new NotImplementedException(); }
+        {
+            foreach (sGirl girl in RunawaysGirlList)
+            {
+                return girl;
+            }
+            return null;
+        }
+
+        public void RemoveGirlFromRunaways(sGirl girl)
+        {
+            m_RunawaysGirlList.Remove(girl);
+        }
+
+        /// <summary>
+        /// sorts the list of girls.
+        /// </summary>
+        /// <param name="brothel">Brothel to sort girls</param>
         public void sort(sBrothel brothel)
-        { throw new NotImplementedException(); } 		// sorts the list of girls
+        {
+            brothel.Sort();
+        }
         // ----- Inventory
         public void SortInventory()
         {
             //	qu_sort(0,299,m_Inventory);
         }
 
-        public void SetName(int brothelID, string name)
-        { throw new NotImplementedException(); }
+        public void SetName(int brothelId, string name)
+        {
+            string data = string.Empty;
+            foreach (sBrothel current in m_BrothelList)
+            {
+                if (current.Id == brothelId)
+                {
+                    current.Name = current != null ? name : "cBrothelManager::GetName - Something went wrong";
+                }
+            }
+        }
+
         public string GetName(int brothelID)
-        { throw new NotImplementedException(); }
+        {
+            foreach (sBrothel current in m_BrothelList)
+            {
+                if (current.Id == brothelID)
+                {
+                    return current.Name;
+                }
+            }
+
+            return "cBrothelManager::GetName - Something went wrong";
+        }
 
         // returns true if the bar is staffed 
         public bool CheckBarStaff(sBrothel brothel, int numGirls)
@@ -2018,38 +2306,353 @@ namespace WMaster.Manager
         public bool CheckGambStaff(sBrothel brothel, int numGirls)
         { throw new NotImplementedException(); }
 
+        // TODO : REFACTORING - Replace trait to object structure with fichtback modifier
         public bool FightsBack(sGirl girl)
-        { throw new NotImplementedException(); }
-        public int GetNumGirls(int brothelID)
-        { throw new NotImplementedException(); }
+        {
+            // `J` When adding new traits, search for "J-Add-New-Traits"  :  found in >> cBrothel > cBrothelManager::FightsBack
+            if (girl.health() < 10 || girl.tiredness() > 90) { return false; }
+            if (girl.has_trait("Broken Will")) { return false; }
+            if (girl.has_trait("Mind Fucked")) { return false; }
+
+            if (Game.Girls.DisobeyCheck(girl, ActionTypes.Combat)) { return true; }
+
+            int chance = 0;
+            if (girl.has_trait("Adventurer")) { chance += 5; }
+            if (girl.has_trait("Aggressive")) { chance += 10; }
+            if (girl.has_trait("Agile")) { chance += 2; }
+            if (girl.has_trait("Assassin")) { chance += 10; }
+            if (girl.has_trait("Audacity")) { chance += 10; }
+            if (girl.has_trait("Brawler")) { chance += 5; }
+            if (girl.has_trait("Canine")) { chance += 2; }
+            if (girl.has_trait("Cat Girl")) { chance += 2; }
+            if (girl.has_trait("Country Gal")) { chance += 2; }
+            if (girl.has_trait("Demon")) { chance += 5; }
+            if (girl.has_trait("Dominatrix")) { chance += 5; }
+            if (girl.has_trait("Emprisoned Customer")) { chance += 10; }
+            if (girl.has_trait("Fearless")) { chance += 10; }
+            if (girl.has_trait("Fleet of Foot")) { chance += 2; }
+            if (girl.has_trait("Heroine")) { chance += 5; }
+            if (girl.has_trait("Hunter")) { chance += 5; }
+            if (girl.has_trait("Incorporeal")) { chance += 10; }
+            if (girl.has_trait("Iron Will")) { chance += 20; }
+            if (girl.has_trait("Kidnapped")) { chance += 15; }
+            if (girl.has_trait("Manly")) { chance += 5; }
+            if (girl.has_trait("Merciless")) { chance += 5; }
+            if (girl.has_trait("Muscular")) { chance += 5; }
+            if (girl.has_trait("Open Minded")) { chance += 2; }
+            if (girl.has_trait("Optimist")) { chance += 2; }
+            if (girl.has_trait("Pessimist")) { chance += 2; }
+            if (girl.has_trait("Powerful Magic")) { chance += 10; }
+            if (girl.has_trait("Sadistic")) { chance += 5; }
+            if (girl.has_trait("Strong Magic")) { chance += 5; }
+            if (girl.has_trait("Strong")) { chance += 5; }
+            if (girl.has_trait("Tomboy")) { chance += 2; }
+            if (girl.has_trait("Tough")) { chance += 5; }
+            if (girl.has_trait("Tsundere")) { chance += 5; }
+            if (girl.has_trait("Twisted")) { chance += 5; }
+            if (girl.has_trait("Yandere")) { chance += 5; }
+
+            if (girl.has_trait("Bad Eyesight")) { chance -= 2; }
+            if (girl.has_trait("Bimbo")) { chance -= 5; }
+            if (girl.has_trait("Blind")) { chance -= 5; }
+            if (girl.has_trait("Bruises")) { chance -= 2; }
+            if (girl.has_trait("Clumsy")) { chance -= 2; }
+            if (girl.has_trait("Deaf")) { chance -= 5; }
+            if (girl.has_trait("Delicate")) { chance -= 10; }
+            if (girl.has_trait("Dependant")) { chance -= 20; }
+            if (girl.has_trait("Elegant")) { chance -= 5; }
+            if (girl.has_trait("Fragile")) { chance -= 10; }
+            if (girl.has_trait("Malformed")) { chance -= 2; }
+            if (girl.has_trait("Masochist")) { chance -= 10; }
+            if (girl.has_trait("Meek")) { chance -= 20; }
+            if (girl.has_trait("Nerd")) { chance -= 5; }
+            if (girl.has_trait("Nervous")) { chance -= 5; }
+            if (girl.has_trait("Retarded")) { chance -= 10; }
+            if (girl.has_trait("Shy")) { chance -= 10; }
+
+            if (WMRand.Percent(chance)) { return true; }
+
+            return false;
+        }
+
+        public int GetNumGirls(int brothelId)
+        {
+            foreach (sBrothel current in m_BrothelList)
+            {
+                if (current.Id == brothelId)
+                {
+                    return current.NumGirls;
+                }
+            }
+            return 0;
+        }
         public string GetGirlString(int brothelID, int girlNum)
         { throw new NotImplementedException(); }
-        public int GetNumGirlsOnJob(int brothelID, Jobs jobID, DayShift dayShift)
-        { throw new NotImplementedException(); }
+        public int GetNumGirlsOnJob(int brothelId, Jobs job, DayShift dayShift)
+        {
+            List<sBrothel> brothels = new List<sBrothel>();
+            if (brothelId != -1)
+            {
+                brothels = m_BrothelList
+                    .Where(x => x.Id == brothelId)
+                    .ToList();
+            }
+            else
+            { brothels = m_BrothelList.ToList(); }
 
-        public string GetBrothelString(int brothelID)
-        { throw new NotImplementedException(); }
+            int count = 0;
+            foreach (sBrothel current in brothels)
+            {
+                if (dayShift == DayShift.Day)
+                {
+                    count += current.GirlsList
+                        .Where(x => x.DayJob == job)
+                        .Count();
+                }
+                else
+                {
+                    count += current.GirlsList
+                        .Where(x => x.NightJob == job)
+                        .Count();
+                }
+            }
+            return count;
+        }
+
+        //C++ TO C# CONVERTER WARNING: The original C++ declaration of the following method implementation was not found:
+        //ORIGINAL LINE: string cBrothelManager::GetBrothelString(int brothelID)
+
+            public string GetBrothelString(int brothelID)
+            {
+                LocalString brothelRepport = new LocalString();
+                sBrothel brothel = GetBrothel(brothelID);
+                /*
+                *	if we can't find the brothel, go home
+                *	the error is logged in GetBrothel,
+                *	so just return an empty string
+                */
+                if (brothel == null)
+                {
+                    return string.Empty;
+                }
+                /*
+                *	some shorthand variables for the simpler descriptions
+                *	Commented out since we may want to put these back in at some stage
+                *
+                const char *has_bar =  (
+                brothel->m_Bar == 1 ? "Yes" : "No"
+                );
+                const char *has_hall =  (
+                brothel->m_GamblingHall == 1 ? "Yes" : "No"
+                );
+                */
+                int profit = brothel.m_Finance.TotalProfit();
+                /*
+                *	format the summary into one big string, and return it
+                */
+                brothelRepport.AppendLineFormat(LocalString.ResourceStringCategory.Brothel,
+                    "CustomerHappiness[Happiness]",
+                    new List<FormatStringParameter>() { new FormatStringParameter("Happiness", happiness_text(brothel)) });
+                brothelRepport.AppendLineFormat(LocalString.ResourceStringCategory.Brothel,
+                    "Fame[Fame]",
+                    new List<FormatStringParameter>() { new FormatStringParameter("Fame", fame_text(brothel)) });
+                brothelRepport.AppendLineFormat(LocalString.ResourceStringCategory.Brothel,
+                    "RoomsAvailablecurrent[AvailableRooms][CurrentRooms]",
+                    new List<FormatStringParameter>() { new FormatStringParameter("AvailableRooms", brothel.NumRooms - brothel.NumGirls), new FormatStringParameter("CurrentRooms", brothel.NumRooms) });
+                //ss << "Strip Bar: "		<< has_bar		<< endl;
+                //ss << "Gambling Hall: "	<< has_hall		<< endl;
+                brothelRepport.AppendLineFormat(LocalString.ResourceStringCategory.Brothel,
+                    "ThisBrothelsProfit[Profit]",
+                    new List<FormatStringParameter>() { new FormatStringParameter("Profit", profit) });
+                brothelRepport.AppendLineFormat(LocalString.ResourceStringCategory.Brothel,
+                    "YourGold[Gold]",
+                    new List<FormatStringParameter>() { new FormatStringParameter("Gold", Game.Gold.IntVal()) });
+                brothelRepport.AppendLineFormat(LocalString.ResourceStringCategory.Brothel,
+                    "Disposition[Disposition]",
+                    new List<FormatStringParameter>() { new FormatStringParameter("Disposition", disposition_text()) });
+                //ss << "Gambling Pool: "		<< m_GamblingHallPool	<< endl;
+                brothelRepport.AppendLineFormat(LocalString.ResourceStringCategory.Brothel,
+                    "Suspicion[Suspicion]",
+                    new List<FormatStringParameter>() { new FormatStringParameter("Suspicion", suss_text()) });
+                brothelRepport.AppendLineFormat(LocalString.ResourceStringCategory.Brothel,
+                    "Filthiness[Filthiness]",
+                    new List<FormatStringParameter>() { new FormatStringParameter("Filthiness", brothel.Filthiness) });
+                brothelRepport.AppendLineFormat(LocalString.ResourceStringCategory.Brothel,
+                    "BeastsHousedHere[Besats]",
+                    new List<FormatStringParameter>() { new FormatStringParameter("Besats", Game.Brothels.GetNumBeasts()) });
+                return brothelRepport.ToString();
+                //add cleanliness and check gh and bh
+            }
 
         public sGirl GetGirl(int brothelID, int num)
-        { throw new NotImplementedException(); }
+        {
+            sBrothel current = null;
+            foreach (sBrothel item in this.m_BrothelList)
+            {
+                if (item.Id == brothelID)
+                {
+                    current = item;
+                    break;
+                }
+            }
+
+            if (current == null || current.GirlsList.Count().Equals(0))
+            {
+                return null;
+            }
+
+            List<sGirl> list = new List<sGirl>(current.GirlsList);
+
+            // Makes num reset when it is >= m_NumGirls
+            if (num >= list.Count())
+            {
+                num = num % list.Count();
+            }
+            if (num < 0)
+            {
+                num = list.Count() + (num % list.Count());
+            }
+            // Check already done
+            //if (current != null)
+            //{
+            return list[num];
+            //int count = 0;
+            //    sGirl currentGirl = current.m_Girls;
+            //    while (currentGirl != null)
+            //    {
+            //        if (count == num)
+            //        {
+            //            break;
+            //        }
+            //        count++;
+            //        currentGirl = currentGirl.m_Next;
+            //    }
+            //    return currentGirl;
+            //}
+            //return 0;
+        }
+
         public int GetGirlPos(int brothelID, sGirl girl)
-        { throw new NotImplementedException(); }
+        {
+            foreach (sBrothel current in m_BrothelList)
+            {
+                if (current.Id == brothelID)
+                {
+                    return current.GirlsList.ToList().IndexOf(girl);
+                }
+            }
+
+            return -1;
+        }
+
         // MYR: Used by new end of turn code in InterfaceProcesses::TurnSummary
         public sGirl GetGirlByName(int brothelID, string name)
-        { throw new NotImplementedException(); }
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null;
+            }
+            // Get the proper brothel
+            sBrothel current = this.m_BrothelList
+                .Where(x => x.Id == brothelID)
+                .FirstOrDefault();
 
-        public sBrothel GetBrothel(int brothelID)
-        { throw new NotImplementedException(); }
+            // Find the girl
+            if (current != null)
+            {
+                foreach (sGirl currentGirl in current.GirlsList)
+                {
+                    if (currentGirl.Realname.GetForCompare().Equals(name.GetForCompare(), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return currentGirl;
+                    }
+                }
+            }
+            return null;
+        }
+
+        [Obsolete("Don't use brothel id publicly", false)]
+        public sBrothel GetBrothel(int brothelId)
+        {
+            foreach (sBrothel current in m_BrothelList)
+            {
+                if (current.Id == brothelId)
+                {
+                    return current;
+                }
+            }
+            /*
+            *	brothel not found at least deserves a log message
+            */
+            WMLog.Trace(string.Format("Brothel {0} not found in list!", brothelId), WMLog.TraceLog.ERROR);
+            return null;
+        }
+
         public int GetNumBrothels()
         { return m_BrothelList.Count(); }
+        // TODO : GetFreeRoom function into building base class -> call it
         public int GetNumBrothelsWithVacancies()
-        { throw new NotImplementedException(); }
+        {
+            int number = 0;
+            foreach (sBrothel current in m_BrothelList)
+            {
+                if (current.NumGirls < current.NumRooms)
+                {
+                    number++;
+                }
+            }
+
+            return number;
+        }
+
         public int GetFirstBrothelWithVacancies()
-        { throw new NotImplementedException(); }
+        {
+            // Do work 2 times ?
+            //if (GetNumBrothelsWithVacancies() < 1)
+            //{
+            //    return -1;
+            //}
+
+            int number = -1;
+
+            foreach (sBrothel current in m_BrothelList)
+            {
+                if (current.NumGirls < current.NumRooms)
+                {
+                    // Is there a bug?
+                    //return number;
+                    return current.Id;
+                }
+            }
+
+            return -1;
+        }
+
         public int GetRandomBrothelWithVacancies()
-        { throw new NotImplementedException(); }
+        {
+            // DO work 2 times
+            //int chance = GetNumBrothelsWithVacancies();
+            //if (chance < 1)
+            //{
+            //    return -1;
+            //}
+            List<int> brothelWithVacancies = new List<int>();
+            foreach (sBrothel current in m_BrothelList)
+            {
+                if (current.NumGirls < current.NumRooms)
+                {
+                    brothelWithVacancies.Add(current.Id);
+                }
+            }
+            if (brothelWithVacancies.Count.Equals(0))
+            { return -1; }
+            else
+            { return brothelWithVacancies[WMRand.Random(brothelWithVacancies.Count - 1)]; }
+        }
         public sBrothel GetRandomBrothel()
-        { throw new NotImplementedException(); }
+        {
+            return m_BrothelList[WMRand.Random(m_BrothelList.Count - 1)];
+        }
 
         public void CalculatePay(sBrothel brothel, sGirl girl, Jobs Job)
         {
@@ -2135,12 +2738,175 @@ namespace WMaster.Manager
             gang.Events.AddMessage(gmess.ToString(), ImageType.PROFILE, EventType.Gang);
         }
 
-        // returns true if the girl wins
+        // True means the girl beat the brothel master
         public bool PlayerCombat(sGirl girl)
-        { throw new NotImplementedException(); }
+        {
+            // MYR: Sanity check: Incorporeal is an auto-win.
+            if (girl.has_trait("Incorporeal"))
+            {
+                girl.m_Stats[(int)EnumStats.Health] = 100;
+                WMLog.Trace(string.Format("Girl vs. Brothel owner: {0} is incorporeal, so she wins.", girl.Realname), WMLog.TraceLog.INFORMATION);
+                return true;
+            }
+
+            EnumSkills girlAttack = EnumSkills.Combat; // determined later, defaults to combat
+            EnumSkills playerAttack = EnumSkills.Combat;
+            int girlDodge = 0;
+            int playerDodge = Game.Player.Stats[EnumStats.Agility].CurrentValue;
+            int playerHealth = 100;
+            int playerMana = 100;
+
+            // first determine what she will fight with
+            if (Game.Girls.GetSkill(girl, EnumSkills.Combat) >= Game.Girls.GetSkill(girl, EnumSkills.Magic))
+            {
+                girlAttack = EnumSkills.Combat;
+            }
+            else
+            {
+                girlAttack = EnumSkills.Magic;
+            }
+
+            // determine what player will fight with
+            if (Game.Player.Skills[EnumSkills.Combat].CurrentValue >= Game.Player.Skills[EnumSkills.Magic].CurrentValue)
+            {
+                playerAttack = EnumSkills.Combat;
+            }
+            else
+            {
+                playerAttack = EnumSkills.Magic;
+            }
+
+            // calculate the girls dodge ability
+            if ((Game.Girls.GetStat(girl, EnumStats.Agility) - Game.Girls.GetStat(girl, EnumStats.Tiredness)) < 0)
+            {
+                girlDodge = 0;
+            }
+            else
+            {
+                girlDodge = (Game.Girls.GetStat(girl, EnumStats.Agility) - Game.Girls.GetStat(girl, EnumStats.Tiredness));
+            }
+
+            int combatRounds = 0;
+            while (Game.Girls.GetStat(girl, EnumStats.Health) > 20 && playerHealth > 0 && combatRounds < 1000)
+            {
+                // Girl attacks
+                if (WMRand.Percent(Game.Girls.GetSkill(girl, girlAttack)))
+                {
+                    int damage = 0;
+                    if (girlAttack == EnumSkills.Magic)
+                    {
+                        if (Game.Girls.GetStat(girl, EnumStats.Mana) <= 0)
+                        {
+                            girlAttack = EnumSkills.Combat;
+                            damage = 2;
+                        }
+                        else
+                        {
+                            damage = 2 + (Game.Girls.GetSkill(girl, girlAttack) / 5);
+                            Game.Girls.UpdateStat(girl, EnumStats.Mana, -7);
+                        }
+                    }
+                    else
+                    {
+                        // she has hit now calculate how much damage will be done
+                        damage = 5 + (Game.Girls.GetSkill(girl, girlAttack) / 10);
+                    }
+
+                    Game.Girls.UpdateSkill(girl, girlAttack, WMRand.Random(2)); // she may improve a little
+
+                    // player attempts Dodge
+                    if (!WMRand.Percent(playerDodge))
+                    {
+                        playerHealth -= damage;
+                    }
+                    else
+                    {
+                        Game.Player.Stats[EnumStats.Agility].Value += WMRand.Random(2); // player may improve a little
+                    }
+                }
+
+                // Player Attacks
+                if (WMRand.Percent(Game.Player.Skills[playerAttack].CurrentValue))
+                {
+                    int damage = 0;
+                    if (playerAttack == EnumSkills.Magic)
+                    {
+                        if (playerMana <= 0)
+                        {
+                            playerAttack = EnumSkills.Combat;
+                            damage = 2;
+                        }
+                        else
+                        {
+                            damage = 2 + (Game.Player.Skills[playerAttack].CurrentValue / 5);
+                            playerMana -= 5;
+                        }
+                    }
+                    else
+                    {
+                        // he has hit now calculate how much damage will be done
+                        damage = 5 + (Game.Player.Skills[playerAttack].CurrentValue / 10);
+                    }
+
+                    Game.Player.Skills[playerAttack].Value += WMRand.Random(2); // he may improve a little
+
+                    // girl attempts Dodge
+                    if (!WMRand.Percent(girlDodge))
+                    {
+                        Game.Girls.UpdateStat(girl, EnumStats.Health, -damage);
+                    }
+                    else
+                    {
+                        Game.Player.Stats[EnumStats.Agility].Value += WMRand.Random(2); // player may improve a little
+                    }
+                }
+
+
+                // update girls dodge ability
+                if ((girlDodge - 2) < 0)
+                {
+                    girlDodge = 0;
+                }
+                else
+                {
+                    girlDodge -= 2;
+                }
+
+                // update players dodge ability
+                if ((playerDodge - 2) < 0)
+                {
+                    playerDodge = 0;
+                }
+                else
+                {
+                    playerDodge -= 2;
+                }
+
+                combatRounds++;
+            }
+
+            if (combatRounds > 999) // a tie?
+            {
+                if (Game.Girls.GetStat(girl, EnumStats.Health) > playerHealth)
+                {
+                    return true; // the girl won
+                }
+                return false;
+            }
+
+            if (Game.Girls.GetStat(girl, EnumStats.Health) < 20)
+            {
+                Game.Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, -1);
+                return false;
+            }
+
+            Game.Girls.UpdateEnjoyment(girl, (int)ActionTypes.Combat, +1);
+
+            return true;
+        }
 
         [Obsolete("Player instance must be move to be member of game instance", false)]
-        public cPlayer GetPlayer()
+        public Player GetPlayer()
         { return m_Player; }
         [Obsolete("Dungeon instance must be move to be member of game instance or in Dungeon manager to provide multiple dungeon ingame.", false)]
         public cDungeon GetDungeon()
@@ -2307,7 +3073,7 @@ namespace WMaster.Manager
         { return m_Drinks; }
         [Obsolete("Think about moving Beast information out of Brothel Manager", false)]
         public int GetNumBeasts()
-        { return m_Beasts; }
+        { return Beasts; }
         public int GetNumGoods()
         { return m_HandmadeGoods; }
         public int GetNumAlchemy()
@@ -2318,7 +3084,7 @@ namespace WMaster.Manager
         { m_Drinks += i; if (m_Drinks < 0) m_Drinks = 0; }
         [Obsolete("Think about moving Beast information out of Brothel Manager", false)]
         public void add_to_beasts(int i)
-        { m_Beasts += i; if (m_Beasts < 0) m_Beasts = 0; }
+        { Beasts += i; if (Beasts < 0) Beasts = 0; }
         public void add_to_goods(int i)
         { m_HandmadeGoods += i; if (m_HandmadeGoods < 0) m_HandmadeGoods = 0; }
         public void add_to_alchemy(int i)
@@ -2446,7 +3212,7 @@ namespace WMaster.Manager
                 bool done = false;
                 m_Objective.m_Difficulty = Game.GameEngine.Year - 1209;
                 m_Objective.SoFar = 0;
-                m_Objective.m_Reward = WMRand.Random((int)Rewards.NUM_REWARDS);
+                m_Objective.Reward = (Rewards)WMRand.Random((int)Rewards.NUM_REWARDS);
                 m_Objective.m_Limit = -1;
                 m_Objective.Target = 0;
                 m_Objective.Text = "";
@@ -2658,10 +3424,288 @@ namespace WMaster.Manager
 
         }
         
+        /// <summary>
+        /// Gives a reward
+        /// </summary>
         public void PassObjective()
-        { throw new NotImplementedException(); } 				// Gives a reward
-        public void AddCustomObjective(int limit, int diff, int objective, int reward, int sofar, int target, string text = "")
-        { throw new NotImplementedException(); }
+        {
+            if (m_Objective != null)
+            {
+                // `J` fix for REWARD_RIVALHINDER so it does not have to recall PassObjective()
+                cRival rival = null;
+                if (m_Objective.Reward == Rewards.RIVALHINDER)
+                {
+                    rival = m_Rivals.GetRandomRival();
+                    if (rival == null)
+                    {
+                        m_Objective.Reward = Rewards.GOLD;
+                    }
+                }
+
+                LocalString objectiveRepport = new LocalString();
+                if (m_Objective.Text.Length.Equals(0))
+                {
+                    objectiveRepport.AppendLine(LocalString.ResourceStringCategory.Player, "YouHaveCompletedYourObjectiveAndYouGet");
+                }
+                else
+                {
+                    objectiveRepport.AppendLineFormat(LocalString.ResourceStringCategory.Player,
+                        "YouHaveCompletedYourObjectiveTo[Objective]YouGet",
+                        new List<FormatStringParameter>() { new FormatStringParameter("Objective", m_Objective.Text) });
+                }
+
+                int gold;
+                switch (m_Objective.Reward)
+                {
+                    case Rewards.GOLD:
+                            gold = WMRand.Random(200) + 33;
+                            if (m_Objective.m_Difficulty > 0)
+                            {
+                                gold *= m_Objective.m_Difficulty;
+                            }
+
+                            // `J` if you had a time limit you get extra gold for the unused time
+                            int mod = m_Objective.Target;
+                            if (m_Objective.Objective == Objectives.REACHGOLDTARGET || m_Objective.Objective == Objectives.STEALXAMOUNTOFGOLD)
+                            {
+                                mod = Math.Min(1, m_Objective.Target / 100);
+                            }
+                            if (m_Objective.m_Limit > 0)
+                            {
+                                gold += mod * m_Objective.m_Limit;
+                            }
+
+                            objectiveRepport.AppendLineFormat(LocalString.ResourceStringCategory.Player,
+                                "[Amount]Gold",
+                                new List<FormatStringParameter>() { new FormatStringParameter("Amount", gold) });
+                            Game.Gold.ObjectiveReward(gold);
+                        break;
+
+                    case Rewards.GIRLS:
+                            int numberOfGirls = 1;
+                            if (m_Objective.m_Difficulty > 0)
+                            {
+                                numberOfGirls *= m_Objective.m_Difficulty;
+                            }
+
+                            // `J` throw in a few extra girls if your mission was to get more girls
+                            int div = 0;
+                            int bonus = Math.Min(5, m_Objective.m_Limit < 4 ? 1 : m_Objective.m_Limit / 2);
+                            if (m_Objective.Objective == Objectives.CAPTUREXCATACOMBGIRLS || m_Objective.Objective == Objectives.KIDNAPXGIRLS)
+                            {
+                                div = 10;
+                            }
+                            if (m_Objective.Objective == Objectives.HAVEXMONSTERGIRLS || m_Objective.Objective == Objectives.HAVEXAMOUNTOFGIRLS)
+                            {
+                                div = 20;
+                            }
+                            if (bonus > 0 && div > 0)
+                            {
+                                numberOfGirls += Math.Min(bonus, m_Objective.Target / div);
+                            }
+
+                            if (numberOfGirls > 1)
+                            {
+                                objectiveRepport.AppendLineFormat(LocalString.ResourceStringCategory.Player,
+                                    "[Number]SlaveGirls",
+                                    new List<FormatStringParameter>() { new FormatStringParameter("Number", numberOfGirls) });
+                            }
+                            else
+                            {
+                                objectiveRepport.AppendLineFormat(LocalString.ResourceStringCategory.Player,
+                                    "[Number]SlaveGirl",
+                                    new List<FormatStringParameter>() { new FormatStringParameter("Number", numberOfGirls) });
+                            }
+
+                            while (numberOfGirls > 0)
+                            {
+                                sGirl girl = Game.Girls.CreateRandomGirl(0, false, true, false, WMRand.Random(3) == 1);
+                                LocalString girlRepport = new LocalString();
+                                objectiveRepport.AppendLitteral(girl.Realname);
+                                objectiveRepport.NewLine();
+                                girlRepport.AppendLineFormat(LocalString.ResourceStringCategory.Girl,
+                                    "[Girlname]WasGivenToYouAsARewardForCompletingYourObjective",
+                                    new List<FormatStringParameter>() { new FormatStringParameter("Girlname", girl.Realname) });
+                                girl.Events.AddMessage(girlRepport.ToString(), ImageType.PROFILE, EventType.Dungeon);
+                                m_Dungeon.AddGirl(girl, DungeonReasons.NEWGIRL);
+                                numberOfGirls--;
+                            }
+                        break;
+
+                    case Rewards.RIVALHINDER:
+                            gold = (rival.m_Gold > 10 ? WMRand.Random((int)(rival.m_Gold / 2)) + 1 : 436);
+                            rival.m_Gold -= gold;
+                            Game.Gold.ObjectiveReward(gold);
+                            objectiveRepport.AppendLineFormat(LocalString.ResourceStringCategory.Player,
+                                "ToSteal[Gold]GoldFromThe[RivalName]",
+                                new List<FormatStringParameter>() { new FormatStringParameter("Gold", gold), new FormatStringParameter("RivalName", rival.m_Name) });
+
+                            // `J` added 
+                            bool building = false;
+                            if (rival.m_NumBrothels > 0 && WMRand.Percent(10))
+                            {
+                                objectiveRepport.Append(LocalString.ResourceStringCategory.Player, "OneOfTheirBrothels");
+                                building = true;
+                                rival.m_NumBrothels--;
+                            }
+                            else if (rival.m_NumGamblingHalls > 0 && WMRand.Percent(25))
+                            {
+                                objectiveRepport.Append(LocalString.ResourceStringCategory.Player, "OneOfTheirGamblingHalls");
+                                building = true;
+                                rival.m_NumGamblingHalls--;
+                            }
+                            else if (rival.m_NumBars > 0 && WMRand.Percent(50))
+                            {
+                                objectiveRepport.Append(LocalString.ResourceStringCategory.Player, "OneOfTheirBars");
+                                building = true;
+                                rival.m_NumBars--;
+                            }
+                            if (building)
+                            {
+                                switch (WMRand.Random(5))
+                                {
+                                    case 0:
+                                        objectiveRepport.AppendLine(LocalString.ResourceStringCategory.Player, "IsClosedDownByTheHealthDepartment");
+                                        break;
+                                    case 1:
+                                        objectiveRepport.AppendLine(LocalString.ResourceStringCategory.Player, "IsBombedByAnUnknownParty");
+                                        break;
+                                    case 2:
+                                        objectiveRepport.AppendLine(LocalString.ResourceStringCategory.Player, "Vanishes");
+                                        break;
+                                    case 3:
+                                        objectiveRepport.AppendLine(LocalString.ResourceStringCategory.Player, "FallsIntoASinkhole");
+                                        break;
+                                    default:
+                                        objectiveRepport.AppendLine(LocalString.ResourceStringCategory.Player, "MysteriouslyBurnsToTheGround");
+                                        break;
+                                }
+                            }
+
+                            if (rival.m_NumGirls > 0 && WMRand.Percent(30))
+                            {
+                                int num = 1;
+                                rival.m_NumGirls--;
+                                while (rival.m_NumGirls > 0 && WMRand.Percent(50))
+                                {
+                                    num++;
+                                    rival.m_NumGirls--;
+                                }
+                                objectiveRepport.AppendFormat(LocalString.ResourceStringCategory.Player,
+                                    "[Number]OfTheirGirls",
+                                    new List<FormatStringParameter>() { new FormatStringParameter("Number", num) });
+                                switch (WMRand.Random(5))
+                                {
+                                    case 0:
+                                        objectiveRepport.AppendLine(LocalString.ResourceStringCategory.Player, "WereArrestedForVariousCrimes");
+                                        break;
+                                    case 1:
+                                        objectiveRepport.AppendLine(LocalString.ResourceStringCategory.Player, "WereKilled");
+                                        break;
+                                    case 2:
+                                        objectiveRepport.AppendLine(LocalString.ResourceStringCategory.Player, "Vanished");
+                                        break;
+                                    case 3:
+                                        objectiveRepport.AppendLine(LocalString.ResourceStringCategory.Player, "Disappeared");
+                                        break;
+                                    default:
+                                        objectiveRepport.AppendLine(LocalString.ResourceStringCategory.Player, "WereKidnapped");
+                                        break;
+                                }
+                            }
+                        break;
+
+                    case Rewards.ITEM:
+                            int numItems = Math.Max(1, m_Objective.m_Difficulty);
+                            int tries = numItems * 10;
+                            while (numItems > 0 && tries > 0)
+                            {
+                                tries--;
+                                sInventoryItem item = Game.Inventory.GetRandomItem();
+                                if (item != null && (int)item.Rarity < (int)ItemRarity.SCRIPTONLY)
+                                {
+                                    int curI = Game.Brothels.HasItem(item.Name, -1);
+                                    bool loop = true;
+                                    while (loop)
+                                    {
+                                        if (curI != -1)
+                                        {
+                                            if (Game.Brothels.m_NumItem[curI] >= 999)
+                                            {
+                                                curI = Game.Brothels.HasItem(item.Name, curI + 1);
+                                            }
+                                            else
+                                            {
+                                                loop = false;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            loop = false;
+                                        }
+                                    }
+
+                                    if (Game.Brothels.m_NumInventory < Constants.MAXNUM_INVENTORY || curI != -1)
+                                    {
+                                        if (curI != -1)
+                                        {
+                                            objectiveRepport.AppendLineLitteral(item.Name + ", ");
+                                            Game.Brothels.m_NumItem[curI]++;
+                                        }
+                                        else
+                                        {
+                                            for (int j = 0; j < Constants.MAXNUM_INVENTORY; j++)
+                                            {
+                                                if (Game.Brothels.m_Inventory[j] == null)
+                                                {
+                                                    objectiveRepport.AppendLineLitteral(item.Name + ", ");
+                                                    Game.Brothels.m_Inventory[j] = item;
+                                                    Game.Brothels.m_EquipedItems[j] = 0;
+                                                    Game.Brothels.m_NumInventory++;
+                                                    Game.Brothels.m_NumItem[j]++;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        numItems--;
+                                    }
+                                    else
+                                    {
+                                        numItems = 0;
+                                        objectiveRepport.AppendLine(LocalString.ResourceStringCategory.Player, "YourInventoryIsFull");
+                                    }
+                                }
+                            }
+                        break;
+
+                }
+                if (objectiveRepport.HasMessage())
+                {
+                    Game.MessageQue.Enqueue(objectiveRepport.ToString(), MessageCategory.Green);
+                    Game.Brothels.GetBrothel(0).m_Events.AddMessage(objectiveRepport.ToString(), ImageType.PROFILE, EventType.GoodNews);
+                }
+                m_Objective = null;
+            }
+        }
+
+        // TODO : REFACTORING - Too many parameters - try to pass them into structure.
+        public void AddCustomObjective(int limit, int diff, Objectives objective, Rewards reward, int sofar, int target, string text)
+        {
+            if (m_Objective != null)
+            {
+                m_Objective = null;
+            }
+            m_Objective = new sObjective();
+
+            m_Objective.m_Difficulty = diff;
+            m_Objective.m_Limit = limit;
+            m_Objective.Objective = objective;
+            m_Objective.Reward = reward;
+            m_Objective.SoFar = sofar;
+            m_Objective.Target = target;
+            m_Objective.Text = text;
+
+        }
 
         public IXmlElement SaveDataXML(IXmlElement pRoot)
         { throw new NotImplementedException(); }
@@ -2669,9 +3713,34 @@ namespace WMaster.Manager
         { throw new NotImplementedException(); }
 
         public bool NameExists(string name)
-        { throw new NotImplementedException(); }
+        {
+            foreach (sBrothel current in m_BrothelList)
+            {
+                foreach (sGirl currentGirl in current.GirlsList)
+                {
+                    if (name == currentGirl.Realname)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public bool SurnameExists(string name)
-        { throw new NotImplementedException(); }
+        {
+            foreach (sBrothel current in m_BrothelList)
+            {
+                foreach (sGirl currentGirl in current.GirlsList)
+                {
+                    if (name == currentGirl.Surname)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
         public bool AddItemToInventory(sInventoryItem item)
         {
@@ -2727,8 +3796,30 @@ namespace WMaster.Manager
             return added;
         }
 
-        public void check_druggy_girl(LocalString ls)
-        { throw new NotImplementedException(); }
+        // ----- Drugs & addiction
+        public void check_druggy_girl(LocalString girlRepport)
+        {
+            if (WMRand.Percent(90))
+            {
+                return;
+            }
+            sGirl girl = GetDrugPossessor();
+            if (girl == null)
+            {
+                return;
+            }
+            girlRepport.AppendLineFormat(LocalString.ResourceStringCategory.Player,
+                "TheyAlsoBustAGirlNamed[GirlName]ForPossessionOfDrugsAndSendHerToPrison",
+                new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.Realname) });
+            for (int i = 0; i < girl.m_NumInventory; i++)
+            {
+                m_EquipedItems[i] = 0;
+                m_Inventory[i] = null;
+            }
+            m_NumInventory = 0;
+            AddGirlToPrison(girl);
+        }
+
         public void CheckRaid()
         {
             cRival rival = null;
@@ -2750,7 +3841,7 @@ namespace WMaster.Manager
             *
             *	And then modified back upwards by rival influence
             */
-            long pc = Game.Player.suspicion() - m_Influence;
+            long pc = Game.Player.Suspicion() - m_Influence;
             if (rival != null)
             {
                 pc += rival.m_Influence / 4;
@@ -3172,15 +4263,15 @@ namespace WMaster.Manager
                         new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.Realname) });
                     if (WMRand.Percent(5))
                     {
-                        Game.Girls.UpdateStat(girl, (int)EnumStats.Beauty, 1); // working out will help her look better
+                        Game.Girls.UpdateStat(girl, EnumStats.Beauty, 1); // working out will help her look better
                     }
                     if (WMRand.Percent(10))
                     {
-                        Game.Girls.UpdateStat(girl, (int)EnumStats.Constitution, 1); // working out will make her healthier
+                        Game.Girls.UpdateStat(girl, EnumStats.Constitution, 1); // working out will make her healthier
                     }
                     if (WMRand.Percent(50))
                     {
-                        Game.Girls.UpdateStat(girl, (int)EnumStats.Strength, 1); // working out will make her stronger
+                        Game.Girls.UpdateStat(girl, EnumStats.Strength, 1); // working out will make her stronger
                     }
                 }
 
@@ -3222,43 +4313,43 @@ namespace WMaster.Manager
                     if (Game.Girls.HasItemJ(girl, "Manual of Sex") != -1 && WMRand.Percent(5) && numbooks > 0)
                     {
                         effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SpentHerTimeOffReadingHerManualOfSex");
-                        Game.Girls.UpdateSkill(girl, (int)EnumSkills.NormalSex, 2);
+                        Game.Girls.UpdateSkill(girl, EnumSkills.NormalSex, 2);
                         numbooks--;
                     }
                     if (Game.Girls.HasItemJ(girl, "Manual of Bondage") != -1 && WMRand.Percent(5) && numbooks > 0)
                     {
                         effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SpentHerTimeOffReadingHerManualOfBondage");
-                        Game.Girls.UpdateSkill(girl, (int)EnumSkills.BDSM, 2);
+                        Game.Girls.UpdateSkill(girl, EnumSkills.BDSM, 2);
                         numbooks--;
                     }
                     if (Game.Girls.HasItemJ(girl, "Manual of Two Roses") != -1 && WMRand.Percent(5) && numbooks > 0)
                     {
                         effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SpentHerTimeOffReadingHerManualOfTwoRoses");
-                        Game.Girls.UpdateSkill(girl, (int)EnumSkills.Lesbian, 2);
+                        Game.Girls.UpdateSkill(girl, EnumSkills.Lesbian, 2);
                         numbooks--;
                     }
                     if (Game.Girls.HasItemJ(girl, "Manual of Arms") != -1 && WMRand.Percent(5) && numbooks > 0)
                     {
                         effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SpentHerTimeOffReadingHerManualOfArms");
-                        Game.Girls.UpdateSkill(girl, (int)EnumSkills.Combat, 2);
+                        Game.Girls.UpdateSkill(girl, EnumSkills.Combat, 2);
                         numbooks--;
                     }
                     if (Game.Girls.HasItemJ(girl, "Manual of the Dancer") != -1 && WMRand.Percent(5) && numbooks > 0)
                     {
                         effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SpentHerTimeOffReadingHerManualOfTheDacer");
-                        Game.Girls.UpdateSkill(girl, (int)EnumSkills.Striptease, 2);
+                        Game.Girls.UpdateSkill(girl, EnumSkills.Striptease, 2);
                         numbooks--;
                     }
                     if (Game.Girls.HasItemJ(girl, "Manual of Magic") != -1 && WMRand.Percent(5) && numbooks > 0)
                     {
                         effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SpentHerTimeOffReadingHerManualOfMagic");
-                        Game.Girls.UpdateSkill(girl, (int)EnumSkills.Magic, 2);
+                        Game.Girls.UpdateSkill(girl, EnumSkills.Magic, 2);
                         numbooks--;
                     }
                     if (Game.Girls.HasItemJ(girl, "Manual of Health") != -1 && WMRand.Percent(5) && numbooks > 0)
                     {
                         effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SpentHerTimeOffReadingHerManualOfHealth");
-                        Game.Girls.UpdateStat(girl, (int)EnumStats.Constitution, 1);
+                        Game.Girls.UpdateStat(girl, EnumStats.Constitution, 1);
                         numbooks--;
                     }
 
@@ -3268,14 +4359,14 @@ namespace WMaster.Manager
                         if (Game.Girls.HasTrait(girl, "Nymphomaniac"))
                         {
                             effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SheSpentTheDayAtTheLibraryLookingAtPornMakingHerBecomeHorny");
-                            Game.Girls.UpdateStatTemp(girl, (int)EnumStats.Libido, 15);
+                            Game.Girls.UpdateStatTemp(girl, EnumStats.Libido, 15);
                         }
                         else
                         {
                             effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SheSpentHerFreeTimeAtTheLibraryReading");
                             if (WMRand.Percent(5))
                             {
-                                Game.Girls.UpdateStat(girl, (int)EnumStats.Intelligence, 1);
+                                Game.Girls.UpdateStat(girl, EnumStats.Intelligence, 1);
                             }
                             if (WMRand.Percent(5))
                             {
@@ -3319,7 +4410,7 @@ namespace WMaster.Manager
                     girl.tiredness(-5);
                     if (WMRand.Percent(5))
                     {
-                        Game.Girls.UpdateStat(girl, (int)EnumStats.Intelligence, 1);
+                        Game.Girls.UpdateStat(girl, EnumStats.Intelligence, 1);
                     }
                 }
                 else
@@ -3354,7 +4445,7 @@ namespace WMaster.Manager
                     effectItemsReport.AppendLineFormat(LocalString.ResourceStringCategory.Girl,
                         "[GirlName]sLustGotTheBetterOfHerAndSheSpentTheDayUsingHerCompellingDildo",
                         new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName) });
-                    Game.Girls.UpdateStatTemp(girl, (int)EnumStats.Libido, -20);
+                    Game.Girls.UpdateStatTemp(girl, EnumStats.Libido, -20);
                     masturbate = true;
                 }
             }
@@ -3409,7 +4500,7 @@ namespace WMaster.Manager
                 if (cGirls.is_she_resting(girl))
                 {
                     effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SpentHerTimeOffPracticingOnHerStripperPole");
-                    Game.Girls.UpdateSkill(girl, (int)EnumSkills.Striptease, 2);
+                    Game.Girls.UpdateSkill(girl, EnumSkills.Striptease, 2);
                     striptease = true;
                 }
             }
@@ -3418,7 +4509,7 @@ namespace WMaster.Manager
                 if (cGirls.is_she_resting(girl))
                 {
                     effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SpentHerTimeOffTrainingWithHerAndroidCombatMKI");
-                    Game.Girls.UpdateSkill(girl, (int)EnumSkills.Combat, 1);
+                    Game.Girls.UpdateSkill(girl, EnumSkills.Combat, 1);
                     combat = true;
                 }
             }
@@ -3427,7 +4518,7 @@ namespace WMaster.Manager
                 if (cGirls.is_she_resting(girl))
                 {
                     effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SpentHerTimeOffTrainingWithHerAndroidCombatMKII");
-                    Game.Girls.UpdateSkill(girl, (int)EnumSkills.Combat, 2);
+                    Game.Girls.UpdateSkill(girl, EnumSkills.Combat, 2);
                     combat = true;
                 }
             }
@@ -3436,7 +4527,7 @@ namespace WMaster.Manager
                 if (cGirls.is_she_resting(girl))
                 {
                     effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SpentHerTimeOffWithHerCompellingButtplugIn");
-                    Game.Girls.UpdateSkill(girl, (int)EnumSkills.Anal, 2);
+                    Game.Girls.UpdateSkill(girl, EnumSkills.Anal, 2);
                 }
             }
             if (Game.Girls.HasItemJ(girl, "Computer") != -1 && WMRand.Percent(15) && cGirls.is_she_resting(girl))
@@ -3448,13 +4539,13 @@ namespace WMaster.Manager
                         effectItemsReport.AppendLineFormat(LocalString.ResourceStringCategory.Girl,
                             "[GirlName]sLustGotTheBetterOfHerWhileSheWasOnTheHerComputerLookingAtPorn",
                             new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girlName) });
-                        Game.Girls.UpdateStatTemp(girl, (int)EnumStats.Libido, -20);
+                        Game.Girls.UpdateStatTemp(girl, EnumStats.Libido, -20);
                         masturbate = true;
                     }
                     else
                     {
                         effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SheSpentTheDayOnHerComputerLookingAtPornMakingHerBecomeHorny");
-                        Game.Girls.UpdateStatTemp(girl, (int)EnumStats.Libido, 15);
+                        Game.Girls.UpdateStatTemp(girl, EnumStats.Libido, 15);
                     }
                 }
                 else
@@ -3462,7 +4553,7 @@ namespace WMaster.Manager
                     effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SheSpentHerFreeTimePlayingOnHerComputer");
                     if (WMRand.Percent(5))
                     {
-                        Game.Girls.UpdateStat(girl, (int)EnumStats.Intelligence, 1);
+                        Game.Girls.UpdateStat(girl, EnumStats.Intelligence, 1);
                     }
                 }
             }
@@ -3586,7 +4677,7 @@ namespace WMaster.Manager
                 if (cGirls.is_she_resting(girl))
                 {
                     effectItemsReport.AppendLine(LocalString.ResourceStringCategory.Girl, "SpentHerTimeOffListenToHerAngerManagementTapes");
-                    Game.Girls.UpdateStat(girl, (int)EnumStats.Spirit, -2);
+                    Game.Girls.UpdateStat(girl, EnumStats.Spirit, -2);
                 }
             }
             if (Game.Girls.HasItemJ(girl, "Rainbow Underwear") != -1)
@@ -4142,14 +5233,159 @@ namespace WMaster.Manager
         #endregion
 
         }
+
+        // TODO : REFACTORING - Move dispositions boundary into configuration data or constants.
+        [Obsolete("Move to player class", false)]
         public string disposition_text()
-        { throw new NotImplementedException(); }
+        {
+            string returnValue = string.Empty;
+            if (Game.Player.disposition() >= 100)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "DispositionSaint");
+            }
+            else if (Game.Player.disposition() >= 80)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "DispositionBenevolent");
+            }
+            else if (Game.Player.disposition() >= 50)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "DispositionNice");
+            }
+            else if (Game.Player.disposition() >= 10)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "DispositionPleasant");
+            }
+            else if (Game.Player.disposition() >= -10)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "DispositionNeutral");
+            }
+            else if (Game.Player.disposition() >= -50)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "DispositionNotNice");
+            }
+            else if (Game.Player.disposition() >= -80)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "DispositionMean");
+            }
+            else
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "DispositionEvil");
+            }
+
+            if (Configuration.Debug.LogShowNumbers)
+            {
+                returnValue += string.Format(" ({0})", Game.Player.disposition());
+            }
+            return returnValue;
+        }
+
+        // TODO : REFACTORING - Move fame boundary into configuration data or constants.
         public string fame_text(sBrothel brothel)
-        { throw new NotImplementedException(); }
+        {
+            string returnValue = string.Empty;
+
+            if (brothel.Fame >= 90)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "FameWorldRenowned");
+            }
+            else if (brothel.Fame >= 80)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "FameFamous");
+            }
+            else if (brothel.Fame >= 70)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "FameWellKnown");
+            }
+            else if (brothel.Fame >= 60)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "FameTalkOfTheTown");
+            }
+            else if (brothel.Fame >= 50)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "FameSomewhatKnown");
+            }
+            else if (brothel.Fame >= 30)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "FameMostlyUnknown");
+            }
+            else
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "FameUnknown");
+            }
+
+            if (Configuration.Debug.LogShowNumbers)
+            {
+                returnValue += string.Format(" ({0})", brothel.Fame);
+            }
+            return returnValue;
+        }
+
+        // TODO : REFACTORING - Move suspicion boundary into configuration data or constants.
+        [Obsolete("Move to player class, rename to SuspiciousText", false)]
         public string suss_text()
-        { throw new NotImplementedException(); }
+        {
+            string returnValue = string.Empty;
+            if (Game.Player.Suspicion() >= 80)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "SuspiciousTownScum");
+            }
+            else if (Game.Player.Suspicion() >= 50)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "SuspiciousMiscreant");
+            }
+            else if (Game.Player.Suspicion() >= 10)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "SuspiciousSuspect");
+            }
+            else if (Game.Player.Suspicion() >= -10)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "SuspiciousUnsuspected");
+            }
+            else if (Game.Player.Suspicion() >= -50)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "SuspiciousLawful");
+            }
+            else if (Game.Player.Suspicion() >= -80)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "SuspiciousPhilanthropist");
+            }
+            else
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "SuspiciousTownHero");
+            }
+
+            if (Configuration.Debug.LogShowNumbers)
+            {
+                returnValue += string.Format(" ({0})", Game.Player.Suspicion());
+            }
+            return returnValue;
+        }
+
+        // TODO : REFACTORING - Move suspicion happiness into configuration data or constants.
         public string happiness_text(sBrothel brothel)
-        { throw new NotImplementedException(); }
+        {
+            string returnValue = string.Empty;
+
+            if (brothel.Happiness >= 80)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "HappinessHigh");
+            }
+            else if (brothel.Happiness < 40)
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "HappinessLow");
+            }
+            else
+            {
+                returnValue = LocalString.GetString(LocalString.ResourceStringCategory.Player, "HappinessMedium");
+            }
+
+            if (Configuration.Debug.LogShowNumbers)
+            {
+                returnValue += string.Format(" ({0})", brothel.Happiness);
+            }
+            return returnValue;
+        }
+
         public double calc_pilfering(sGirl girl)
         {
             double factor = 0.0;
@@ -4179,7 +5415,189 @@ namespace WMaster.Manager
         }
 
         public bool runaway_check(sBrothel brothel, sGirl girl)
-        { throw new NotImplementedException(); }
+        {
+            /*
+            *	nothing interesting happens here unless the girl is miserable
+            *
+            *	WD: added m_DaysUnhappy tracking
+            */
+
+            bool flightRisk = (girl.has_trait("Kidnapped") || girl.has_trait("Emprisoned Customer"));
+
+            if (flightRisk && girl.happiness() > 50) // Girls here totally against their will are more likely to try to get away
+            {
+                girl.m_DaysUnhappy--; // and they don't reset days to 0 but instead reduce day count
+                if (girl.m_DaysUnhappy < 0)
+                {
+                    girl.m_DaysUnhappy = 0; // until it gets to 0
+                }
+                return false;
+            }
+            else if ((girl.has_trait("Homeless") || girl.has_trait("Adventurer")) && girl.happiness() > 10)
+            { // homeless girls and adventurers know they can survive on their own so are more likely to runaway
+                if (girl.m_DaysUnhappy > 3)
+                {
+                    girl.m_DaysUnhappy /= 2; // they don't reset days to 0 but instead divide day count in half
+                }
+                else
+                {
+                    girl.m_DaysUnhappy--; // or just lower by 1
+                }
+                return false;
+            }
+            else if (girl.happiness() > 10)
+            {
+                girl.m_DaysUnhappy = 0;
+                return false;
+            }
+
+            /*	
+            *	`J` this was only adding up for free girls
+            *	I made it add up for all girls
+            *	and free girls become unhappy faster
+            */
+            girl.m_DaysUnhappy++;
+            if (!girl.is_slave())
+            {
+                girl.m_DaysUnhappy++;
+            }
+            /*
+            *	now there's a matron on duty, she has a chance of fending off
+            *	bad things.
+            *
+            *	previously, it was a 75% chance if a matron was employed
+            *	so since we have two shifts, let's have a 35% chance per
+            *	shift with a matron
+            *
+            *	with matrons being girls now, we have some opportunities
+            *	for mischief here. For instance, is there still a matron skill?
+            *	this should depend on that, if so. Also on how motivated the
+            *	matron is. An unhappy matron, or one who hates the PC
+            *	may be inclined to turn a blind eye to runaway attempts
+            */
+            //	int matron_chance = brothel->matron_count() * 35;
+            int matronChance = brothel.MatronCount(girl.m_InClinic, girl.m_InStudio, girl.m_InArena, girl.m_InCentre, girl.m_InHouse, girl.m_InFarm, girl.where_is_she) * 35;
+
+            if (WMRand.Percent(matronChance))
+            {
+                return false; // if there is a matron 70%
+            }
+
+            if (girl.DayJob == Jobs.REHAB && (Game.Clinic.GetNumGirlsOnJob(0, Jobs.COUNSELOR, DayShift.Day) > 0) || (Game.Clinic.GetNumGirlsOnJob(0, Jobs.COUNSELOR, DayShift.Night) > 0))
+            {
+                if (WMRand.Percent(70))
+                {
+                    return false;
+                }
+            }
+
+            /*
+            *	mainly here, we're interested in the chance that she might run away
+            */
+            if (Game.Girls.DisobeyCheck(girl, ActionTypes.General)) // check if the girl will run away
+            {
+                if (WMRand.Percent(cJobManager.guard_coverage() - girl.m_DaysUnhappy))
+                {
+                    return false;
+                }
+
+                girl.Events.AddMessage(LocalString.GetStringLine(LocalString.ResourceStringCategory.Girl, "SheRanAway"), ImageType.PROFILE, EventType.Danger);
+                SetGirlStat(girl, EnumStats.Tiredness, 0);
+                SetGirlStat(girl, EnumStats.Health, 100);
+                girl.m_RunAway = 6;
+                LocalString repport = new LocalString();
+                repport.AppendLineFormat(LocalString.ResourceStringCategory.Player,
+                    "[GirlName]HasRunAwaySendYourGoonsAfterHerToAttemptRecaptureSheWillEscapeForGoodAfter6Weeks",
+                new List<FormatStringParameter>() { new FormatStringParameter("GirlName", girl.Realname) });
+                Game.MessageQue.Enqueue(repport.ToString(), MessageCategory.Red);
+                return true;
+            }
+
+            if (girl.Money <= 50)
+            {
+                return false;
+            }
+            if (WMRand.Percent(80 - girl.m_DaysUnhappy))
+            {
+                return false;
+            }
+            /*
+            *	if she is unhappy she may turn to drugs
+            */
+            bool starts_drugs = false;
+            //Crazy changed it to this might not be the best // `J` made it better :p
+            string drug = "";
+            int i = 0;
+            if (girl.happiness() <= 20 && Game.Girls.HasTrait(girl, "Former Addict"))
+            {
+                while (!starts_drugs && i < 10) // `J` She will try to find a drug she used to be addicted to
+                { // and if she can't find it in 10 tries she will take what is available
+                    int d = WMRand.Random(8); // with a slight advantage to alcohol and fairy dust
+                    switch (d)
+                    {
+                        case 1:
+                            drug = "Shroud Addict";
+                            break; // 12.5%
+                        //C++ TO C# CONVERTER TODO TASK: C# does not allow fall-through from a non-empty 'case':
+                        case 2:
+                        case 3:
+                            drug = "Fairy Dust Addict";
+                            break; // 25%
+                        //C++ TO C# CONVERTER TODO TASK: C# does not allow fall-through from a non-empty 'case':
+                        case 4:
+                            drug = "Viras Blood Addict";
+                            break; // 12.5%
+                        //C++ TO C# CONVERTER TODO TASK: C# does not allow fall-through from a non-empty 'case':
+                        default:
+                            drug = "Alcoholic";
+                            break; // 50%
+                            break;
+                    }
+                    if (Game.Girls.HasRememberedTrait(girl, drug))
+                    {
+                        starts_drugs = true;
+                    }
+                    i++;
+                }
+            }
+            else if (girl.happiness() <= 3 && WMRand.Percent(50) && !Game.Girls.HasTrait(girl, "Viras Blood Addict"))
+            {
+                drug = "Viras Blood Addict";
+            }
+            else if (girl.happiness() <= 5 && WMRand.Percent(50) && !Game.Girls.HasTrait(girl, "Shroud Addict"))
+            {
+                drug = "Shroud Addict";
+            }
+            else if (girl.happiness() <= 8 && WMRand.Percent(50) && !Game.Girls.HasTrait(girl, "Fairy Dust Addict"))
+            {
+                drug = "Fairy Dust Addict";
+            }
+            else if (girl.happiness() <= 10 && !Game.Girls.HasTrait(girl, "Alcoholic"))
+            {
+                drug = "Alcoholic";
+            }
+
+            /*
+            *	if she Just Said No then we're done
+            */
+            if (drug == "")
+            {
+                return false;
+            }
+
+            Game.Girls.AddTrait(girl, drug);
+            Game.Girls.RemoveTrait(girl, "Former Addict");
+
+            /*
+            *	otherwise, report the sad occurrence
+            */
+            LocalString girlRepport = new LocalString();
+            girlRepport.AppendLineFormat(LocalString.ResourceStringCategory.Girl,
+                "ThisGirlsUnhappinessHasTurnedHerInto[Drug]",
+                new List<FormatStringParameter>() { new FormatStringParameter("Drug", drug) });
+            girl.Events.AddMessage(girlRepport.ToString(), ImageType.PROFILE, EventType.Warning);
+            return false;
+        }
 
 
         // WD: JOB_TORTURER stuff
@@ -4187,8 +5605,30 @@ namespace WMaster.Manager
         { m_TortureDoneFlag = flag; return; }
         public bool TortureDone()
         { return m_TortureDoneFlag; }
+
         public sGirl WhoHasTorturerJob()
-        { throw new NotImplementedException(); }
+        {
+            /*	WD:
+            *	Loops through all brothels to find first
+            *	girl with JOB_TORTURER
+            *
+            *	NOTE: assumes that only one girl, the first
+            *	found is the torturer.
+            *
+            */
+
+            foreach (sBrothel currentBrothel in m_BrothelList)
+            {
+                foreach (sGirl currentGirl in currentBrothel.GirlsList)
+                {
+                    if ((currentGirl.DayJob == Jobs.TORTURER) || (currentGirl.PrevDayJob == Jobs.TORTURER)) // Should fix torturer crash thx to akia
+                    {
+                        return currentGirl;
+                    }
+                }
+            }
+            return null; // WD: Not Found
+        }
 
         // WD: test to check if doing turn processing.  Used to ingnore HOUSE_STAT value in GetRebelValue() if girl gets to keep all her income.
         public bool is_Dayshift_Processing()
@@ -4196,9 +5636,91 @@ namespace WMaster.Manager
         public bool is_Nightshift_Processing()
         { return m_ProcessingShift == (short)WMaster.Enums.DayShift.Night; }
 
+        // TODO : REFACTORING - It's girl class responsibility to update their stats.
         // WD:	Update code of girls stats
+        [Obsolete("Move methode togirl instance")]
         public void updateGirlTurnBrothelStats(sGirl girl)
-        { throw new NotImplementedException(); }
+        {
+            /*
+            *	WD: Update each turn the stats for girl in brothel
+            *
+            *	Uses scaling formula in the form of
+            *		bonus = (60 - STAT_HOUSE) / div
+            *
+            *				div =
+            *		STAT	30	20	15
+            *		0		2	3	4
+            *		1		1	2	3
+            *		10		1	2	3
+            *		11		1	2	3
+            *		20		1	2	2
+            *		21		1	1	2
+            *		30		1	1	2
+            *		31		0	1	1
+            *		40		0	1	1
+            *		41		0	0	1
+            *		50		0	0	0
+            *		51		0	0	0
+            *		60		0	0	0
+            *		61		-1	-1	-1
+            *		70		-1	-1	-1
+            *		71		-1	-1	-1
+            *		80		-1	-1	-2
+            *		81		-1	-2	-2
+            *		90		-1	-2	-2
+            *		91		-2	-2	-3
+            *		100		-2	-2	-3
+            *
+            *
+            */
+
+            //#define WDTEST // debuging
+
+            // Sanity check. Abort on dead girl
+            if (girl.is_dead())
+            {
+                return;
+            }
+
+            LocalString girlRepport = new LocalString();
+            string girlName = girl.Realname;
+            int statHouse = girl.house();
+            int bonus = (60 - statHouse) / 30;
+
+#if DEBUG
+            WMLog.Trace("Start" + Environment.NewLine + "   h=" + girl.happiness() + "   o=" + girl.obedience() + "   l=" + girl.pclove()
+                + "   f=" + girl.pcfear() + "   h=" + girl.pchate() + "  HP=" + girl.health() + "  TD=" + girl.tiredness(), WMLog.TraceLog.DEBUG);
+#endif
+
+            if (girl.is_slave())
+            {
+                if (bonus > 0) // Slaves don't get penalties
+                {
+                    girl.obedience(bonus); // bonus vs house stat    0: 31-60, 1: 01-30, 2: 00
+                    girl.pcfear(-bonus);
+                    girl.pchate(-bonus);
+                    bonus = (60 - statHouse) / 15;
+                    girl.happiness(bonus); // bonus vs house stat    0: 46-60, 1: 31-45, 2: 16-30, 3: 01-15, 4: 00
+                }
+            }
+            else // Free girls
+            {
+                girl.obedience(bonus); // bonus vs house stat    -2: 91-100, -1: 61-90, 0: 31-60, 1: 01-30, 2: 00
+
+                if (bonus > 0) // no increase for hate or fear
+                {
+                    girl.pcfear(-bonus);
+                    girl.pchate(-bonus);
+                }
+
+                bonus = (60 - statHouse) / 15;
+                girl.happiness(bonus); // bonus vs house stat    -3: 91-100, -2: 76-90, -1: 61-75, 0: 46-60, 1: 31-45, 2: 16-30, 3: 01-15, 4: 00
+            }
+#if DEBUG
+            WMLog.Trace("Final" + Environment.NewLine + "   h=" + girl.happiness() + "   o=" + girl.obedience() + "   l=" + girl.pclove()
+                + "   f=" + girl.pcfear() + "   h=" + girl.pchate() + "  HP=" + girl.health() + "  TD=" + girl.tiredness(), WMLog.TraceLog.DEBUG);
+#endif
+        }
 
         //private:
         /// <summary>
@@ -4217,7 +5739,7 @@ namespace WMaster.Manager
             return totalFame;
         }
 
-        private cPlayer m_Player;				// the stats for the player owning these brothels
+        private Player m_Player;				// the stats for the player owning these brothels
         private cDungeon m_Dungeon;				// the dungeon
 
         private List<sBrothel> m_BrothelList = new List<sBrothel>();
@@ -4232,7 +5754,7 @@ namespace WMaster.Manager
         // brothel resources
         private int m_HandmadeGoods;			// used with the community centre
         [Obsolete("Think about moving Beast information out of Brothel Manager", false)]
-        private int m_Beasts;					// used for beastiality scenes
+        public int Beasts { get; set; }					// used for beastiality scenes
         private int m_Food;						// food produced at the farm
         private int m_Drinks;					// drinks produced at the farm
         private int m_Alchemy;

@@ -2756,6 +2756,9 @@ namespace WMaster
                 set { m_LogExtraDetails = value; }
             }
 
+            /// <summary>
+            /// If number must be shown (like suspicious, fame ...)
+            /// </summary>
             [XmlAttribute("LogShowNumbers")]
             public bool LogShowNumbers
             {

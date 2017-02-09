@@ -424,7 +424,7 @@ namespace WMaster.ClassOrStructurToImplement
         // MYR: New code for security.  All the old code is still here, commented out.
         static bool work_related_violence(sGirl NamelessParameter1, bool NamelessParameter2, bool NamelessParameter3)
         { throw new NotImplementedException(); }
-        static int guard_coverage(List<Gang> v = null)
+        public static int guard_coverage(List<Gang> v = null)
         { throw new NotImplementedException(); }
         //C++ TO C# CONVERTER TODO TASK: The implementation of the following method could not be found:
         //	static bool security_stops_rape(sGirl girl, sGang enemy_gang, int day_night);

@@ -107,6 +107,43 @@
     <Resource Code="HaveATotalOf[Number]Girls" Value="Have a total of [[:Number:]] girls." />
     <Resource Code="PurchaseANewBrothelWithin[Limite]Weeks" Value="Purchase a new brothel within [[:Limite:]] weeks." />
     <Resource Code="PurchaseANewBrothel" Value="Purchase a new brothel." />
+    <Resource Code="YouHaveCompletedYourObjectiveAndYouGet" Value="You have completed your objective and you get " />
+    <Resource Code="YouHaveCompletedYourObjectiveTo[Objective]YouGet" Value="You have completed your objective to [[:Objective:]].[[:NewLine:]]You get " />
+    <Resource Code="[Number]SlaveGirls" Value="[[:Number:]] slave girls:" />
+    <Resource Code="[Number]SlaveGirl" Value="[[:Number:]] slave girl:" />
+    <Resource Code="ToSteal[Gold]GoldFromThe[RivalName]" Value="to steal [[:Gold:]] gold from the [[:RivalName:]]." />
+    <Resource Code="OneOfTheirBrothels" Value="[[:NewLine:]]One of their Brothels " />
+    <Resource Code="OneOfTheirGamblingHalls" Value="[[:NewLine:]]One of their Gambling Halls " />
+    <Resource Code="OneOfTheirBars" Value="[[:NewLine:]]One of their Bars " />
+    <Resource Code="IsClosedDownByTheHealthDepartment" Value="is closed down by the health department." />
+    <Resource Code="IsBombedByAnUnknownParty" Value="is bombed by an unknown party." />
+    <Resource Code="Vanishes" Value="vanishes." />
+    <Resource Code="FallsIntoASinkhole" Value="falls into a sinkhole." />
+    <Resource Code="MysteriouslyBurnsToTheGround" Value="mysteriously burns to the ground." />
+    <Resource Code="[Number]OfTheirGirls" Value="[[:NewLine:]][[:Number:]] of their girls " />
+    <Resource Code="WereArrestedForVariousCrimes" Value="were arrested for various crimes." />
+    <Resource Code="WereKilled" Value="were killed." />
+    <Resource Code="Vanished" Value="vanished." />
+    <Resource Code="Disappeared" Value="disappeared." />
+    <Resource Code="WereKidnapped" Value="were kidnapped." />
+    <Resource Code="[Amount]Gold" Value="[[:Amount:]] gold." />
+    <Resource Code="DispositionSaint" Value="Saint" />
+    <Resource Code="DispositionBenevolent" Value="Benevolent" />
+    <Resource Code="DispositionNice" Value="Nice" />
+    <Resource Code="DispositionPleasant" Value="Pleasant" />
+    <Resource Code="DispositionNeutral" Value="Neutral" />
+    <Resource Code="DispositionNotNice" Value="Not nice" />
+    <Resource Code="DispositionMean" Value="Mean" />
+    <Resource Code="DispositionEvil" Value="Evil" />
+    <Resource Code="SuspiciousTownScum" Value="Town Scum" />
+    <Resource Code="SuspiciousMiscreant" Value="Miscreant" />
+    <Resource Code="SuspiciousSuspect" Value="Suspect" />
+    <Resource Code="SuspiciousUnsuspected" Value="Unsuspected" />
+    <Resource Code="SuspiciousLawful" Value="Lawful" />
+    <Resource Code="SuspiciousPhilanthropist" Value="Philanthropist" />
+    <Resource Code="SuspiciousTownHero" Value="Town Hero" />
+    <Resource Code="[GirlName]HasRunAwaySendYourGoonsAfterHerToAttemptRecaptureSheWillEscapeForGoodAfter6Weeks" Value="[[:GirlName:]] has run away.[[:NewLine:]]Send your goons after her to attempt recapture.[[:NewLine:]]She will escape for good after 6 weeks." />
+    <Resource Code="TheyAlsoBustAGirlNamed[GirlName]ForPossessionOfDrugsAndSendHerToPrison" Value="They also bust a girl named [[:GirlName:]] for possession of drugs and send her to prison." />
   </Player>
   <Brothel>
     <Resource Code="BrothelSecurity" Value="Security" />
@@ -133,6 +170,26 @@
     <Resource Code="YouAreBreakingEvenMadeAsMuchMoneyAsYouSpent" Value="You are breaking even (made as much money as you spent)." />
     <Resource Code="YourMatronTakes[GirlName]OffDutyToRestDueToHerTiredness" Value="Your matron takes [[:GirlName:]] off duty to rest due to her tiredness." />
     <Resource Code="YourMatronHelps[GirlName]ToRelax" Value="Your matron helps [[:GirlName:]] to relax." />
+    <Resource Code="CustomerHappiness[Happiness]" Value="Customer Happiness: [[:Happiness:]]" />
+    <Resource Code="Fame[Fame]" Value="Fame: [[:Fame:]]" />
+    <Resource Code="RoomsAvailablecurrent[AvailableRooms][CurrentRooms]" Value="Rooms (available/current): [[:AvailableRooms:]] / [[:CurrentRooms:]]" />
+    <Resource Code="ThisBrothelsProfit[Profit]" Value="This brothel's Profit: [[:Profit:]]" />
+    <Resource Code="YourGold[Gold]" Value="Your Gold: [[:Gold:]]" />
+    <Resource Code="SecurityLevel[Security]" Value="Security Level: [[:Security:]]" />
+    <Resource Code="Disposition[Disposition]" Value="Disposition: [[:Disposition:]]" />
+    <Resource Code="Suspicion[Suspicion]" Value="Suspicion: [[:Suspicion:]]" />
+    <Resource Code="Filthiness[Filthiness]" Value="Filthiness: [[:Filthiness:]]" />
+    <Resource Code="BeastsHousedHere[Besats]" Value="Beasts Housed Here: [[:Besats:]]" />
+    <Resource Code="FameWorldRenowned" Value="World Renowned" />
+    <Resource Code="FameFamous" Value="Famous" />
+    <Resource Code="FameWellKnown" Value="Well Known" />
+    <Resource Code="FameTalkOfTheTown" Value="Talk of the town" />
+    <Resource Code="FameSomewhatKnown" Value="Somewhat known" />
+    <Resource Code="FameMostlyUnknown" Value="Mostly unknown" />
+    <Resource Code="FameUnknown" Value="Unknown" />
+    <Resource Code="HappinessHigh" Value="High" />
+    <Resource Code="HappinessLow" Value="Low" />
+    <Resource Code="HappinessMedium" Value="Medium" />
   </Brothel>
   <Girl>
     <Resource Code="[GirlName]WasRecapturedBy[GangName]SheGaveUpWithoutAFight" Value="[[:GirlName:]] was recaptured by [[:GangName:]]. She gave up without a fight." />
@@ -227,6 +284,9 @@
     <Resource Code="[GirlName]HasLostThePessimistTraitSomeoneWriteBetterTextForThis" Value="[[:GirlName:]] has lost the &quot;Pessimist&quot; trait. (someone write better text for this)" />
     <Resource Code="[GirlName]HasGainedThePessimistTraitSomeoneWriteBetterTextForThis" Value="[[:GirlName:]] has gained the &quot;Pessimist&quot; trait. (someone write better text for this)" />
     <Resource Code="[GirlName]HasGottenUsedToBetterSurroundingsAndHasLostTheHomelessTrait" Value="[[:GirlName:]] has gotten used to better surroundings and has lost the &quot;Homeless&quot; trait." />
+    <Resource Code="[Girlname]WasGivenToYouAsARewardForCompletingYourObjective" Value="[[:Girlname:]] was given to you as a reward for completing your objective." />
+    <Resource Code="SheRanAway" Value="She ran away." />
+    <Resource Code="ThisGirlsUnhappinessHasTurnedHerInto[Drug]" Value="This girl's unhappiness has turned her into [[:Drug:]]." />
   </Girl>
   <Gang>
     <Resource Code="[GangName]LostOneMan" Value="[[:GangName:]] lost one man." />

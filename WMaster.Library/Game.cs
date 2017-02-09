@@ -118,7 +118,7 @@ namespace WMaster
         /// <summary>
         /// Get Player manager.
         /// </summary>
-        public static cPlayer Player
+        public static Player Player
         {
             get { return GameEngine.Instance.g_Brothels.GetPlayer(); }
         }

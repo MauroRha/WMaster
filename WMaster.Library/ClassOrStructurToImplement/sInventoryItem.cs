@@ -163,7 +163,7 @@ namespace WMaster.Entity.Item
         ///     </list>
         /// </remarks>
         /// </summary>
-        public enum Rarity
+        public enum RarityItem
         {
             /// <summary>
             /// Common item.
@@ -264,7 +264,7 @@ namespace WMaster.Entity.Item
         /// Chance that a girl on break will buy this item if she's looking at it in the shop
         /// </summary>
         private short m_GirlBuyChance;
-        private Rarity m_Rarity;
+        public RarityItem Rarity { get; set; }
 
         /// <summary>
         /// Set item rarity from it's string representation.
@@ -274,44 +274,44 @@ namespace WMaster.Entity.Item
         {
             if (s == "Common")
             {
-                m_Rarity = Rarity.Common;
+                Rarity = RarityItem.Common;
             }
             else if (s == "Shop50")
             {
-                m_Rarity = Rarity.Shop50;
+                Rarity = RarityItem.Shop50;
             }
             else if (s == "Shop25")
             {
-                m_Rarity = Rarity.Shop25;
+                Rarity = RarityItem.Shop25;
             }
             else if (s == "Shop05")
             {
-                m_Rarity = Rarity.Shop05;
+                Rarity = RarityItem.Shop05;
             }
             else if (s == "Catacomb15")
             {
-                m_Rarity = Rarity.Catacomb15;
+                Rarity = RarityItem.Catacomb15;
             }
             else if (s == "Catacomb05")
             {
-                m_Rarity = Rarity.Catacomb05;
+                Rarity = RarityItem.Catacomb05;
             }
             else if (s == "Catacomb01")
             {
-                m_Rarity = Rarity.Catacomb01;
+                Rarity = RarityItem.Catacomb01;
             }
             else if (s == "ScriptOnly")
             {
-                m_Rarity = Rarity.ScriptOnly;
+                Rarity = RarityItem.ScriptOnly;
             }
             else if (s == "ScriptOrReward")
             {
-                m_Rarity = Rarity.ScriptOrReward;
+                Rarity = RarityItem.ScriptOrReward;
             }
             else
             {
                 WMaster.WMLog.Trace(string.Format("set_rarity: unexpected value '{0}'", s), WMLog.TraceLog.ERROR);
-                m_Rarity = Rarity.Shop05;
+                Rarity = RarityItem.Shop05;
             }
         }
 
@@ -458,29 +458,29 @@ namespace WMaster.Entity.Item
         /// <summary>
         /// Return string representation of sInventoryItem.Rarity
         /// </summary>
-        /// <param name="r"><see cref="sInventoryItem.Rarity"/> to convert to string.</param>
+        /// <param name="r"><see cref="sInventoryItem.RarityItem"/> to convert to string.</param>
         /// <returns>The string representation.</returns>
-        public static string ToString(sInventoryItem.Rarity r)
+        public static string ToString(sInventoryItem.RarityItem r)
         {
             switch (r)
             {
-                case Rarity.Common:
+                case RarityItem.Common:
                     return "Common";
-                case Rarity.Shop50:
+                case RarityItem.Shop50:
                     return "Shops, 50%";
-                case Rarity.Shop25:
+                case RarityItem.Shop25:
                     return "Shops, 25%";
-                case Rarity.Shop05:
+                case RarityItem.Shop05:
                     return "Shops, 05%";
-                case Rarity.Catacomb15:
+                case RarityItem.Catacomb15:
                     return "Catacombs, 15%";
-                case Rarity.Catacomb05:
+                case RarityItem.Catacomb05:
                     return "Catacombs, 05%";
-                case Rarity.Catacomb01:
+                case RarityItem.Catacomb01:
                     return "Catacombs, 01%";
-                case Rarity.ScriptOnly:
+                case RarityItem.ScriptOnly:
                     return "Scripted Only";
-                case Rarity.ScriptOrReward:
+                case RarityItem.ScriptOrReward:
                     return "Scripts or Reward";
                 default:
                     WMaster.WMLog.Trace(string.Format("Unexpected rarity value: unexpected value '{0}'", r), WMLog.TraceLog.ERROR);
@@ -554,7 +554,7 @@ namespace WMaster.Entity.Item
             sb.AppendLine(string.Format("Badness: {0}", it.m_Badness));
             sb.AppendLine(string.Format("Special: {0}", it.m_Special));
             sb.AppendLine(string.Format("Cost: {0}", it.m_Cost));
-            sb.AppendLine(string.Format("Rarity: {0}", it.m_Rarity));
+            sb.AppendLine(string.Format("Rarity: {0}", it.Rarity));
             sb.AppendLine(string.Format("Infinite: {0}", (it.m_Infinite ? "True" : "False")));
             foreach (sEffect item in it.m_Effects)
             {
