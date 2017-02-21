@@ -45,12 +45,6 @@
     <Compile Include="FacadeOS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WMaster.Library\WMaster.Library.csproj">
-      <Project>{263640e0-abb6-480f-8d4d-e81b922a6942}</Project>
-      <Name>WMaster.Library</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
