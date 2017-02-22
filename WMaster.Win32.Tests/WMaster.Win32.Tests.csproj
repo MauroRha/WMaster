@@ -54,12 +54,6 @@
     <Compile Include="LogTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WMaster.Win32.OS\WMaster.Win32.OS.csproj">
-      <Project>{7e230be7-3d6c-4b72-aa9a-a0f8af5c749e}</Project>
-      <Name>WMaster.Win32.OS</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

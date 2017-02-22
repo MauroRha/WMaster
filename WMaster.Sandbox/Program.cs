@@ -5,8 +5,6 @@
     using System.Windows.Forms;
     using System.Xml.Serialization;
     using WMaster;
-    using WMaster.Win32;
-    using WMaster.Win32.Diagnostics;
 
     static class Program
     {
@@ -25,11 +23,6 @@
 
         static void Initialize()
         {
-            // Set Win32 log instance switch to log information.
-            Log.LogInstance.Switch = WMLog.LogSwitch.INFORMATION;
-            Game.GameInitialize(FacadeOS.Entry, FacadeIHM.Entry, Log.LogInstance);
-
-            return;
         }
     }
 }
