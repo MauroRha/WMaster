@@ -16,33 +16,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#include "stdafx.h"
+
 #include "CRenderQue.h"
 
-void CRenderQue::DrawQue()
+namespace BrothelMaster
 {
-	CRenderObject* temp = m_Parent;
-	while(temp)
+	void CRenderQue::DrawQue()
 	{
-		temp->Draw();
-		temp = temp->m_Next;
+		CRenderObject^ temp = m_Parent;
+		while(temp)
+		{
+			temp->Draw();
+			temp = temp->m_Next;
+		}
+
+		ClearQue();
 	}
 
-	ClearQue();
-}
+	void CRenderQue::ClearQue() {m_Parent = nullptr; m_Last = nullptr;}
 
-void CRenderQue::ClearQue() {m_Parent = 0; m_Last = 0;}
-
-void CRenderQue::AddObject(CRenderObject* object)
-{
-	object->m_Next = 0;
-	if(!m_Parent)
+	void CRenderQue::AddObject(CRenderObject^ object)
 	{
-		m_Parent = object;
-		m_Last = object;
-	}
-	else
-	{
-		m_Last->m_Next = object;
-		m_Last = object;
+		object->m_Next = nullptr;
+		if(!m_Parent)
+		{
+			m_Parent = object;
+			m_Last = object;
+		}
+		else
+		{
+			m_Last->m_Next = object;
+			m_Last = object;
+		}
 	}
 }

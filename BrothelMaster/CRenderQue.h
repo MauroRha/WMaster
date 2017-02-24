@@ -16,34 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef __CRENDERQUE_H
-#define __CRENDERQUE_H
+#pragma once
 
-class CRenderObject;
+using namespace System;
 
-// An object that can be added to the render que, eg a character, or a game object.
-class CRenderObject
+namespace BrothelMaster
 {
-public:
-	CRenderObject() {m_Next = 0;}
-	virtual void Draw() {};
+	//class CRenderObject;
 
-	CRenderObject* m_Next;
-};
+	// An object that can be added to the render que, eg a character, or a game object.
+	public ref class CRenderObject
+	{
+	public:
+		CRenderObject() {m_Next = nullptr;}
+		virtual void Draw() {};
 
-class CRenderQue
-{
-public:
-	CRenderQue() {m_Parent = 0; m_Last = 0;}
-	~CRenderQue() {m_Parent = 0; m_Last = 0;}
+		CRenderObject^ m_Next;
+	};
 
-	void DrawQue();
-	void ClearQue();
+	public ref class CRenderQue
+	{
+	public:
+		CRenderQue() {m_Parent = nullptr; m_Last = nullptr;}
+		~CRenderQue() {m_Parent = nullptr; m_Last = nullptr;}
 
-	void AddObject(CRenderObject* object);
-private:
-	CRenderObject* m_Parent;
-	CRenderObject* m_Last;
-};
+		void DrawQue();
+		void ClearQue();
 
-#endif
+		void AddObject(CRenderObject^ object);
+	private:
+		CRenderObject^ m_Parent;
+		CRenderObject^ m_Last;
+	};
+}
