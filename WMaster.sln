@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{B5E2EE70-110F-4FF0-867D-A0771C792647}"
 	ProjectSection(SolutionItems) = preProject
+		Documentation\ElementModifiéesInterface.txt = Documentation\ElementModifiéesInterface.txt
 		Documentation\GPL.txt = Documentation\GPL.txt
+		Documentation\OrdreDeConvertionDesFichiers.txt = Documentation\OrdreDeConvertionDesFichiers.txt
 		Documentation\Random Ideas.txt = Documentation\Random Ideas.txt
 		Documentation\Refactoring Notes.docx = Documentation\Refactoring Notes.docx
 		Documentation\Special Thanks.txt = Documentation\Special Thanks.txt
@@ -20,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{20007291
 EndProject
 Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "WMaster.Models", "WMaster.Models\WMaster.Models.modelproj", "{E6794DD1-DD1F-4731-A702-FB59CD8ADBF6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Whore Master", "crazys-wm-mod\BrothelMaster-vse2013.vcxproj", "{69036B2E-2444-41CA-B87E-48C40D598BBF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Whore Master", "BrothelMaster\BrothelMaster.vcxproj", "{33A9CA4A-C19B-473C-9DF1-1E39AECE9A51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,16 +52,16 @@ Global
 		{E6794DD1-DD1F-4731-A702-FB59CD8ADBF6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E6794DD1-DD1F-4731-A702-FB59CD8ADBF6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E6794DD1-DD1F-4731-A702-FB59CD8ADBF6}.Release|Win32.ActiveCfg = Release|Any CPU
-		{69036B2E-2444-41CA-B87E-48C40D598BBF}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{69036B2E-2444-41CA-B87E-48C40D598BBF}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{69036B2E-2444-41CA-B87E-48C40D598BBF}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{69036B2E-2444-41CA-B87E-48C40D598BBF}.Debug|Win32.ActiveCfg = Debug|Win32
-		{69036B2E-2444-41CA-B87E-48C40D598BBF}.Debug|Win32.Build.0 = Debug|Win32
-		{69036B2E-2444-41CA-B87E-48C40D598BBF}.Release|Any CPU.ActiveCfg = Release|Win32
-		{69036B2E-2444-41CA-B87E-48C40D598BBF}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{69036B2E-2444-41CA-B87E-48C40D598BBF}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{69036B2E-2444-41CA-B87E-48C40D598BBF}.Release|Win32.ActiveCfg = Release|Win32
-		{69036B2E-2444-41CA-B87E-48C40D598BBF}.Release|Win32.Build.0 = Release|Win32
+		{33A9CA4A-C19B-473C-9DF1-1E39AECE9A51}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{33A9CA4A-C19B-473C-9DF1-1E39AECE9A51}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{33A9CA4A-C19B-473C-9DF1-1E39AECE9A51}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{33A9CA4A-C19B-473C-9DF1-1E39AECE9A51}.Debug|Win32.ActiveCfg = Debug|Win32
+		{33A9CA4A-C19B-473C-9DF1-1E39AECE9A51}.Debug|Win32.Build.0 = Debug|Win32
+		{33A9CA4A-C19B-473C-9DF1-1E39AECE9A51}.Release|Any CPU.ActiveCfg = Release|Win32
+		{33A9CA4A-C19B-473C-9DF1-1E39AECE9A51}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{33A9CA4A-C19B-473C-9DF1-1E39AECE9A51}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{33A9CA4A-C19B-473C-9DF1-1E39AECE9A51}.Release|Win32.ActiveCfg = Release|Win32
+		{33A9CA4A-C19B-473C-9DF1-1E39AECE9A51}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

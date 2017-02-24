@@ -84,6 +84,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BrothelMaster\BrothelMaster.vcxproj">
+      <Project>{33a9ca4a-c19b-473c-9df1-1e39aece9a51}</Project>
+      <Name>Whore Master</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
