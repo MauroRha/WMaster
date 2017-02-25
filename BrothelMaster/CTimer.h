@@ -16,69 +16,76 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef __CTIMER_H
-#define __CTIMER_H
 
-// Frame Rate for games
-const int FRAMES_PER_SECOND = 25;
+#pragma once
 
-class CTimer
+using namespace System;
+using namespace System::Diagnostics;
+
+namespace BrothelMaster
 {
-public:
-	CTimer() {
-		//m_StartTicks = m_PausedTicks = 0; m_Paused = m_Started = false;
-	}
-	~CTimer() {}
+	// Frame Rate for games
 
-	void Start() {
-		//m_Paused = false; m_Started = true; m_StartTicks = SDL_GetTicks();
-	}
-	void Stop() {
-		//m_Paused = m_Started = false;
-	}
-	void Pause(bool pause)
+	public ref class CTimer
 	{
-		//if(pause)
-		//{
-		//	if(m_Started && !m_Paused)
-		//	{
-		//		m_Paused = true;
-		//		m_PausedTicks = SDL_GetTicks() - m_StartTicks;
-		//	}
-		//}
-		//else
-		//{
-		//	m_Paused = false;
-		//	m_StartTicks = SDL_GetTicks() - m_PausedTicks;
-		//	m_PausedTicks = 0;
-		//}
-	}
+	public:
+		literal int FRAMES_PER_SECOND = 25;
 
-	int GetTicks()
-	{
-		//if(m_Started)
-		//{
-		//	if(m_Paused)
-		//		return m_PausedTicks;
-		//	else
-		//		return (SDL_GetTicks() - m_StartTicks);
-		//}
-		//return 0;
-	}
+		CTimer() {
+			m_StartTicks = m_PausedTicks = 0; m_Paused = m_Started = false;
+		}
+		~CTimer() {}
 
-	bool IsStarted() {
-		//return m_Started;
-	}
-	bool IsPaused() {
-		//return m_Paused;
-	}
+		void Start() {
+			m_Paused = false; m_Started = true; m_StartTicks = Stopwatch::GetTimestamp();
+;
+		}
+		void Stop() {
+			m_Paused = m_Started = false;
+		}
+		void Pause(bool pause)
+		{
+			if(pause)
+			{
+				if(m_Started && !m_Paused)
+				{
+					m_Paused = true;
+					m_PausedTicks = Stopwatch::GetTimestamp() - m_StartTicks;
+				}
+			}
+			else
+			{
+				m_Paused = false;
+				m_StartTicks = Stopwatch::GetTimestamp() - m_PausedTicks;
+				m_PausedTicks = 0;
+			}
+		}
 
-private:
-	//int m_StartTicks;
-	//int m_PausedTicks;
+		Int64 GetTicks()
+		{
+			if(m_Started)
+			{
+				if(m_Paused)
+					return m_PausedTicks;
+				else
+					return (Stopwatch::GetTimestamp() - m_StartTicks) / Stopwatch::Frequency;
+			}
+			return 0;
+		}
 
-	//bool m_Paused;
-	//bool m_Started;
-};
+		bool IsStarted() {
+			return m_Started;
+		}
+		bool IsPaused() {
+			return m_Paused;
+		}
 
-#endif
+	private:
+		Int64 m_StartTicks;
+		Int64 m_PausedTicks;
+
+		bool m_Paused;
+		bool m_Started;
+	};
+
+}

@@ -10,5 +10,6 @@
 #include "CLog.h"
 //#include "CRenderQue.h"	// include in CGameObject.h
 #include "CGameObject.h"
+#include "CTimer.h"
 
 using namespace System;
