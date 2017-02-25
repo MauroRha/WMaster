@@ -10,8 +10,8 @@
 ^?CGameObject.cpp
 ^CTimer.h
 ^cXmlWidget.h
-GameFlags.h
-GameFlags.cpp
+^GameFlags.h
+?GameFlags.cpp
 Globals.h
 Globals.cpp
 InterfaceIDs.h
