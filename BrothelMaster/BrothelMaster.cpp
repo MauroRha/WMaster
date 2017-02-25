@@ -11,5 +11,6 @@
 //#include "CRenderQue.h"	// include in CGameObject.h
 #include "CGameObject.h"
 #include "CTimer.h"
+#include "cXmlWidget.h"
 
 using namespace System;

@@ -18,27 +18,32 @@
  */
 #pragma once
 
-#include <vector>
+using namespace System;
+using namespace System::Collections::Generic;
 
-struct sXmlWidgetPart {
-public:
-	int x, y, w, h, r, g, b;
-	int fontsize, bordersize;
-	bool stat, alpha, scale, hidden, events, multi, hide, cache, leftorright;
-	string base, on, off, disabled, type, name, text, file, seq;
-};
+namespace BrothelMaster
+{
+	public ref struct sXmlWidgetPart {
+	public:
+		int x, y, w, h, r, g, b;
+		int fontsize, bordersize;
+		bool stat, alpha, scale, hidden, events, multi, hide, cache, leftorright;
+		String ^base, ^on, ^off, ^disabled, ^type, ^name, ^text, ^file, ^seq;
+	};
 
-class cXmlWidget {
-	vector<sXmlWidgetPart> list;
-public:
-	cXmlWidget() {}
-	int size() {	return int(list.size()); }
-	sXmlWidgetPart& operator[](int i) {
-		return list[i];
-	}
-	void add(sXmlWidgetPart &part)
-	{
-		list.push_back(part);
-	}
-};
+	public ref class cXmlWidget {
+	public:
+		cXmlWidget(void) {this->list = gcnew List<sXmlWidgetPart^>();}
 
+		int size(void) {	return list->Count; }
+		sXmlWidgetPart^ operator[](int i) {
+			return list[i];
+		}
+		void add(sXmlWidgetPart^ part)
+		{
+			list->Add(part);
+		}
+	private:
+		List<sXmlWidgetPart^>^ list;
+	};
+}
