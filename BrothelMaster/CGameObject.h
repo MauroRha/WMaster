@@ -17,30 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 // Parent Class for all game objects
-#ifndef __CGAMEOBJECT_H
-#define __CGAMEOBJECT_H
+
+#pragma once
 
 #include "CRenderQue.h"
 
-class CGameObject : public CRenderObject
+using namespace System;
+
+namespace BrothelMaster
 {
-public:
-	virtual void Draw() {};
-	virtual void Update() {};
+	public ref class CGameObject : public CRenderObject
+	{
+	public:
+		//virtual void Draw() {};
+		virtual void Update() {};
 
-	int GetState() {return m_State;}
-	void SetState(int state) {m_State = state;}
+		int GetState() {return m_State;}
+		void SetState(int state) {m_State = state;}
 
-	void SetVelocity(int vel) {m_Vel= vel;}
-	
-	bool IsAlive() {return m_Alive;}
-	void SetAlive(bool alive) {m_Alive = alive;}
+		void SetVelocity(int vel) {m_Vel= vel;}
 
-protected:
-	int m_XPos, m_YPos;
-	int m_Vel;
-	int m_State;
-	bool m_Alive;
-};
+		bool IsAlive() {return m_Alive;}
+		void SetAlive(bool alive) {m_Alive = alive;}
 
-#endif
+	protected:
+		int m_XPos, m_YPos;
+		int m_Vel;
+		int m_State;
+		bool m_Alive;
+	};
+}
