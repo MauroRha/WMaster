@@ -12,5 +12,11 @@
 #include "CGameObject.h"
 #include "CTimer.h"
 #include "cXmlWidget.h"
+#include "GameFlags.h"
+#include "Globals.h"
 
 using namespace System;
+
+namespace BrothelMaster
+{
+}

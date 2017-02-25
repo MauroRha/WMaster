@@ -19,74 +19,78 @@
 //mod alter the rng for better randomness
 // note all you have to to is a global find and replace g_Dice with whatever you choose as the name of the variable.  I declared this in main as g_Dice and just let it be external.
 
-#ifndef _H_CRNG
-#define _H_CRNG
-#include <cstdlib>
-#include <ctime>
+#pragma once
 
-typedef unsigned int u_int;
- 
-struct cRng
+#include "CRenderQue.h"
+
+using namespace System;
+
+namespace BrothelMaster
 {
-/*
- *	changed this to be the base random number generator 
- *	because it's easier to build other funcs around a
- *	function than an operator. Well, less messy, anyway.
- */
-	int random(int n); // returns int between 0 and n
-	double randomd(double n); // returns double between 0 and n - `J` added
-	/*
- *	modulus operator re-implemented using random()
- */
-	int operator %(int n) {
-		return  random(n);
-	}
-/*
- *	returns a number randomly distributed between
- *	min and max.
- *
- *	if min > max, then returns number in the range 0 to 100
- *	in order to replicate how the girl stat generation works
- */
-	int in_range(int min, int max, int range=101);
+	typedef unsigned int u_int;
 
-/*
- *	`J` trying to add a bell curve
-*/
-	int bell(int min, int max, int mid);
-	int bell(int min, int max);
-/*
- *	I was thinking of this as useful shorthand for all the
- *	(g_Dice % 100)+1 lines, but on reflection, I think 
- *	I prefer the function following
- */
-	int operator +(int n) { return random(100) + n; }
-/*
- *	returns true n percent of the time. 
- *	so g_Dice.percent(20) will return true 20% of the time
- */
-	bool percent(int n) { return (1 + random(100)) < n; }
-/*
-*	`J` added percent allowing double input up to 3 decimal
-*	returns true n percent of the time.
-*	so g_Dice.percent(20.005) will return true 20.005% of the time
-*/
-	bool percent(double n) { return (1 + random(100000)) < (n * 1000.0); }
-/*
- *	a couple of shorthand methods for decding the sex of
- *	children
- */
-	bool is_boy(int mod = 0);
-	bool is_girl(int mod = 0);
-/*
- *	we generate d100 rolls a lot
- */
-	int d100() { return random(100) + 1; }
-/*
- *	constructor and destructor
- */
-	cRng(){srand((int)time(0));}
-	~cRng(){}
-};
+	public ref struct cRng
+	{
+		/*
+		*	changed this to be the base random number generator 
+		*	because it's easier to build other funcs around a
+		*	function than an operator. Well, less messy, anyway.
+		*/
+		int random(int n); // returns int between 0 and n
+		double randomd(double n); // returns double between 0 and n - `J` added
+		/*
+		*	modulus operator re-implemented using random()
+		*/
+		int operator %(int n) {
+			return  random(n);
+		}
+		/*
+		*	returns a number randomly distributed between
+		*	min and max.
+		*
+		*	if min > max, then returns number in the range 0 to 100
+		*	in order to replicate how the girl stat generation works
+		*/
+		int in_range(int min, int max, int range=101);
 
+		/*
+		*	`J` trying to add a bell curve
+		*/
+		int bell(int min, int max, int mid);
+		int bell(int min, int max);
+		/*
+		*	I was thinking of this as useful shorthand for all the
+		*	(g_Dice % 100)+1 lines, but on reflection, I think 
+		*	I prefer the function following
+		*/
+		int operator +(int n) { return random(100) + n; }
+		/*
+		*	returns true n percent of the time. 
+		*	so g_Dice.percent(20) will return true 20% of the time
+		*/
+		bool percent(int n) { return (1 + random(100)) < n; }
+		/*
+		*	`J` added percent allowing double input up to 3 decimal
+		*	returns true n percent of the time.
+		*	so g_Dice.percent(20.005) will return true 20.005% of the time
+		*/
+		bool percent(double n) { return (1 + random(100000)) < (n * 1000.0); }
+		/*
+		*	a couple of shorthand methods for decding the sex of
+		*	children
+		*/
+		bool is_boy(int mod = 0);
+		bool is_girl(int mod = 0);
+		/*
+		*	we generate d100 rolls a lot
+		*/
+		int d100() { return random(100) + 1; }
+		/*
+		*	constructor and destructor
+		*/
+		cRng(){srand((int)time(0));}
+		~cRng(){}
+	};
+
+}
 #endif

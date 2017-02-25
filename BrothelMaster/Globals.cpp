@@ -16,17 +16,20 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "stdafx.h"
+
 #include "Globals.h"
 
-
-Globals::Globals()
+namespace BrothelMaster
 {
-	g_ScreenWidth = 1024; g_ScreenHeight = 768;
-	g_ScreenScaleX = g_ScreenScaleY = 1.0f;
-	g_Fullscreen = false;
-}
+	Globals::Globals()
+	{
+		g_ScreenWidth = 1024; g_ScreenHeight = 768;
+		g_ScreenScaleX = g_ScreenScaleY = 1.0f;
+		g_Fullscreen = false;
+	}
 
-
-Globals::~Globals()
-{
+	Globals::~Globals()
+	{
+	}
 }
